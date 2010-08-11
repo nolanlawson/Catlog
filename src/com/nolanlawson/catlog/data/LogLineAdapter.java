@@ -54,6 +54,7 @@ import com.nolanlawson.catlog.util.UtilLogger;
 public class LogLineAdapter extends BaseAdapter implements Filterable {
 	
 	private static UtilLogger log = new UtilLogger(LogLineAdapter.class);
+
 	
 	private Comparator<? super LogLine> mComparator;
 	
@@ -295,14 +296,25 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 		LogLine logLine = getItem(position);
 		
 		levelTextView.setText(Character.toString(LogLine.convertLogLevelToChar(logLine.getLogLevel())));
-		outputTextView.setText(logLine.getLogOutput());
-		tagTextView.setText(logLine.getTag());
+		levelTextView.setBackgroundColor(LogLineAdapterUtil.getBackgroundColorForLogLevel(context, logLine.getLogLevel()));
+		levelTextView.setTextColor(LogLineAdapterUtil.getForegroundColorForLogLevel(context, logLine.getLogLevel()));
+		levelTextView.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
 		
+		outputTextView.setText(logLine.getLogOutput());
 		outputTextView.setSingleLine(!logLine.isExpanded());
 		outputTextView.setEllipsize(logLine.isExpanded() ? null : TruncateAt.END);
 		
+		tagTextView.setText(logLine.getTag());
 		tagTextView.setSingleLine(!logLine.isExpanded());
 		tagTextView.setEllipsize(logLine.isExpanded() ? null : TruncateAt.END);
+		tagTextView.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
+		
+		// adjacent tags should be different colors, ideally
+		String mustBeDifferentFrom = null;
+		if (position > 0 ) {
+			mustBeDifferentFrom = getItem(position - 1).getTag();
+		}
+		tagTextView.setTextColor(LogLineAdapterUtil.getTagColor(context, logLine.getTag(), mustBeDifferentFrom));
 		
 		return view;
     }
@@ -371,19 +383,8 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
                     // search the tag and the log output
                     final String valueText = (value.getTag() + " " + value.getLogOutput()).toLowerCase();
 
-                    // First match against the whole, non-splitted value
-                    if (valueText.startsWith(prefixString)) {
+                    if (valueText.contains(prefixString)) {
                         newValues.add(value);
-                    } else {
-                        final String[] words = valueText.split(" ");
-                        final int wordCount = words.length;
-
-                        for (int k = 0; k < wordCount; k++) {
-                            if (words[k].startsWith(prefixString)) {
-                                newValues.add(value);
-                                break;
-                            }
-                        }
                     }
                 }
 

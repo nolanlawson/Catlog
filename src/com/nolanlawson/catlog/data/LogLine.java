@@ -82,6 +82,8 @@ public class LogLine {
 			
 		} else {
 			log.e("Line doesn't match pattern: " + originalLine);
+			logLine.setLogOutput(originalLine);
+			logLine.setLogLevel(-1);
 		}
 		
 		return logLine;
@@ -113,7 +115,7 @@ public class LogLine {
 	
 	public static char convertLogLevelToChar(int logLevel) {
 		
-		char result = 'X';
+		char result = ' ';
 		switch (logLevel) {
 		case Log.DEBUG:
 			result = 'D';

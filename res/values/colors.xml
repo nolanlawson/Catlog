@@ -1,0 +1,30 @@
+<resources>
+
+<color name="background_error">#FFCC0000</color>
+<color name="background_verbose">#FF666666</color>
+<color name="background_debug">#FF0066CC</color>
+<color name="background_info">#FF00CC00</color>
+<color name="background_warn">#FFFFFF00</color>
+
+<color name="foreground_error">#FFFFFFFF</color>
+<color name="foreground_verbose">#FFCCCCCC</color>
+<color name="foreground_debug">#FF999999</color>
+<color name="foreground_info">#FF666666</color>
+<color name="foreground_warn">#FF999999</color>
+
+<color name="tag_color_01">#FFCC9900</color>
+<color name="tag_color_02">#FFCC0000</color>
+<color name="tag_color_03">#FF00CC99</color>
+<color name="tag_color_04">#FFCCCCCC</color>
+<color name="tag_color_05">#FF0066FF</color>
+<color name="tag_color_06">#FF00FF00</color>
+<color name="tag_color_07">#FF990099</color>
+<color name="tag_color_08">#FFCCFF33</color>
+<color name="tag_color_09">#FFFF9999</color>
+<color name="tag_color_10">#FF999900</color>
+<color name="tag_color_11">#FFFFFF00</color>
+<color name="tag_color_12">#FF66CCFF</color>
+<color name="tag_color_13">#FFFFFFFF</color>
+<color name="tag_color_14">#FFFF9900</color>
+<color name="tag_color_15">#FFCCCCFF</color>
+</resources>

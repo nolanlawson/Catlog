@@ -6,17 +6,29 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.Filter.FilterListener;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.nolanlawson.catlog.data.LogLine;
 import com.nolanlawson.catlog.data.LogLineAdapter;
 import com.nolanlawson.catlog.util.UtilLogger;
 
-public class CatlogActivity extends ListActivity implements TextWatcher {
+public class CatlogActivity extends ListActivity implements TextWatcher, OnScrollListener, FilterListener, OnEditorActionListener {
 	
 	private static UtilLogger log = new UtilLogger(CatlogActivity.class);
 	
@@ -24,12 +36,19 @@ public class CatlogActivity extends ListActivity implements TextWatcher {
 	private LogLineAdapter adapter;
 	private LogReaderAsyncTask task;
 	
+	private boolean autoscrollToBottom = true;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        
         setContentView(R.layout.main);
         
         setUpWidgets();
+        
+        setUpAdapter();
         
     }
     
@@ -37,7 +56,7 @@ public class CatlogActivity extends ListActivity implements TextWatcher {
     public void onResume() {
     	super.onResume();
     	
-        setUpAdapter();
+        adapter.clear();
     	
     	if (task != null && !task.isCancelled()) {
     		task.cancel(true);
@@ -46,7 +65,6 @@ public class CatlogActivity extends ListActivity implements TextWatcher {
     	task = new LogReaderAsyncTask();
     	
     	task.execute((Void)null);
-    	
     	
     }
     
@@ -65,6 +83,8 @@ public class CatlogActivity extends ListActivity implements TextWatcher {
 	private void setUpWidgets() {
 		searchEditText = (EditText) findViewById(R.id.main_edit_text);
 		searchEditText.addTextChangedListener(this);
+		searchEditText.setOnEditorActionListener(this);
+		
 		
 	}
 	
@@ -73,6 +93,8 @@ public class CatlogActivity extends ListActivity implements TextWatcher {
 		adapter = new LogLineAdapter(this, R.layout.logcat_list_item, new ArrayList<LogLine>());
 		
 		setListAdapter(adapter);
+		
+		getListView().setOnScrollListener(this);
 		
 		
 	}	
@@ -141,6 +163,9 @@ public class CatlogActivity extends ListActivity implements TextWatcher {
 			super.onProgressUpdate(values);
 			//log.d("onProgressUpdate()");
 			adapter.add(LogLine.newLogLine(values[0]));
+			if (autoscrollToBottom) {
+				getListView().setSelection(getListView().getCount());
+			}
 			
 		}
 
@@ -154,6 +179,17 @@ public class CatlogActivity extends ListActivity implements TextWatcher {
 		
 	}
 	
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		
+		LogLine logLine = adapter.getItem(position);
+		
+		logLine.setExpanded(!logLine.isExpanded());
+		adapter.notifyDataSetChanged();
+		
+	}
+
 	@Override
 	public void afterTextChanged(Editable s) {
 		// do nothing
@@ -174,7 +210,53 @@ public class CatlogActivity extends ListActivity implements TextWatcher {
 		
 		log.d("filtering: %s", filterText);
 		
-		adapter.getFilter().filter(filterText);
+		Filter filter = adapter.getFilter();
+
+		filter.filter(filterText, this);
 		
+	}
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem,
+			int visibleItemCount, int totalItemCount) {
+
+		// if the bottom of the list isn't visible anymore, then stop autoscrolling
+		autoscrollToBottom = firstVisibleItem + visibleItemCount == totalItemCount;
+		
+		
+	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		// do nothing
+		
+	}
+
+	@Override
+	public void onFilterComplete(int count) {
+		// always scroll to the bottom when searching
+		getListView().setSelection(count);
+		
+	}	
+	
+	private void dismissSoftKeyboard() {
+		log.d("dismissSoftKeyboard()");
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+
+	}	
+
+	@Override
+	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+		
+		log.d("actionId: " + actionId+" event:" + event);
+		
+		if (event != null && event.getAction() == KeyEvent.ACTION_DOWN) {
+			dismissSoftKeyboard();
+			return true;
+		}
+		
+		
+		return false;
 	}	
 }
