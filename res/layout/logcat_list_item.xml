@@ -1,0 +1,24 @@
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="wrap_content"
+	android:orientation="horizontal" android:paddingLeft="5dp"
+	android:paddingRight="5dp" android:paddingBottom="1dp"
+	android:paddingTop="1dp">
+
+
+
+
+	<TextView android:layout_width="0px" android:layout_height="wrap_content"
+		android:paddingRight="2dp" android:textSize="14sp" android:text="SomeActivity"
+		android:layout_weight="0.3" android:id="@+id/tag_text" />
+
+	<TextView android:layout_width="0px" android:layout_weight="0.05"
+		android:layout_height="wrap_content" android:textSize="14sp"
+		android:paddingRight="2dp" android:text="D" android:id="@+id/log_level_text" />
+
+	<TextView android:layout_width="0px" android:layout_weight="0.65"
+		android:layout_height="wrap_content" android:textSize="14sp"
+		android:text="Blah blah blah a bunch of output" android:paddingRight="2dp" android:id="@+id/log_output_text" />
+
+
+</LinearLayout>
