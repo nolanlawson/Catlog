@@ -10,6 +10,7 @@
 	<string name="record_log">Record Log</string>
 	<string name="clear">Clear</string>
 	<string name="send_log">Send Log</string>
+	<string name="main_log">Play Main Log</string>
 	
 	<string name="log_level_verbose">Verbose</string>
 	<string name="log_level_debug">Debug</string>

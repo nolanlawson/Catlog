@@ -42,7 +42,6 @@ import android.widget.TextView.OnEditorActionListener;
 import com.nolanlawson.catlog.data.LogLine;
 import com.nolanlawson.catlog.data.LogLineAdapter;
 import com.nolanlawson.catlog.helper.SaveLogHelper;
-import com.nolanlawson.catlog.util.StringUtil;
 import com.nolanlawson.catlog.util.UtilLogger;
 
 public class CatlogActivity extends ListActivity implements TextWatcher, OnScrollListener, FilterListener, OnEditorActionListener {
@@ -57,6 +56,8 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 	
 	private int logLevelLimit = 0;
 	
+	private int currentlyOpenLog = -1;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +70,7 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
         
         setUpAdapter();
         
-    	startUpAsyncTask();
+    	startUpMainLog();
         
     }
     
@@ -79,9 +80,7 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
     	
     }
     
-    private void startUpAsyncTask() {
-    	
-    	adapter.clear();
+    private void startUpMainLog() {
     	
     	if (task != null && !task.isCancelled()) {
     		task.cancel(true);
@@ -139,6 +138,9 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 	    case R.id.menu_send_log:
 	    	sendLog();
 	    	return true;
+	    case R.id.menu_main_log:
+	    	startUpMainLog();
+	    	return true;
 	    	
 	    }
 	    return false;
@@ -148,6 +150,15 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
+		
+		boolean showingMainLog = (task != null && !task.isCancelled());
+		
+		menu.findItem(R.id.menu_clear).setEnabled(showingMainLog);
+		menu.findItem(R.id.menu_clear).setVisible(showingMainLog);
+		
+		menu.findItem(R.id.menu_main_log).setEnabled(!showingMainLog);
+		menu.findItem(R.id.menu_main_log).setVisible(!showingMainLog);
+		
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -266,13 +277,17 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		Builder builder = new Builder(this);
 		
+		int logToSelect = (currentlyOpenLog >= 0 && currentlyOpenLog < filenames.size()) 
+				? currentlyOpenLog : 0; 
+		
 		builder.setTitle(R.string.open_log)
 			.setCancelable(true)
-			.setSingleChoiceItems(dropdownAdapter, 0, new OnClickListener() {
+			.setSingleChoiceItems(dropdownAdapter, logToSelect, new OnClickListener() {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.dismiss();
+					currentlyOpenLog = which;
 					openLog(filenames.get(which));
 					
 				}
@@ -281,13 +296,15 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 		builder.show();
 		
 	}	
-	protected void openLog(String filename) {
+	private void openLog(String filename) {
 		
 		if (task != null && !task.isCancelled()) {
 			task.cancel(true);
 		}
 		
 		adapter.clear();
+		
+		resetFilter();
 		
 		List<String> logLines = SaveLogHelper.openLog(filename);
 		
@@ -296,6 +313,17 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 		}
 		// scroll to bottom
 		getListView().setSelection(getListView().getCount());
+		
+	}
+	
+	private void resetFilter() {
+		
+		logLevelLimit = 0;
+		
+		// silently change edit text
+		searchEditText.removeTextChangedListener(this);
+		searchEditText.setText("");
+		searchEditText.addTextChangedListener(this);
 		
 	}
 
@@ -395,6 +423,10 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 		protected void onPreExecute() {
 			super.onPreExecute();
 			log.d("onPreExecute()");
+			
+	    	currentlyOpenLog = -1;
+	    	adapter.clear();
+	    	resetFilter();
 
 		}
 
@@ -403,6 +435,7 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 			super.onProgressUpdate(values);
 			//log.d("onProgressUpdate()");
 			adapter.add(LogLine.newLogLine(values[0]));
+			
 			if (autoscrollToBottom) {
 				getListView().setSelection(getListView().getCount());
 			}

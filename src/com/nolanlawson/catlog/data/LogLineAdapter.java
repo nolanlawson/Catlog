@@ -131,6 +131,8 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
         if (mOriginalValues != null) {
             synchronized (mLock) {
                 mOriginalValues.add(object);
+                mObjects.add(object);
+                
                 if (mNotifyOnChange) notifyDataSetChanged();
             }
         } else {
@@ -180,6 +182,7 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
         if (mOriginalValues != null) {
             synchronized (mLock) {
                 mOriginalValues.clear();
+                mObjects.clear();
             }
         } else {
             mObjects.clear();
@@ -206,6 +209,7 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
     public void notifyDataSetChanged() {
         super.notifyDataSetChanged();
         mNotifyOnChange = true;
+        
     }
 
     /**
@@ -427,7 +431,7 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
         protected void publishResults(CharSequence constraint, FilterResults results) {
             //noinspection unchecked
         	
-        	log.d("filtering: %s", constraint);
+        	//log.d("filtering: %s", constraint);
         	
             mObjects = (List<LogLine>) results.values;
             if (results.count > 0) {

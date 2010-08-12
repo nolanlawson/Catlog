@@ -6,7 +6,10 @@
 		
 	<item android:id="@+id/menu_clear" android:title="@string/clear"
 		android:alphabeticShortcut="@string/clear" android:icon="@drawable/ic_menu_close_clear_cancel" />
-	
+		
+	<item android:id="@+id/menu_main_log" android:title="@string/main_log"
+		android:alphabeticShortcut="@string/main_log" android:icon="@drawable/ic_menu_play_clip" />
+			
 	<item android:id="@+id/menu_send_log" android:title="@string/send_log"
 		android:alphabeticShortcut="@string/send_log" android:icon="@drawable/ic_menu_send" />
 						
