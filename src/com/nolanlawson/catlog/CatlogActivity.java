@@ -36,6 +36,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AbsListView.OnScrollListener;
@@ -53,13 +54,14 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 	private static UtilLogger log = new UtilLogger(CatlogActivity.class);
 	
 	private EditText searchEditText;
+	private ProgressBar progressBar;
 	private LogLineAdapter adapter;
 	private LogReaderAsyncTask task;
 	
 	private boolean autoscrollToBottom = true;
 
 	
-	private int currentlyOpenLog = -1;
+	private String currentlyOpenLog = null;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -193,7 +195,10 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 
 
 	private void startDeleteSavedLogsDialog() {
-		Builder builder = new Builder(this);
+		
+		if (!checkSdCard()) {
+			return;
+		}
 		
 		List<String> filenames = SaveLogHelper.getLogFilenames();
 		
@@ -208,6 +213,8 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 		final TextView messageTextView = new TextView(CatlogActivity.this);
 		messageTextView.setText(R.string.select_logs_to_delete);
 		messageTextView.setPadding(3, 3, 3, 3);
+		
+		Builder builder = new Builder(this);
 		
 		builder.setTitle(R.string.manage_saved_logs)
 			.setCancelable(true)
@@ -296,6 +303,16 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		
 	}
+	
+	private boolean checkSdCard() {
+		
+		boolean result = SaveLogHelper.checkIfSdCardExists();
+		
+		if (!result) {
+			Toast.makeText(getApplicationContext(), R.string.sd_card_not_found, Toast.LENGTH_LONG).show();
+		}
+		return result;
+	}
 
 	private void startAboutActivity() {
 		
@@ -306,6 +323,10 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 	}
 	private void startRecordingLog() {
 		
+		if (!checkSdCard()) {
+			return;
+		}
+		
 		final EditText editText = createEditTextForFilenameSuggestingDialog();
 		
 		OnClickListener onClickListener = new OnClickListener() {
@@ -313,9 +334,7 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				
-				if (TextUtils.isEmpty(editText.getText()) 
-						|| editText.getText().toString().contains("/")
-						|| !editText.getText().toString().endsWith(".txt")) {
+				if (isInvalidFilename(editText.getText())) {
 					
 					Toast.makeText(CatlogActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
 				} else {
@@ -367,31 +386,44 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 
 	private void showSaveLogDialog() {
 		
+		if (!checkSdCard()) {
+			return;
+		}
+		
 		final EditText editText = createEditTextForFilenameSuggestingDialog();
 		
 		OnClickListener onClickListener = new OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
+
 				
-				int toastText;
-				
-				if (TextUtils.isEmpty(editText.getText()) || editText.getText().toString().contains("/")) {
-					toastText = R.string.enter_good_filename;
+				if (isInvalidFilename(editText.getText())) {
+					Toast.makeText(CatlogActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
 				} else {
 					
-					boolean logSaved = saveLog(editText.getText().toString());
-					
-					toastText = logSaved ? R.string.log_saved : R.string.enter_good_filename;
+					saveLog(editText.getText().toString());
 				}
 				
-				Toast.makeText(CatlogActivity.this, toastText, Toast.LENGTH_SHORT).show();
+				
 				dialog.dismiss();
 				
 			}
 		};
 		
 		showFilenameSuggestingDialog(editText, onClickListener, R.string.save_log);
+	}
+	
+	private boolean isInvalidFilename(CharSequence filename) {
+		
+		String filenameAsString = null;
+		
+		return TextUtils.isEmpty(filename)
+				|| (filenameAsString = filename.toString()).contains("/")
+				|| filenameAsString.contains(":")
+				|| filenameAsString.contains(" ")
+				|| !filenameAsString.endsWith(".txt");
+				
 	}
 
 	private EditText createEditTextForFilenameSuggestingDialog() {
@@ -443,10 +475,36 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 		
 	}
 
-	private boolean saveLog(String filename) {
-		List<String> logLines = getCurrentLogAsListOfStrings();
+	private void saveLog(final String filename) {
 		
-		return SaveLogHelper.saveLog(logLines, filename);
+		// do in background to avoid jankiness
+		
+		final List<String> logLines = getCurrentLogAsListOfStrings();
+		
+		AsyncTask<Void,Void,Boolean> saveTask = new AsyncTask<Void, Void, Boolean>(){
+
+			@Override
+			protected Boolean doInBackground(Void... params) {
+				return SaveLogHelper.saveLog(logLines, filename);
+				
+			}
+
+			@Override
+			protected void onPostExecute(Boolean successfullySavedLog) {
+				
+				super.onPostExecute(successfullySavedLog);
+				
+				if (successfullySavedLog) {
+					Toast.makeText(getApplicationContext(), R.string.log_saved, Toast.LENGTH_SHORT).show();
+				} else {
+					Toast.makeText(getApplicationContext(), R.string.unable_to_save_log, Toast.LENGTH_LONG).show();
+				}
+			}
+			
+			
+		};
+		
+		saveTask.execute((Void)null);
 		
 	}
 
@@ -480,6 +538,10 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 
 	private void showOpenLogDialog() {
 		
+		if (!checkSdCard()) {
+			return;
+		}
+		
 		final List<String> filenames = SaveLogHelper.getLogFilenames();
 		
 		if (filenames.isEmpty()) {
@@ -492,8 +554,11 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		Builder builder = new Builder(this);
 		
-		int logToSelect = (currentlyOpenLog >= 0 && currentlyOpenLog < filenames.size()) 
-				? currentlyOpenLog : 0; 
+		int logToSelect = currentlyOpenLog != null ? filenames.indexOf(currentlyOpenLog) : 0;
+		
+		if (logToSelect == -1) {
+			logToSelect = 0;
+		}
 		
 		builder.setTitle(R.string.open_log)
 			.setCancelable(true)
@@ -502,8 +567,8 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.dismiss();
-					currentlyOpenLog = which;
-					openLog(filenames.get(which));
+					String filename = filenames.get(which);
+					openLog(filename);
 					
 				}
 			});
@@ -518,6 +583,8 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 		}
 		
 		adapter.clear();
+		
+		currentlyOpenLog = filename;
 		
 		resetFilter();
 		
@@ -564,9 +631,13 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 	}
 	
 	private void setUpWidgets() {
+		
 		searchEditText = (EditText) findViewById(R.id.main_edit_text);
 		searchEditText.addTextChangedListener(this);
 		searchEditText.setOnEditorActionListener(this);
+		
+		progressBar = (ProgressBar) findViewById(R.id.main_progress_bar);
+		progressBar.setVisibility(View.VISIBLE);
 		
 		
 	}
@@ -639,7 +710,7 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 			super.onPreExecute();
 			log.d("onPreExecute()");
 			
-	    	currentlyOpenLog = -1;
+	    	currentlyOpenLog = null;
 	    	adapter.clear();
 	    	resetFilter();
 
@@ -648,7 +719,8 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 		@Override
 		protected void onProgressUpdate(String... values) {
 			super.onProgressUpdate(values);
-			//log.d("onProgressUpdate()");
+
+			progressBar.setVisibility(View.GONE);
 			adapter.addWithFilter(LogLine.newLogLine(values[0]), searchEditText.getText());
 			
 			if (autoscrollToBottom) {

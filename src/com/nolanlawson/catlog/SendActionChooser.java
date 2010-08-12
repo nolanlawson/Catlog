@@ -10,10 +10,10 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.ClipboardManager;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -22,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nolanlawson.catlog.helper.BitmapHelper;
 import com.nolanlawson.catlog.util.UtilLogger;
  
 public class SendActionChooser extends ListActivity {
@@ -149,9 +150,20 @@ public class SendActionChooser extends ListActivity {
  
 			label.setText(getItem(position).loadLabel(pm));
  
-			ImageView icon=(ImageView)row.findViewById(R.id.icon);
+			ImageView iconImageView=(ImageView)row.findViewById(R.id.icon);
  
-			icon.setImageDrawable(getItem(position).loadIcon(pm));
+			Drawable drawableIcon = getItem(position).loadIcon(pm);
+			
+			if (drawableIcon != null) {
+			
+				Bitmap iconBitmap = BitmapHelper.convertIconToBitmap(getApplicationContext(), drawableIcon);
+				
+				iconImageView.setImageBitmap(iconBitmap);
+				iconImageView.setVisibility(View.VISIBLE);
+			
+			} else {
+				iconImageView.setVisibility(View.INVISIBLE);
+			}
 		}
 	}
 

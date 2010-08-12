@@ -13,6 +13,8 @@
 		android:paddingTop="2px"
 		android:paddingBottom="2px"
 		android:paddingRight="5px"
+		android:minWidth="@android:dimen/app_icon_size"
+		android:minHeight="@android:dimen/app_icon_size"
 	/>
 	<TextView
 		android:id="@+id/label"

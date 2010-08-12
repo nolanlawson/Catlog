@@ -34,6 +34,9 @@
 	<string name="files_deleted">%d file(s) deleted.</string>
 	<string name="delete_all">Delete All</string>
 	<string name="are_you_sure">Are you sure? %d file(s) will be deleted.</string>
+	<string name="log_recording_started">Log recording started.</string>
+	<string name="unable_to_save_log">Unable to save log. Did you enter a valid filename?</string>
+	<string name="sd_card_not_found">SD card not found.</string>
 	
 	<string name="notification_title">Log recording in progress</string>
 	<string name="notification_ticker">Log recording started</string>

@@ -212,6 +212,8 @@ public class CatlogRecordingService extends IntentService {
 		
 		log.d("Starting up AppTrackerService now with intent: %s", intent);
 
+		makeToast(R.string.log_recording_started);
+		
 		Process logcatProcess = null;
 		BufferedReader reader = null;
 		
@@ -267,21 +269,31 @@ public class CatlogRecordingService extends IntentService {
 
 			log.d("CatlogService ended");
 			
-			SaveLogHelper.saveLog(lines, filename);
+			boolean logSaved = SaveLogHelper.saveLog(lines, filename);
 			
-			handler.post(new Runnable() {
-				
-				@Override
-				public void run() {
-					
-					Toast.makeText(CatlogRecordingService.this, R.string.log_saved, Toast.LENGTH_SHORT).show();
-					
-				}
-			});
+			if (logSaved) {
+				makeToast(R.string.log_saved);
+			} else {
+				makeToast(R.string.unable_to_save_log);
+			}
 			
 
 		}
 	}
+
+	private void makeToast(final int stringResId) {
+		handler.post(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				Toast.makeText(CatlogRecordingService.this, stringResId, Toast.LENGTH_LONG).show();
+				
+			}
+		});
+		
+	}
+
 
 	private int getNumberOfExistingLogLines() throws IOException {
 		
