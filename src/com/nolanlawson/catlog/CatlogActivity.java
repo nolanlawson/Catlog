@@ -456,6 +456,7 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 		calendar.setTime(date);
 		
 		DecimalFormat twoDigitDecimalFormat = new DecimalFormat("00");
+		DecimalFormat threeDigitDecimalFormat = new DecimalFormat("000");
 		DecimalFormat fourDigitDecimalFormat = new DecimalFormat("0000");
 		
 		String year = fourDigitDecimalFormat.format(calendar.get(Calendar.YEAR));
@@ -464,7 +465,7 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 		String hour = twoDigitDecimalFormat.format(calendar.get(Calendar.HOUR_OF_DAY));
 		String minute = twoDigitDecimalFormat.format(calendar.get(Calendar.MINUTE));
 		String second = twoDigitDecimalFormat.format(calendar.get(Calendar.SECOND));
-		String millisecond = twoDigitDecimalFormat.format(calendar.get(Calendar.MILLISECOND));
+		String millisecond = threeDigitDecimalFormat.format(calendar.get(Calendar.MILLISECOND));
 		
 		StringBuilder stringBuilder = new StringBuilder();
 		
