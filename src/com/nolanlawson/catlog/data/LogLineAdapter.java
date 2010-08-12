@@ -19,6 +19,7 @@
 package com.nolanlawson.catlog.data;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -140,6 +141,30 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
             if (mNotifyOnChange) notifyDataSetChanged();
         }
     }
+    
+
+	public void addWithFilter(LogLine object, CharSequence text) {
+		
+        if (mOriginalValues != null) {
+            synchronized (mLock) {
+                mOriginalValues.add(object);
+                
+                if (mFilter == null) {
+                	mFilter = new ArrayFilter();
+                }
+                
+                List<LogLine> inputList = Arrays.asList(object);
+                mObjects.addAll(mFilter.performFilteringOnList(inputList, text));
+                
+                if (mNotifyOnChange) notifyDataSetChanged();
+            }
+        } else {
+            mObjects.add(object);
+            if (mNotifyOnChange) notifyDataSetChanged();
+        }
+        
+		
+	}    
 
     /**
      * Inserts the specified object at the specified index in the array.
@@ -378,23 +403,29 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
                 }
             }
             
-            // search by log level
-            ArrayList<LogLine> allValues = new ArrayList<LogLine>(mOriginalValues.size());
+            ArrayList<LogLine> allValues = performFilteringOnList(mOriginalValues, prefix);
             
-            for (LogLine logLine : new ArrayList<LogLine>(mOriginalValues)) {
+            results.values = allValues;
+            results.count = allValues.size();
+            
+            return results;
+        }
+        
+        public ArrayList<LogLine> performFilteringOnList(List<LogLine> inputList, CharSequence prefix) {
+            
+            
+            // search by log level
+            ArrayList<LogLine> allValues = new ArrayList<LogLine>(inputList.size());
+            
+            for (LogLine logLine : new ArrayList<LogLine>(inputList)) {
             	if (LogLineAdapterUtil.logLevelIsAcceptableGivenLogLevelLimit(logLine.getLogLevel(), logLevelLimit)) {
             		allValues.add(logLine);
             	}
             }
+            ArrayList<LogLine> finalValues = allValues;
             
             // search by prefix
-            if (prefix == null || prefix.length() == 0) {
-                synchronized (mLock) {
-                    ArrayList<LogLine> list = allValues;
-                    results.values = list;
-                    results.count = list.size();
-                }
-            } else {
+            if (prefix != null && prefix.length() > 0) {
                 String prefixString = prefix.toString().toLowerCase();
 
                 final ArrayList<LogLine> values = allValues;
@@ -412,19 +443,15 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
                     }
                 }
 
-                results.values = newValues;
-                results.count = newValues.size();
+                finalValues = newValues;
             }
             
-
-            
-
             // sort here to ensure that filtering the list doesn't mess up the sorting
             if (mComparator != null) {
-            	Collections.sort((List<LogLine>)results.values, mComparator);
+            	Collections.sort((List<LogLine>)finalValues, mComparator);
             }
             
-            return results;
+            return finalValues;        	
         }
 
         @Override
@@ -441,4 +468,5 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
             }
         }
     }
+
 }

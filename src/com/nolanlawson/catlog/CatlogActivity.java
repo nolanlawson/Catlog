@@ -434,7 +434,7 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 		protected void onProgressUpdate(String... values) {
 			super.onProgressUpdate(values);
 			//log.d("onProgressUpdate()");
-			adapter.add(LogLine.newLogLine(values[0]));
+			adapter.addWithFilter(LogLine.newLogLine(values[0]), searchEditText.getText());
 			
 			if (autoscrollToBottom) {
 				getListView().setSelection(getListView().getCount());
