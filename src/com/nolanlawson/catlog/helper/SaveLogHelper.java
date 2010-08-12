@@ -30,6 +30,18 @@ public class SaveLogHelper {
 		
 	}
 	
+	public static void deleteLog(String filename) {
+		
+		File catlogDir = getCatlogDirectory();
+		
+		File file = new File(catlogDir, filename);
+		
+		if (file.exists()) {
+			file.delete();
+		}
+		
+	}
+	
 	/**
 	 * Get all the log filenames, order by last modified descending
 	 * @return

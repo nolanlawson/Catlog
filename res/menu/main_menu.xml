@@ -24,6 +24,9 @@
 	
 	<item android:id="@+id/menu_send_log" android:title="@string/send_log"
 		android:alphabeticShortcut="@string/send_log" android:icon="@drawable/ic_menu_send" />
+
+	<item android:id="@+id/menu_delete_saved_log" android:title="@string/manage_saved_logs"
+		android:alphabeticShortcut="@string/manage_saved_logs" android:icon="@drawable/ic_menu_delete" />
 		
 	<item android:id="@+id/menu_about" android:title="@string/about"
 		android:alphabeticShortcut="@string/about" android:icon="@drawable/ic_menu_info_details" />

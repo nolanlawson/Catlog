@@ -13,6 +13,8 @@
 	<string name="main_log">Play Main Log</string>
 	<string name="stop_recording_log">Stop Recording</string>
 	<string name="about">About</string>
+	<string name="delete_saved_log">Delete Saved Logs</string>
+	<string name="manage_saved_logs">Manage Saved Logs</string>
 	
 	<string name="log_level_verbose">Verbose</string>
 	<string name="log_level_debug">Debug</string>
@@ -28,6 +30,10 @@
 	<string name="copy_to_clipboard">Copy to clipboard</string>
 	<string name="copied_to_clipboard">Copied to clipboard.</string>
 	<string name="enter_filename">Enter a filename to save to the SD card:</string>
+	<string name="select_logs_to_delete">Select which logs to delete.</string>
+	<string name="files_deleted">%d file(s) deleted.</string>
+	<string name="delete_all">Delete All</string>
+	<string name="are_you_sure">Are you sure? %d file(s) will be deleted.</string>
 	
 	<string name="notification_title">Log recording in progress</string>
 	<string name="notification_ticker">Log recording started</string>

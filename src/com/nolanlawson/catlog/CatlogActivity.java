@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -150,6 +151,9 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 	    case R.id.menu_about:
 	    	startAboutActivity();
 	    	return true;
+	    case R.id.menu_delete_saved_log:
+	    	startDeleteSavedLogsDialog();
+	    	return true;
 	    	
 	    }
 	    return false;
@@ -188,6 +192,111 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 
 
 
+	private void startDeleteSavedLogsDialog() {
+		Builder builder = new Builder(this);
+		
+		List<String> filenames = SaveLogHelper.getLogFilenames();
+		
+		if (filenames.isEmpty()) {
+			Toast.makeText(this, R.string.no_saved_logs, Toast.LENGTH_SHORT).show();
+			return;			
+		}
+		
+		final CharSequence[] filenameArray = filenames.toArray(new CharSequence[filenames.size()]);
+		final boolean[] checkedItems = new boolean[filenames.size()];
+		
+		final TextView messageTextView = new TextView(CatlogActivity.this);
+		messageTextView.setText(R.string.select_logs_to_delete);
+		messageTextView.setPadding(3, 3, 3, 3);
+		
+		builder.setTitle(R.string.manage_saved_logs)
+			.setCancelable(true)
+			.setNegativeButton(android.R.string.cancel, null)
+			.setNeutralButton(R.string.delete_all, new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					boolean[] allChecked = new boolean[checkedItems.length];
+					
+					for (int i = 0; i < allChecked.length; i++) {
+						allChecked[i] = true;
+					}
+					verifyDelete(filenameArray, allChecked, dialog);
+					
+				}
+			})
+			.setPositiveButton(android.R.string.ok, new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					
+					verifyDelete(filenameArray, checkedItems, dialog);
+					
+				}
+			})
+			.setView(messageTextView)
+			.setMultiChoiceItems(filenameArray, checkedItems, 
+					new OnMultiChoiceClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+					checkedItems[which] = isChecked;
+					
+				}
+			});
+		
+		builder.show();
+		
+	}
+
+	protected void verifyDelete(final CharSequence[] filenameArray,
+			final boolean[] checkedItems, final DialogInterface parentDialog) {
+		
+		Builder builder = new Builder(this);
+		
+		int deleteCount = 0;
+		
+		for (int i = 0; i < checkedItems.length; i++) {
+			if (checkedItems[i]) {
+				deleteCount++;
+			}
+		}
+		
+		
+		final int finalDeleteCount = deleteCount;
+		
+		if (finalDeleteCount > 0) {
+			
+			builder.setTitle(R.string.delete_saved_log)
+				.setCancelable(true)
+				.setMessage(String.format(getText(R.string.are_you_sure).toString(), finalDeleteCount))
+				.setPositiveButton(android.R.string.ok, new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// ok, delete
+					
+					for (int i = 0; i < checkedItems.length; i++) {
+						if (checkedItems[i]) {
+							SaveLogHelper.deleteLog(filenameArray[i].toString());
+						}
+					}
+					
+					String toastText = String.format(getText(R.string.files_deleted).toString(), finalDeleteCount);
+					Toast.makeText(CatlogActivity.this, toastText, Toast.LENGTH_SHORT).show();
+					
+					dialog.dismiss();
+					parentDialog.dismiss();
+					
+				}
+			});
+			builder.setNegativeButton(android.R.string.cancel, null);
+			builder.show();
+		}
+		
+		
+	}
+
 	private void startAboutActivity() {
 		
 		Intent intent = new Intent(this,AboutActivity.class);
@@ -204,7 +313,9 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				
-				if (TextUtils.isEmpty(editText.getText()) || editText.getText().toString().contains("/")) {
+				if (TextUtils.isEmpty(editText.getText()) 
+						|| editText.getText().toString().contains("/")
+						|| !editText.getText().toString().endsWith(".txt")) {
 					
 					Toast.makeText(CatlogActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
 				} else {
