@@ -3,16 +3,23 @@ package com.nolanlawson.catlog;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 import android.app.ListActivity;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -22,16 +29,20 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.Filter.FilterListener;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.nolanlawson.catlog.data.LogLine;
 import com.nolanlawson.catlog.data.LogLineAdapter;
+import com.nolanlawson.catlog.helper.SaveLogHelper;
+import com.nolanlawson.catlog.util.StringUtil;
 import com.nolanlawson.catlog.util.UtilLogger;
 
 public class CatlogActivity extends ListActivity implements TextWatcher, OnScrollListener, FilterListener, OnEditorActionListener {
@@ -58,13 +69,19 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
         
         setUpAdapter();
         
+    	startUpAsyncTask();
+        
     }
     
     @Override
     public void onResume() {
     	super.onResume();
     	
-        adapter.clear();
+    }
+    
+    private void startUpAsyncTask() {
+    	
+    	adapter.clear();
     	
     	if (task != null && !task.isCancelled()) {
     		task.cancel(true);
@@ -73,13 +90,19 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
     	task = new LogReaderAsyncTask();
     	
     	task.execute((Void)null);
-    	
-    }
-    
-    @Override
+		
+	}
+
+	@Override
     public void onPause() {
     	
     	super.onPause();
+
+    }
+    
+    @Override
+    public void onDestroy() {
+    	super.onDestroy();
     	
     	if (task != null && !task.isCancelled()) {
     		task.cancel(true);
@@ -102,10 +125,24 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 	    case R.id.menu_log_level:
 	    	showLogLevelDialog();
 	    	return true;
+	    case R.id.menu_open_log:
+	    	showOpenLogDialog();
+	    	return true;
+	    case R.id.menu_save_log:
+	    	showSaveLogDialog();
+	    	return true;
+	    case R.id.menu_record_log:
+	    	return true;
+	    case R.id.menu_clear:
+	    	adapter.clear();
+	    	return true;
+	    case R.id.menu_send_log:
+	    	sendLog();
+	    	return true;
+	    	
 	    }
 	    return false;
 	}
-
 
 
 
@@ -113,7 +150,155 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		return super.onPrepareOptionsMenu(menu);
 	}
+
+	private void sendLog() {
+		
+		String text = TextUtils.join("\n", getCurrentLogAsListOfStrings());
+		
+		Bundle extras = new Bundle();
+		
+		extras.putString(Intent.EXTRA_TEXT, text);
+		
+		Intent sendActionChooserIntent = new Intent(this, SendActionChooser.class);
+		
+		sendActionChooserIntent.putExtras(extras);
+		startActivity(sendActionChooserIntent);
+		
+	}
 	
+	private List<String> getCurrentLogAsListOfStrings() {
+		
+		List<String> result = new ArrayList<String>();
+		
+		for (int i = 0; i < adapter.getCount(); i ++) {
+			result.add(adapter.getItem(i).getOriginalLine());
+		}
+		
+		return result;
+	}
+
+	private void showSaveLogDialog() {
+		Builder builder = new Builder(this);
+		
+		final EditText editText = new EditText(this);
+		
+		// create an initial filename to suggest to the user
+		String filename = createLogFilename();
+		editText.setText(filename);
+		
+		// highlight everything but the .txt at the end
+		editText.setSelection(0, filename.length() - 4);
+		
+		builder.setTitle(R.string.save_log)
+			.setCancelable(true)
+			.setNegativeButton(android.R.string.cancel, null)
+			.setPositiveButton(android.R.string.ok, new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					
+					int toastText;
+					
+					if (TextUtils.isEmpty(editText.getText()) || editText.getText().toString().contains("/")) {
+						toastText = R.string.enter_good_filename;
+					} else {
+						
+						boolean logSaved = saveLog(editText.getText().toString());
+						
+						toastText = logSaved ? R.string.log_saved : R.string.enter_good_filename;
+					}
+					
+					Toast.makeText(CatlogActivity.this, toastText, Toast.LENGTH_SHORT).show();
+					dialog.dismiss();
+					
+				}
+			})
+			.setView(editText);
+		
+		builder.show();
+	}
+
+	protected boolean saveLog(String filename) {
+		List<String> logLines = getCurrentLogAsListOfStrings();
+		
+		return SaveLogHelper.saveLog(logLines, filename);
+		
+	}
+
+	private String createLogFilename() {
+		Date date = new Date();
+		GregorianCalendar calendar = new GregorianCalendar();
+		calendar.setTime(date);
+		
+		DecimalFormat twoDigitDecimalFormat = new DecimalFormat("00");
+		DecimalFormat fourDigitDecimalFormat = new DecimalFormat("0000");
+		
+		String year = fourDigitDecimalFormat.format(calendar.get(Calendar.YEAR));
+		String month = twoDigitDecimalFormat.format(calendar.get(Calendar.MONTH) + 1);
+		String day = twoDigitDecimalFormat.format(calendar.get(Calendar.DAY_OF_MONTH));
+		String hour = twoDigitDecimalFormat.format(calendar.get(Calendar.HOUR_OF_DAY));
+		String minute = twoDigitDecimalFormat.format(calendar.get(Calendar.MINUTE));
+		String second = twoDigitDecimalFormat.format(calendar.get(Calendar.SECOND));
+		String millisecond = twoDigitDecimalFormat.format(calendar.get(Calendar.MILLISECOND));
+		
+		StringBuilder stringBuilder = new StringBuilder();
+		
+		stringBuilder.append(year).append("-").append(month).append("-")
+				.append(day).append("-").append(hour).append("-")
+				.append(minute).append("-").append(second).append(millisecond);
+		
+		stringBuilder.append(".txt");
+		
+		return stringBuilder.toString();
+	}
+
+	private void showOpenLogDialog() {
+		
+		final List<String> filenames = SaveLogHelper.getLogFilenames();
+		
+		if (filenames.isEmpty()) {
+			Toast.makeText(this, R.string.no_saved_logs, Toast.LENGTH_SHORT).show();
+			return;
+		}
+		
+		ArrayAdapter<CharSequence> dropdownAdapter = new ArrayAdapter<CharSequence>(
+				this, R.layout.simple_spinner_dropdown_item_small, filenames.toArray(new CharSequence[filenames.size()]));
+		
+		Builder builder = new Builder(this);
+		
+		builder.setTitle(R.string.open_log)
+			.setCancelable(true)
+			.setSingleChoiceItems(dropdownAdapter, 0, new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+					openLog(filenames.get(which));
+					
+				}
+			});
+		
+		builder.show();
+		
+	}	
+	protected void openLog(String filename) {
+		
+		if (task != null && !task.isCancelled()) {
+			task.cancel(true);
+		}
+		
+		adapter.clear();
+		
+		List<String> logLines = SaveLogHelper.openLog(filename);
+		
+		for (String line : logLines) {
+			adapter.add(LogLine.newLogLine(line));
+		}
+		// scroll to bottom
+		getListView().setSelection(getListView().getCount());
+		
+	}
+
 	private void showLogLevelDialog() {
 	
 		Builder builder = new Builder(this);
@@ -155,7 +340,7 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 	}	
 	
 	private class LogReaderAsyncTask extends AsyncTask<Void,String,Void> {
-
+		
 		@Override
 		protected Void doInBackground(Void... params) {
 			log.d("doInBackground()");
@@ -173,7 +358,7 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 				
 				String line;
 				
-				while ((line = reader.readLine()) != null) {
+				while ((line = reader.readLine()) != null && !isCancelled()) {
 					publishProgress(line);
 					
 				} 
@@ -228,6 +413,7 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 		protected void onCancelled() {
 			super.onCancelled();
 			log.d("onCancelled()");
+			
 
 			
 		}
@@ -282,7 +468,7 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 			int visibleItemCount, int totalItemCount) {
 
 		// if the bottom of the list isn't visible anymore, then stop autoscrolling
-		autoscrollToBottom = firstVisibleItem + visibleItemCount == totalItemCount;
+		autoscrollToBottom = (firstVisibleItem + visibleItemCount == totalItemCount);
 		
 	}
 

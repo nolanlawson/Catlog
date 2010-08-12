@@ -3,5 +3,20 @@
 
 	<item android:id="@+id/menu_log_level" android:title="@string/log_level"
 		android:alphabeticShortcut="@string/log_level" android:icon="@drawable/ic_menu_sort_by_size" />
+		
+	<item android:id="@+id/menu_clear" android:title="@string/clear"
+		android:alphabeticShortcut="@string/clear" android:icon="@drawable/ic_menu_close_clear_cancel" />
+	
+	<item android:id="@+id/menu_send_log" android:title="@string/send_log"
+		android:alphabeticShortcut="@string/send_log" android:icon="@drawable/ic_menu_send" />
+						
+	<item android:id="@+id/menu_save_log" android:title="@string/save_log"
+		android:alphabeticShortcut="@string/save_log" android:icon="@drawable/ic_menu_save" />
+		
+	<item android:id="@+id/menu_open_log" android:title="@string/open_log"
+		android:alphabeticShortcut="@string/open_log" android:icon="@drawable/ic_menu_set_as" />
+		
+	<item android:id="@+id/menu_record_log" android:title="@string/record_log"
+		android:alphabeticShortcut="@string/record_log" android:icon="@drawable/ic_menu_record2" />
 
 </menu>

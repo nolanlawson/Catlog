@@ -2,15 +2,28 @@
 <resources>
     <string name="app_name">CatLog</string>
     <string name="main_edit_text_hint">Search logs</string>
-
+    
+    
+	<string name="save_log">Save Log</string>
 	<string name="log_level">Log Level</string>
+	<string name="open_log">Open Saved Log</string>
+	<string name="record_log">Record Log</string>
+	<string name="clear">Clear</string>
+	<string name="send_log">Send Log</string>
+	
 	<string name="log_level_verbose">Verbose</string>
 	<string name="log_level_debug">Debug</string>
 	<string name="log_level_info">Info</string>
 	<string name="log_level_warn">Warn</string>
 	<string name="log_level_error">Error</string>
 	<string name="log_level_wtf">What a Terrible Failure</string>
-
+	
+	<string name="no_saved_logs">No saved logs found.</string>
+	<string name="recording_in_progress">Recording already in progress.</string>
+	<string name="enter_good_filename">Please enter a valid filename.</string>
+	<string name="log_saved">Log saved to SD card.</string>
+	<string name="copy_to_clipboard">Copy to clipboard</string>
+	<string name="copied_to_clipboard">Copied to clipboard.</string>
 
 
 

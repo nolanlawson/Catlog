@@ -29,6 +29,7 @@ public class LogLineAdapterUtil {
 		R.color.tag_color_13,
 		R.color.tag_color_14,
 		R.color.tag_color_15,
+		R.color.tag_color_16,
 	};
 	private static int tagColorIndex = 0;
 	
