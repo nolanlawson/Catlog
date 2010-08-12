@@ -9,9 +9,6 @@
 		
 	<item android:id="@+id/menu_main_log" android:title="@string/main_log"
 		android:alphabeticShortcut="@string/main_log" android:icon="@drawable/ic_menu_play_clip" />
-			
-	<item android:id="@+id/menu_send_log" android:title="@string/send_log"
-		android:alphabeticShortcut="@string/send_log" android:icon="@drawable/ic_menu_send" />
 						
 	<item android:id="@+id/menu_save_log" android:title="@string/save_log"
 		android:alphabeticShortcut="@string/save_log" android:icon="@drawable/ic_menu_save" />
@@ -21,5 +18,13 @@
 		
 	<item android:id="@+id/menu_record_log" android:title="@string/record_log"
 		android:alphabeticShortcut="@string/record_log" android:icon="@drawable/ic_menu_record2" />
-
+		
+	<item android:id="@+id/menu_stop_recording_log" android:title="@string/stop_recording_log"
+		android:alphabeticShortcut="@string/stop_recording_log" android:icon="@drawable/ic_menu_stop" />
+	
+	<item android:id="@+id/menu_send_log" android:title="@string/send_log"
+		android:alphabeticShortcut="@string/send_log" android:icon="@drawable/ic_menu_send" />
+		
+	<item android:id="@+id/menu_about" android:title="@string/about"
+		android:alphabeticShortcut="@string/about" android:icon="@drawable/ic_menu_info_details" />
 </menu>

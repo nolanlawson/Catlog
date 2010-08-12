@@ -19,6 +19,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -27,6 +28,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
@@ -42,6 +44,7 @@ import android.widget.TextView.OnEditorActionListener;
 import com.nolanlawson.catlog.data.LogLine;
 import com.nolanlawson.catlog.data.LogLineAdapter;
 import com.nolanlawson.catlog.helper.SaveLogHelper;
+import com.nolanlawson.catlog.helper.ServiceHelper;
 import com.nolanlawson.catlog.util.UtilLogger;
 
 public class CatlogActivity extends ListActivity implements TextWatcher, OnScrollListener, FilterListener, OnEditorActionListener {
@@ -53,8 +56,7 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 	private LogReaderAsyncTask task;
 	
 	private boolean autoscrollToBottom = true;
-	
-	private int logLevelLimit = 0;
+
 	
 	private int currentlyOpenLog = -1;
 	
@@ -131,7 +133,11 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 	    	showSaveLogDialog();
 	    	return true;
 	    case R.id.menu_record_log:
+	    	startRecordingLog();
 	    	return true;
+	    case R.id.menu_stop_recording_log:
+	    	stopRecordingLog();
+	    	return true;	    	
 	    case R.id.menu_clear:
 	    	adapter.clear();
 	    	return true;
@@ -140,6 +146,9 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 	    	return true;
 	    case R.id.menu_main_log:
 	    	startUpMainLog();
+	    	return true;
+	    case R.id.menu_about:
+	    	startAboutActivity();
 	    	return true;
 	    	
 	    }
@@ -153,15 +162,72 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		boolean showingMainLog = (task != null && !task.isCancelled());
 		
-		menu.findItem(R.id.menu_clear).setEnabled(showingMainLog);
-		menu.findItem(R.id.menu_clear).setVisible(showingMainLog);
+		MenuItem clearMenuItem = menu.findItem(R.id.menu_clear);
+		MenuItem mainLogMenuItem = menu.findItem(R.id.menu_main_log);
 		
-		menu.findItem(R.id.menu_main_log).setEnabled(!showingMainLog);
-		menu.findItem(R.id.menu_main_log).setVisible(!showingMainLog);
+		clearMenuItem.setEnabled(showingMainLog);
+		clearMenuItem.setVisible(showingMainLog);
+		
+		mainLogMenuItem.setEnabled(!showingMainLog);
+		mainLogMenuItem.setVisible(!showingMainLog);
+		
+		boolean recordingInProgress = ServiceHelper.checkIfServiceIsRunning(getApplicationContext());
+	
+		MenuItem recordMenuItem = menu.findItem(R.id.menu_record_log);
+		MenuItem stopRecordingMenuItem = menu.findItem(R.id.menu_stop_recording_log);
+		
+		recordMenuItem.setEnabled(!recordingInProgress);
+		recordMenuItem.setVisible(!recordingInProgress);
+		
+		stopRecordingMenuItem.setEnabled(recordingInProgress);
+		stopRecordingMenuItem.setVisible(recordingInProgress);
+		
 		
 		return super.onPrepareOptionsMenu(menu);
 	}
 
+
+
+	private void startAboutActivity() {
+		
+		Intent intent = new Intent(this,AboutActivity.class);
+		
+		startActivity(intent);
+		
+	}
+	private void startRecordingLog() {
+		
+		final EditText editText = createEditTextForFilenameSuggestingDialog();
+		
+		OnClickListener onClickListener = new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				
+				if (TextUtils.isEmpty(editText.getText()) || editText.getText().toString().contains("/")) {
+					
+					Toast.makeText(CatlogActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
+				} else {
+					
+					String filename = editText.getText().toString();
+					ServiceHelper.startBackgroundServiceIfNotAlreadyRunning(getApplicationContext(), filename);
+					
+				}
+				
+				dialog.dismiss();
+				
+			}
+		};		
+		
+		showFilenameSuggestingDialog(editText, onClickListener, R.string.record_log);
+		
+	}
+	
+	private void stopRecordingLog() {
+		
+		ServiceHelper.stopBackgroundServiceIfRunning(getApplicationContext());
+		
+	}
 	private void sendLog() {
 		
 		String text = TextUtils.join("\n", getCurrentLogAsListOfStrings());
@@ -189,9 +255,57 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 	}
 
 	private void showSaveLogDialog() {
-		Builder builder = new Builder(this);
+		
+		final EditText editText = createEditTextForFilenameSuggestingDialog();
+		
+		OnClickListener onClickListener = new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				
+				int toastText;
+				
+				if (TextUtils.isEmpty(editText.getText()) || editText.getText().toString().contains("/")) {
+					toastText = R.string.enter_good_filename;
+				} else {
+					
+					boolean logSaved = saveLog(editText.getText().toString());
+					
+					toastText = logSaved ? R.string.log_saved : R.string.enter_good_filename;
+				}
+				
+				Toast.makeText(CatlogActivity.this, toastText, Toast.LENGTH_SHORT).show();
+				dialog.dismiss();
+				
+			}
+		};
+		
+		showFilenameSuggestingDialog(editText, onClickListener, R.string.save_log);
+	}
+
+	private EditText createEditTextForFilenameSuggestingDialog() {
 		
 		final EditText editText = new EditText(this);
+		editText.setSingleLine();
+		editText.setSingleLine(true);
+		editText.setInputType(InputType.TYPE_TEXT_VARIATION_FILTER);
+		editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+		editText.setOnEditorActionListener(new OnEditorActionListener() {
+			
+			@Override
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				
+				if (event != null && event.getAction() == KeyEvent.ACTION_DOWN) {
+					// dismiss soft keyboard
+					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+					return true;
+				}
+				
+				
+				return false;
+			}
+		});
 		
 		// create an initial filename to suggest to the user
 		String filename = createLogFilename();
@@ -200,36 +314,25 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 		// highlight everything but the .txt at the end
 		editText.setSelection(0, filename.length() - 4);
 		
-		builder.setTitle(R.string.save_log)
+		return editText;
+	}
+	
+	private void showFilenameSuggestingDialog(EditText editText, OnClickListener onClickListener, int titleResId) {
+		
+		Builder builder = new Builder(this);
+		
+		builder.setTitle(titleResId)
 			.setCancelable(true)
 			.setNegativeButton(android.R.string.cancel, null)
-			.setPositiveButton(android.R.string.ok, new OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					
-					int toastText;
-					
-					if (TextUtils.isEmpty(editText.getText()) || editText.getText().toString().contains("/")) {
-						toastText = R.string.enter_good_filename;
-					} else {
-						
-						boolean logSaved = saveLog(editText.getText().toString());
-						
-						toastText = logSaved ? R.string.log_saved : R.string.enter_good_filename;
-					}
-					
-					Toast.makeText(CatlogActivity.this, toastText, Toast.LENGTH_SHORT).show();
-					dialog.dismiss();
-					
-				}
-			})
+			.setPositiveButton(android.R.string.ok, onClickListener)
+			.setMessage(R.string.enter_filename)
 			.setView(editText);
 		
 		builder.show();
+		
 	}
 
-	protected boolean saveLog(String filename) {
+	private boolean saveLog(String filename) {
 		List<String> logLines = getCurrentLogAsListOfStrings();
 		
 		return SaveLogHelper.saveLog(logLines, filename);
@@ -317,8 +420,8 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 	}
 	
 	private void resetFilter() {
-		
-		logLevelLimit = 0;
+
+		adapter.setLogLevelLimit(0);
 		
 		// silently change edit text
 		searchEditText.removeTextChangedListener(this);
@@ -333,11 +436,11 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		builder.setTitle(R.string.log_level)
 			.setCancelable(true)
-			.setSingleChoiceItems(R.array.log_levels, logLevelLimit, new OnClickListener() {
+			.setSingleChoiceItems(R.array.log_levels, adapter.getLogLevelLimit(), new OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				logLevelLimit = which;
+				adapter.setLogLevelLimit(which);
 				logLevelChanged();
 				dialog.dismiss();
 				
@@ -540,7 +643,6 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 	}	
 	
 	private void logLevelChanged() {
-		adapter.setLogLevelLimit(logLevelLimit);
 		filter(searchEditText.getText());
 	}
 }

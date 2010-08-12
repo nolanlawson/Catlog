@@ -11,6 +11,8 @@
 	<string name="clear">Clear</string>
 	<string name="send_log">Send Log</string>
 	<string name="main_log">Play Main Log</string>
+	<string name="stop_recording_log">Stop Recording</string>
+	<string name="about">About</string>
 	
 	<string name="log_level_verbose">Verbose</string>
 	<string name="log_level_debug">Debug</string>
@@ -25,6 +27,13 @@
 	<string name="log_saved">Log saved to SD card.</string>
 	<string name="copy_to_clipboard">Copy to clipboard</string>
 	<string name="copied_to_clipboard">Copied to clipboard.</string>
+	<string name="enter_filename">Enter a filename to save to the SD card:</string>
+	
+	<string name="notification_title">Log recording in progress</string>
+	<string name="notification_ticker">Log recording started</string>
+	<string name="notification_subtext">Select to stop recording.</string>
+	
+	<string name="about_catlog">About CatLog</string>
 
 
 

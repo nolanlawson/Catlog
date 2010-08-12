@@ -10,9 +10,9 @@
 <color name="foreground_wtf">#FFFFFFFF</color>
 <color name="foreground_error">#FFFFFFFF</color>
 <color name="foreground_verbose">#FFCCCCCC</color>
-<color name="foreground_debug">#FF999999</color>
-<color name="foreground_info">#FF666666</color>
-<color name="foreground_warn">#FF999999</color>
+<color name="foreground_debug">#FFCCCCCC</color>
+<color name="foreground_info">#FF333333</color>
+<color name="foreground_warn">#FF333333</color>
 
 <color name="tag_color_01">#FFCC9900</color>
 <color name="tag_color_02">#FFCC0000</color>
