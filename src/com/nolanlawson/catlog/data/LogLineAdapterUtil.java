@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.nolanlawson.catlog.R;
+import com.nolanlawson.catlog.util.StringUtil;
 
 public class LogLineAdapterUtil {
 	
@@ -34,7 +35,7 @@ public class LogLineAdapterUtil {
 	private static int tagColorIndex = 0;
 	
 	// used to cycle through colors for each tag to make the UI more visually appealing
-	private static Map<String, Integer> tagsToColors = new HashMap<String, Integer>();
+	private static Map<Integer, Integer> tagsToColors = new HashMap<Integer, Integer>();
 	
 	
 	
@@ -97,11 +98,14 @@ public class LogLineAdapterUtil {
 			return context.getResources().getColor(android.R.color.black); // color doesn't matter in this case
 		}
 		
-		Integer result = tagsToColors.get(tag);
+		int hashedTag = hashStringToInt(tag);
+		
+		Integer result = tagsToColors.get(hashedTag);
 		
 		if (result == null) {
 			
-			Integer mustBeDifferentFrom = tagsToColors.get(mustBeDifferentFromTag);
+			Integer mustBeDifferentFrom = TextUtils.isEmpty(mustBeDifferentFromTag) 
+					? null : tagsToColors.get(hashStringToInt(mustBeDifferentFromTag));
 			
 			do {
 			
@@ -116,7 +120,7 @@ public class LogLineAdapterUtil {
 				
 			} while (mustBeDifferentFrom != null && result.equals(mustBeDifferentFrom));
 			
-			tagsToColors.put(tag, result);
+			tagsToColors.put(hashedTag, result);
 		}
 		
 		return context.getResources().getColor(result);
@@ -153,5 +157,13 @@ public class LogLineAdapterUtil {
 		
 		return minVal >= logLevelLimit;
 
+	}
+	
+	/*
+	 * This avoids using up additional memory in the hash map when we don't have to.
+	 * Appending the string to the reverse of itself makes the hash codes less likely to collide.
+	 */
+	private static int hashStringToInt(String str) {
+		return (str + StringUtil.reverse(str)).hashCode();
 	}
 }

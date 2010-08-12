@@ -183,4 +183,18 @@ public class StringUtil {
     	
     	return sb.toString();	
     }
+    
+    public static String reverse(String str) {
+    	
+    	int len = str.length();
+    	
+    	char[] result = new char[len];
+    	
+    	for (int i = 0; i < len; i++) {
+    		result[len - i - 1] = str.charAt(i);
+    	}
+    	
+    	return new String(result);
+    	
+    }
 }
