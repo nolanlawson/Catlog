@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<item android:id="@+id/menu_log_level" android:title="@string/log_level"
+		android:alphabeticShortcut="@string/log_level" android:icon="@drawable/ic_menu_sort_by_size" />
+
+</menu>

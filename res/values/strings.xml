@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Catlog</string>
+    <string name="app_name">CatLog</string>
     <string name="main_edit_text_hint">Search logs</string>
+
+	<string name="log_level">Log Level</string>
+	<string name="log_level_verbose">Verbose</string>
+	<string name="log_level_debug">Debug</string>
+	<string name="log_level_info">Info</string>
+	<string name="log_level_warn">Warn</string>
+	<string name="log_level_error">Error</string>
+	<string name="log_level_wtf">What a Terrible Failure</string>
+
+
+
+
+
+    
 </resources>

@@ -10,17 +10,18 @@
 
 	<TextView android:layout_width="0px" android:layout_height="wrap_content"
 		android:paddingRight="2dp" android:textSize="12sp" android:text="SomeActivity"
-		android:layout_weight="0.3" android:id="@+id/tag_text"
+		android:layout_weight="0.25" android:id="@+id/tag_text"
 		android:typeface="monospace" />
 
 	<TextView android:layout_width="0px" android:layout_weight="0.05"
 		android:layout_height="wrap_content" android:textSize="12sp"
-		android:paddingRight="2dp" android:text="D" android:id="@+id/log_level_text" 
+		android:text="D" android:id="@+id/log_level_text" 
 		android:gravity="center_horizontal"
 		android:typeface="monospace"/>
 
-	<TextView android:layout_width="0px" android:layout_weight="0.65"
+	<TextView android:layout_width="0px" android:layout_weight="0.7"
 		android:layout_height="wrap_content" android:textSize="12sp"
+		android:paddingLeft="2dp" 
 		android:text="Blah blah blah a bunch of output" android:paddingRight="2dp" android:id="@+id/log_output_text" 
 		android:typeface="monospace"/>
 

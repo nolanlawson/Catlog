@@ -103,6 +103,8 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
     private ArrayFilter mFilter;
 
     private LayoutInflater mInflater;
+    
+    private int logLevelLimit = 0;
 
 
 
@@ -337,8 +339,16 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
         return createViewFromResource(position, convertView, parent, mDropDownResource);
     }
 
+	public int getLogLevelLimit() {
+		return logLevelLimit;
+	}
 
-    /**
+
+	public void setLogLevelLimit(int logLevelLimit) {
+		this.logLevelLimit = logLevelLimit;
+	}
+
+	/**
      * {@inheritDoc}
      */
     public Filter getFilter() {
@@ -363,17 +373,27 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
                     mOriginalValues = new ArrayList<LogLine>(mObjects);
                 }
             }
-
+            
+            // search by log level
+            ArrayList<LogLine> allValues = new ArrayList<LogLine>(mOriginalValues.size());
+            
+            for (LogLine logLine : new ArrayList<LogLine>(mOriginalValues)) {
+            	if (LogLineAdapterUtil.logLevelIsAcceptableGivenLogLevelLimit(logLine.getLogLevel(), logLevelLimit)) {
+            		allValues.add(logLine);
+            	}
+            }
+            
+            // search by prefix
             if (prefix == null || prefix.length() == 0) {
                 synchronized (mLock) {
-                    ArrayList<LogLine> list = new ArrayList<LogLine>(mOriginalValues);
+                    ArrayList<LogLine> list = allValues;
                     results.values = list;
                     results.count = list.size();
                 }
             } else {
                 String prefixString = prefix.toString().toLowerCase();
 
-                final ArrayList<LogLine> values = mOriginalValues;
+                final ArrayList<LogLine> values = allValues;
                 final int count = values.size();
 
                 final ArrayList<LogLine> newValues = new ArrayList<LogLine>(count);
@@ -391,6 +411,9 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
                 results.values = newValues;
                 results.count = newValues.size();
             }
+            
+
+            
 
             // sort here to ensure that filtering the list doesn't mess up the sorting
             if (mComparator != null) {

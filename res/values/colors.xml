@@ -1,11 +1,13 @@
 <resources>
 
+<color name="background_wtf">#FF999900</color>
 <color name="background_error">#FFCC0000</color>
 <color name="background_verbose">#FF666666</color>
 <color name="background_debug">#FF0066CC</color>
 <color name="background_info">#FF00CC00</color>
 <color name="background_warn">#FFFFFF00</color>
 
+<color name="foreground_wtf">#FFFFFFFF</color>
 <color name="foreground_error">#FFFFFFFF</color>
 <color name="foreground_verbose">#FFCCCCCC</color>
 <color name="foreground_debug">#FF999999</color>

@@ -1,0 +1,10 @@
+<resources>
+	<string-array name="log_levels">
+		<item>@string/log_level_verbose</item>
+		<item>@string/log_level_debug</item>
+		<item>@string/log_level_info</item>
+		<item>@string/log_level_warn</item>
+		<item>@string/log_level_error</item>
+		<item>@string/log_level_wtf</item>
+	</string-array>
+</resources>

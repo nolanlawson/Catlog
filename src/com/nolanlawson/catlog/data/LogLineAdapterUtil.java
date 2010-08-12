@@ -10,7 +10,9 @@ import android.util.Log;
 import com.nolanlawson.catlog.R;
 
 public class LogLineAdapterUtil {
-
+	
+	public static final int LOG_WTF = 100; // arbitrary int to signify 'wtf' log level
+	
 	private static final int[] TAG_COLORS = new int[]{
 		R.color.tag_color_01,
 		R.color.tag_color_02,
@@ -53,8 +55,13 @@ public class LogLineAdapterUtil {
 		case Log.WARN:
 			result = R.color.background_warn;
 			break;
-		}
-		// TODO: wtf log level in 2.2	
+		case LOG_WTF:
+			result = R.color.background_wtf;
+			break;
+		}	
+
+
+
 		return context.getResources().getColor(result);
 	}
 
@@ -76,8 +83,10 @@ public class LogLineAdapterUtil {
 		case Log.WARN:
 			result = R.color.foreground_warn;
 			break;
+		case LOG_WTF:
+			result = R.color.foreground_wtf;
+			break;
 		}
-		// TODO: wtf log level in 2.2	
 		return context.getResources().getColor(result);
 	}	
 	
@@ -112,5 +121,36 @@ public class LogLineAdapterUtil {
 		return context.getResources().getColor(result);
 		
 		
+	}
+	
+	public static boolean logLevelIsAcceptableGivenLogLevelLimit(int logLevel, int logLevelLimit) {
+			
+		int minVal = 0;
+		switch (logLevel) {
+			
+			case Log.VERBOSE:
+				minVal = 0;
+				break;
+			case Log.DEBUG:
+				minVal = 1;
+				break;
+			case Log.INFO:
+				minVal = 2;
+				break;
+			case Log.WARN:
+				minVal = 3;
+				break;
+			case Log.ERROR:
+				minVal = 4;
+				break;
+			case LOG_WTF:
+				minVal = 5;
+				break;
+			default: // e.g. the starting line that says "output of log such-and-such"
+				return true;
+		}
+		
+		return minVal >= logLevelLimit;
+
 	}
 }

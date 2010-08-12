@@ -6,12 +6,18 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import android.app.ListActivity;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -37,6 +43,8 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 	private LogReaderAsyncTask task;
 	
 	private boolean autoscrollToBottom = true;
+	
+	private int logLevelLimit = 0;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,8 +86,55 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
     	}
     }
 
+    
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.main_menu, menu);
+	    
+	    return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		
+	    switch (item.getItemId()) {
+	    case R.id.menu_log_level:
+	    	showLogLevelDialog();
+	    	return true;
+	    }
+	    return false;
+	}
 
 
+
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		return super.onPrepareOptionsMenu(menu);
+	}
+	
+	private void showLogLevelDialog() {
+	
+		Builder builder = new Builder(this);
+		
+		builder.setTitle(R.string.log_level)
+			.setCancelable(true)
+			.setSingleChoiceItems(R.array.log_levels, logLevelLimit, new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				logLevelLimit = which;
+				logLevelChanged();
+				dialog.dismiss();
+				
+			}
+		});
+		
+		builder.show();
+		
+	}
+	
 	private void setUpWidgets() {
 		searchEditText = (EditText) findViewById(R.id.main_edit_text);
 		searchEditText.addTextChangedListener(this);
@@ -210,6 +265,12 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		log.d("filtering: %s", filterText);
 		
+		filter(filterText);
+		
+	}
+
+	private void filter(CharSequence filterText) {
+		
 		Filter filter = adapter.getFilter();
 
 		filter.filter(filterText, this);
@@ -222,7 +283,6 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 
 		// if the bottom of the list isn't visible anymore, then stop autoscrolling
 		autoscrollToBottom = firstVisibleItem + visibleItemCount == totalItemCount;
-		
 		
 	}
 
@@ -259,4 +319,9 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		return false;
 	}	
+	
+	private void logLevelChanged() {
+		adapter.setLogLevelLimit(logLevelLimit);
+		filter(searchEditText.getText());
+	}
 }

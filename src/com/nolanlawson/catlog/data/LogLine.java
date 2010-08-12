@@ -81,7 +81,7 @@ public class LogLine {
 			
 			
 		} else {
-			log.e("Line doesn't match pattern: " + originalLine);
+			log.d("Line doesn't match pattern: " + originalLine);
 			logLine.setLogOutput(originalLine);
 			logLine.setLogLevel(-1);
 		}
@@ -108,8 +108,10 @@ public class LogLine {
 		case 'W':
 			logLevel = Log.WARN;
 			break;
+		case 'F':
+			logLevel = LogLineAdapterUtil.LOG_WTF; // 'F' actually stands for 'WTF', which is a real Android log level in 2.2
+			break;
 		}
-		// TODO: wtf log level in 2.2
 		return logLevel;
 	}
 	
@@ -132,8 +134,9 @@ public class LogLine {
 		case Log.WARN:
 			result = 'W';
 			break;
+		case LogLineAdapterUtil.LOG_WTF:
+			result = 'F';
 		}
-		// TODO: wtf log level in 2.2
 		return result;
 	}	
 }
