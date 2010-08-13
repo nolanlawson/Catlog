@@ -2,24 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="fill_parent" android:gravity="center_horizontal">
-	
-	<EditText android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:id="@+id/main_edit_text"
-		android:singleLine="true" android:imeOptions="actionSearch"
-		android:inputType="textFilter" android:hint="@string/main_edit_text_hint" />
-		
+
+	<LinearLayout android:orientation="vertical"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:gravity="center_horizontal" android:paddingLeft="2dp"
+		android:paddingRight="2dp" android:paddingTop="2dp">
+
+		<EditText android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:id="@+id/main_edit_text"
+			android:singleLine="true" android:imeOptions="actionSearch"
+			android:inputType="textFilter" android:hint="@string/main_edit_text_hint" />
+
+	</LinearLayout>
+
 	<ProgressBar android:id="@+id/main_progress_bar"
-		        android:layout_width="wrap_content" 
-		        android:layout_height="wrap_content"   
-		        android:indeterminate="true"
-		        />
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:indeterminate="true" />
 
 	<ListView android:layout_width="fill_parent"
 		android:layout_height="0px" android:layout_weight="1.0" android:id="@android:id/list"
-		android:paddingBottom="2dp" android:paddingTop="3dp"
-		android:cacheColorHint="#00000000" 
-		android:divider="#00000000"
-		
-            android:dividerHeight="0px"/>
+		android:paddingBottom="2dp" android:paddingTop="1dp"
+		android:cacheColorHint="#00000000" android:divider="#00000000"
+
+		android:dividerHeight="0px" />
 
 </LinearLayout>
