@@ -118,7 +118,9 @@ public class LogLineAdapterUtil {
 					tagColorIndex++;
 				}
 				
-			} while (mustBeDifferentFrom != null && result.equals(mustBeDifferentFrom));
+			} while (mustBeDifferentFrom != null 
+					&& !tag.equals(mustBeDifferentFromTag) 
+					&& result.equals(mustBeDifferentFrom));
 			
 			tagsToColors.put(hashedTag, result);
 		}
