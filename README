@@ -1,10 +1,10 @@
-Debug your applications. Find error stacktraces. See what your phone is saying about you behind your back. It's all there in the system log, aka Logcat!
+Debug your applications. Find error stacktraces. See what your phone is saying about you behind your back. It's all there in the system log!
 
-App features:
+Features:
 
- - Search logs by keyword and log level
+ - Filter by keyword/log level
  - Record logs in the background
- - Save & open logs
+ - Save & open from SD card
  - Send logs via email
- - Automatically pauses when scrolling
+ - Auto-pause when scrolling
  - Pretty colors
