@@ -690,7 +690,7 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 					logcatProcess.destroy();
 				}
 
-				log.i("AsyncTask has died");
+				log.d("AsyncTask has died");
 
 			}
 			
