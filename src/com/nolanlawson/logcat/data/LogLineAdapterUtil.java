@@ -1,4 +1,4 @@
-package com.nolanlawson.catlog.data;
+package com.nolanlawson.logcat.data;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,8 +7,8 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.nolanlawson.catlog.R;
-import com.nolanlawson.catlog.util.StringUtil;
+import com.nolanlawson.logcat.R;
+import com.nolanlawson.logcat.util.StringUtil;
 
 public class LogLineAdapterUtil {
 	

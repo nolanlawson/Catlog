@@ -1,4 +1,4 @@
-package com.nolanlawson.catlog.helper;
+package com.nolanlawson.logcat.helper;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,7 +16,7 @@ import java.util.List;
 
 import android.os.Environment;
 
-import com.nolanlawson.catlog.util.UtilLogger;
+import com.nolanlawson.logcat.util.UtilLogger;
 
 public class SaveLogHelper {
 

@@ -1,4 +1,4 @@
-package com.nolanlawson.catlog.helper;
+package com.nolanlawson.logcat.helper;
 
 import android.content.Context;
 import android.graphics.Bitmap;

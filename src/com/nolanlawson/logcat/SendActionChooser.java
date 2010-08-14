@@ -1,5 +1,5 @@
 
-package com.nolanlawson.catlog;
+package com.nolanlawson.logcat;
  
 import java.util.Collections;
 import java.util.List;
@@ -22,8 +22,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.nolanlawson.catlog.helper.BitmapHelper;
-import com.nolanlawson.catlog.util.UtilLogger;
+import com.nolanlawson.logcat.helper.BitmapHelper;
+import com.nolanlawson.logcat.util.UtilLogger;
  
 public class SendActionChooser extends ListActivity {
 	

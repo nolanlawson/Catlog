@@ -1,4 +1,4 @@
-package com.nolanlawson.catlog;
+package com.nolanlawson.logcat;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,7 +19,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-import com.nolanlawson.catlog.util.UtilLogger;
+import com.nolanlawson.logcat.util.UtilLogger;
 
 public class AboutActivity extends Activity implements OnClickListener {
 	

@@ -1,4 +1,4 @@
-package com.nolanlawson.catlog;
+package com.nolanlawson.logcat;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,9 +22,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
-import com.nolanlawson.catlog.helper.SaveLogHelper;
-import com.nolanlawson.catlog.helper.ServiceHelper;
-import com.nolanlawson.catlog.util.UtilLogger;
+import com.nolanlawson.logcat.helper.SaveLogHelper;
+import com.nolanlawson.logcat.helper.ServiceHelper;
+import com.nolanlawson.logcat.util.UtilLogger;
 
 /**
  * Reads logs.

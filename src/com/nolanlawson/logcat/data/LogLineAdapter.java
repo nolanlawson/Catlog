@@ -16,7 +16,7 @@
  * stolen almost completely from ArrayAdapter.java - nolan
  */
 
-package com.nolanlawson.catlog.data;
+package com.nolanlawson.logcat.data;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,8 +34,8 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.nolanlawson.catlog.R;
-import com.nolanlawson.catlog.util.UtilLogger;
+import com.nolanlawson.logcat.R;
+import com.nolanlawson.logcat.util.UtilLogger;
 
 /**
  * A ListAdapter that manages a ListView backed by an array of arbitrary

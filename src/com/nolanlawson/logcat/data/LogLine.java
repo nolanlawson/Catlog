@@ -1,11 +1,11 @@
-package com.nolanlawson.catlog.data;
+package com.nolanlawson.logcat.data;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.util.Log;
 
-import com.nolanlawson.catlog.util.UtilLogger;
+import com.nolanlawson.logcat.util.UtilLogger;
 
 
 public class LogLine {

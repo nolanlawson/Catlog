@@ -1,4 +1,4 @@
-package com.nolanlawson.catlog;
+package com.nolanlawson.logcat;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,11 +43,11 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.Filter.FilterListener;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.nolanlawson.catlog.data.LogLine;
-import com.nolanlawson.catlog.data.LogLineAdapter;
-import com.nolanlawson.catlog.helper.SaveLogHelper;
-import com.nolanlawson.catlog.helper.ServiceHelper;
-import com.nolanlawson.catlog.util.UtilLogger;
+import com.nolanlawson.logcat.data.LogLine;
+import com.nolanlawson.logcat.data.LogLineAdapter;
+import com.nolanlawson.logcat.helper.SaveLogHelper;
+import com.nolanlawson.logcat.helper.ServiceHelper;
+import com.nolanlawson.logcat.util.UtilLogger;
 
 public class LogcatActivity extends ListActivity implements TextWatcher, OnScrollListener, FilterListener, OnEditorActionListener {
 	
@@ -58,6 +58,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	private LogLineAdapter adapter;
 	private LogReaderAsyncTask task;
 	
+	private int firstVisibleItem = -1;
 	private boolean autoscrollToBottom = true;
 	private boolean collapsedMode = true;
 	
@@ -212,11 +213,27 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		collapsedMode = !expanded;
 		
+		int oldFirstVisibleItem = firstVisibleItem;
+		
 		for (LogLine logLine : adapter.getTrueValues()) {
 			logLine.setExpanded(expanded);
 		}
 		
 		adapter.notifyDataSetChanged();
+		
+		// ensure that we either stay autoscrolling at the bottom of the list...
+		
+		if (autoscrollToBottom) {
+			
+			getListView().setSelection(getListView().getCount());
+			
+		// ... or that whatever was the previous first visible item is still the current first 
+		// visible item after expanding/collapsing
+			
+		} else if (oldFirstVisibleItem != -1) {
+			
+			getListView().setSelection(oldFirstVisibleItem);
+		}
 		
 		
 	}
@@ -815,6 +832,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {
 
+		// update what the first viewable item is
+		this.firstVisibleItem = firstVisibleItem;
+		
 		// if the bottom of the list isn't visible anymore, then stop autoscrolling
 		autoscrollToBottom = (firstVisibleItem + visibleItemCount == totalItemCount);
 		

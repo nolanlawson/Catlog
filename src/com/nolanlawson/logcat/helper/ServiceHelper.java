@@ -1,4 +1,4 @@
-package com.nolanlawson.catlog.helper;
+package com.nolanlawson.logcat.helper;
 
 import java.util.List;
 
@@ -7,8 +7,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 
-import com.nolanlawson.catlog.LogcatRecordingService;
-import com.nolanlawson.catlog.util.UtilLogger;
+import com.nolanlawson.logcat.LogcatRecordingService;
+import com.nolanlawson.logcat.util.UtilLogger;
 
 public class ServiceHelper {
 

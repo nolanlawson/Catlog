@@ -1,4 +1,4 @@
-package com.nolanlawson.catlog.util;
+package com.nolanlawson.logcat.util;
 
 import java.util.ArrayList;
 import java.util.List;
