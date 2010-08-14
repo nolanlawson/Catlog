@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">CatLog</string>
+    <string name="app_name">Logcat Reader</string>
     <string name="main_edit_text_hint">Search logs</string>
     
     
@@ -15,6 +15,8 @@
 	<string name="about">About</string>
 	<string name="delete_saved_log">Delete Saved Logs</string>
 	<string name="manage_saved_logs">Manage Saved Logs</string>
+	<string name="expand_all">Expand All</string>
+	<string name="collapse_all">Collapse All</string>
 	
 	<string name="log_level_verbose">Verbose</string>
 	<string name="log_level_debug">Debug</string>
@@ -42,7 +44,7 @@
 	<string name="notification_ticker">Log recording started</string>
 	<string name="notification_subtext">Select to stop recording.</string>
 	
-	<string name="about_catlog">About CatLog</string>
+	<string name="about_catlog">About Logcat Reader</string>
 
 
 

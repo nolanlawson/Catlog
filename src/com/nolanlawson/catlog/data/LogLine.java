@@ -62,12 +62,13 @@ public class LogLine {
 	public void setExpanded(boolean expanded) {
 		this.expanded = expanded;
 	}
-	public static LogLine newLogLine(String originalLine) {
+	public static LogLine newLogLine(String originalLine, boolean expanded) {
 		
 		//log.d("originalLine is: " + originalLine);
 		
 		LogLine logLine = new LogLine();
 		logLine.setOriginalLine(originalLine);
+		logLine.setExpanded(expanded);
 		
 		Matcher matcher = logPattern.matcher(originalLine);
 		

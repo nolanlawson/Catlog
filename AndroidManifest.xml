@@ -3,7 +3,7 @@
 	package="com.nolanlawson.catlog" android:versionCode="1"
 	android:versionName="1.0" android:installLocation="auto">
 	<application android:icon="@drawable/icon" android:label="@string/app_name">
-		<activity android:name=".CatlogActivity" android:label="@string/app_name"
+		<activity android:name=".LogcatActivity" android:label="@string/app_name"
 			android:configChanges="keyboard|keyboardHidden|orientation">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
@@ -17,7 +17,7 @@
 		
 		<activity android:name=".AboutActivity" android:theme="@android:style/Theme.Dialog" />
 
-		<service android:name=".CatlogRecordingService" />
+		<service android:name=".LogcatRecordingService" />
 
 	</application>
 

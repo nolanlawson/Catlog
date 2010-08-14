@@ -286,6 +286,10 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
     public LogLine getItem(int position) {
         return mObjects.get(position);
     }
+    
+    public List<LogLine> getTrueValues() {
+    	return new ArrayList<LogLine>(mOriginalValues != null ? mOriginalValues : mObjects);
+    }
 
     /**
      * Returns the position of the specified item in the array.

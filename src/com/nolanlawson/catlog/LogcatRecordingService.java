@@ -32,7 +32,7 @@ import com.nolanlawson.catlog.util.UtilLogger;
  * @author nolan
  * 
  */
-public class CatlogRecordingService extends IntentService {
+public class LogcatRecordingService extends IntentService {
 
 	private static final Class<?>[] mStartForegroundSignature = new Class[] {
 	    int.class, Notification.class};
@@ -42,7 +42,7 @@ public class CatlogRecordingService extends IntentService {
 	private static final String ACTION_STOP_RECORDING = "com.nolanlawson.catlog.action.STOP_RECORDING";
 	public static final String URI_SCHEME = "catlog_recording_service";
 	
-	private static UtilLogger log = new UtilLogger(CatlogRecordingService.class);
+	private static UtilLogger log = new UtilLogger(LogcatRecordingService.class);
 
 	private boolean kill = false;
 
@@ -68,7 +68,7 @@ public class CatlogRecordingService extends IntentService {
 	private Handler handler;
 
 
-	public CatlogRecordingService() {
+	public LogcatRecordingService() {
 		super("AppTrackerService");
 	}
 	
@@ -287,7 +287,7 @@ public class CatlogRecordingService extends IntentService {
 			@Override
 			public void run() {
 				
-				Toast.makeText(CatlogRecordingService.this, stringResId, Toast.LENGTH_LONG).show();
+				Toast.makeText(LogcatRecordingService.this, stringResId, Toast.LENGTH_LONG).show();
 				
 			}
 		});

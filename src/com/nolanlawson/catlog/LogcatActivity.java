@@ -49,9 +49,9 @@ import com.nolanlawson.catlog.helper.SaveLogHelper;
 import com.nolanlawson.catlog.helper.ServiceHelper;
 import com.nolanlawson.catlog.util.UtilLogger;
 
-public class CatlogActivity extends ListActivity implements TextWatcher, OnScrollListener, FilterListener, OnEditorActionListener {
+public class LogcatActivity extends ListActivity implements TextWatcher, OnScrollListener, FilterListener, OnEditorActionListener {
 	
-	private static UtilLogger log = new UtilLogger(CatlogActivity.class);
+	private static UtilLogger log = new UtilLogger(LogcatActivity.class);
 	
 	private EditText searchEditText;
 	private ProgressBar progressBar;
@@ -59,7 +59,7 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 	private LogReaderAsyncTask task;
 	
 	private boolean autoscrollToBottom = true;
-
+	private boolean collapsedMode = true;
 	
 	private String currentlyOpenLog = null;
 	
@@ -156,11 +156,16 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 	    case R.id.menu_delete_saved_log:
 	    	startDeleteSavedLogsDialog();
 	    	return true;
+	    case R.id.menu_expand_all:
+	    	expandOrCollapseAll(true);
+	    	return true;
+	    case R.id.menu_collapse_all:
+	    	expandOrCollapseAll(false);
+	    	return true;
 	    	
 	    }
 	    return false;
 	}
-
 
 
 	@Override
@@ -188,12 +193,34 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 		stopRecordingMenuItem.setEnabled(recordingInProgress);
 		stopRecordingMenuItem.setVisible(recordingInProgress);
 		
+		MenuItem expandAllMenuItem = menu.findItem(R.id.menu_expand_all);
+		MenuItem collapseAllMenuItem = menu.findItem(R.id.menu_collapse_all);
+		
+		expandAllMenuItem.setEnabled(collapsedMode);
+		expandAllMenuItem.setVisible(collapsedMode);
+		
+		collapseAllMenuItem.setEnabled(!collapsedMode);
+		collapseAllMenuItem.setVisible(!collapsedMode);
+		
 		
 		return super.onPrepareOptionsMenu(menu);
 	}
 
 
 
+	private void expandOrCollapseAll(boolean expanded) {
+		
+		collapsedMode = !expanded;
+		
+		for (LogLine logLine : adapter.getTrueValues()) {
+			logLine.setExpanded(expanded);
+		}
+		
+		adapter.notifyDataSetChanged();
+		
+		
+	}
+	
 	private void startDeleteSavedLogsDialog() {
 		
 		if (!checkSdCard()) {
@@ -210,7 +237,7 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 		final CharSequence[] filenameArray = filenames.toArray(new CharSequence[filenames.size()]);
 		final boolean[] checkedItems = new boolean[filenames.size()];
 		
-		final TextView messageTextView = new TextView(CatlogActivity.this);
+		final TextView messageTextView = new TextView(LogcatActivity.this);
 		messageTextView.setText(R.string.select_logs_to_delete);
 		messageTextView.setPadding(3, 3, 3, 3);
 		
@@ -290,7 +317,7 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 					}
 					
 					String toastText = String.format(getText(R.string.files_deleted).toString(), finalDeleteCount);
-					Toast.makeText(CatlogActivity.this, toastText, Toast.LENGTH_SHORT).show();
+					Toast.makeText(LogcatActivity.this, toastText, Toast.LENGTH_SHORT).show();
 					
 					dialog.dismiss();
 					parentDialog.dismiss();
@@ -336,7 +363,7 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 				
 				if (isInvalidFilename(editText.getText())) {
 					
-					Toast.makeText(CatlogActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
+					Toast.makeText(LogcatActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
 				} else {
 					
 					String filename = editText.getText().toString();
@@ -399,7 +426,7 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 
 				
 				if (isInvalidFilename(editText.getText())) {
-					Toast.makeText(CatlogActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
+					Toast.makeText(LogcatActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
 				} else {
 					
 					saveLog(editText.getText().toString());
@@ -580,22 +607,27 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 			task.cancel(true);
 		}
 		
-		adapter.clear();
-		
-		currentlyOpenLog = filename;
-		
-		resetFilter();
+		resetDisplayedLog(filename);
 		
 		List<String> logLines = SaveLogHelper.openLog(filename);
 		
 		for (String line : logLines) {
-			adapter.add(LogLine.newLogLine(line));
+			adapter.add(LogLine.newLogLine(line, !collapsedMode));
 		}
 		// scroll to bottom
 		getListView().setSelection(getListView().getCount());
 		
 	}
 	
+	private void resetDisplayedLog(String filename) {
+		
+		adapter.clear();
+		currentlyOpenLog = filename;
+		collapsedMode = true;
+		resetFilter();
+		
+	}
+
 	private void resetFilter() {
 
 		adapter.setLogLevelLimit(0);
@@ -708,9 +740,7 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 			super.onPreExecute();
 			log.d("onPreExecute()");
 			
-	    	currentlyOpenLog = null;
-	    	adapter.clear();
-	    	resetFilter();
+			resetDisplayedLog(null);
 
 		}
 
@@ -719,7 +749,7 @@ public class CatlogActivity extends ListActivity implements TextWatcher, OnScrol
 			super.onProgressUpdate(values);
 
 			progressBar.setVisibility(View.GONE);
-			adapter.addWithFilter(LogLine.newLogLine(values[0]), searchEditText.getText());
+			adapter.addWithFilter(LogLine.newLogLine(values[0], !collapsedMode), searchEditText.getText());
 			
 			if (autoscrollToBottom) {
 				getListView().setSelection(getListView().getCount());

@@ -7,7 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 
-import com.nolanlawson.catlog.CatlogRecordingService;
+import com.nolanlawson.catlog.LogcatRecordingService;
 import com.nolanlawson.catlog.util.UtilLogger;
 
 public class ServiceHelper {
@@ -20,7 +20,7 @@ public class ServiceHelper {
 		log.d("Is CatlogService running: %s", alreadyRunning);
 		
 		if (alreadyRunning) {
-			Intent intent = new Intent(context, CatlogRecordingService.class);
+			Intent intent = new Intent(context, LogcatRecordingService.class);
 			context.stopService(intent);
 		}
 		
@@ -35,7 +35,7 @@ public class ServiceHelper {
 		
 		if (!alreadyRunning) {
 
-			Intent intent = new Intent(context, CatlogRecordingService.class);
+			Intent intent = new Intent(context, LogcatRecordingService.class);
 			intent.putExtra("filename", filename);
 			context.startService(intent);
 		}
@@ -43,7 +43,7 @@ public class ServiceHelper {
 	
 	public static boolean checkIfServiceIsRunning(Context context) {
 		
-		String serviceName = CatlogRecordingService.class.getName();
+		String serviceName = LogcatRecordingService.class.getName();
 		
 		ComponentName componentName = new ComponentName(context.getPackageName(), serviceName);
 		
