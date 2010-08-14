@@ -85,8 +85,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     	super.onResume();
     	
     }
-    
-    private void startUpMainLog() {
+
+	private void startUpMainLog() {
     	
     	if (task != null && !task.isCancelled()) {
     		task.cancel(true);
@@ -820,6 +820,22 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 	}
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)  {
+		
+	    if (keyCode == KeyEvent.KEYCODE_SEARCH && event.getRepeatCount() == 0 ) {
+	    	
+	    	// show keyboard
+	    	
+	    	searchEditText.requestFocus();
+			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.showSoftInput(searchEditText, 0);
+			
+	    	return true;
+	    }
+	    return super.onKeyDown(keyCode, event);
+	}
+	
 	private void filter(CharSequence filterText) {
 		
 		Filter filter = adapter.getFilter();
