@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Logcat Reader</string>
+    <string name="app_name">CatLog</string>
     <string name="main_edit_text_hint">Search logs</string>
     
     
@@ -44,7 +44,7 @@
 	<string name="notification_ticker">Log recording started</string>
 	<string name="notification_subtext">Select to stop recording.</string>
 	
-	<string name="about_catlog">About Logcat Reader</string>
+	<string name="about_catlog">About CatLog</string>
 
 
 
