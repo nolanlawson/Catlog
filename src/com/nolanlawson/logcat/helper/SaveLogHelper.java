@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import android.os.Environment;
@@ -40,6 +41,21 @@ public class SaveLogHelper {
 			file.delete();
 		}
 		
+	}
+	
+	public static Date getLastModifiedDate(String filename) {
+		
+		File catlogDir = getCatlogDirectory();
+		
+		File file = new File(catlogDir, filename);
+		
+		if (file.exists()) {
+			return new Date(file.lastModified());
+		} else {
+			// shouldn't happen
+			log.e("file last modified date not found: %s", filename);
+			return new Date();
+		}
 	}
 	
 	/**

@@ -43,6 +43,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.Filter.FilterListener;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.nolanlawson.logcat.data.LogFileAdapter;
 import com.nolanlawson.logcat.data.LogLine;
 import com.nolanlawson.logcat.data.LogLineAdapter;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
@@ -244,7 +245,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			return;
 		}
 		
-		List<String> filenames = SaveLogHelper.getLogFilenames();
+		List<CharSequence> filenames = new ArrayList<CharSequence>(SaveLogHelper.getLogFilenames());
 		
 		if (filenames.isEmpty()) {
 			Toast.makeText(this, R.string.no_saved_logs, Toast.LENGTH_SHORT).show();
@@ -252,7 +253,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		}
 		
 		final CharSequence[] filenameArray = filenames.toArray(new CharSequence[filenames.size()]);
-		final boolean[] checkedItems = new boolean[filenames.size()];
+		
+		final LogFileAdapter dropdownAdapter = new LogFileAdapter(
+				this, filenames, -1, true);
 		
 		final TextView messageTextView = new TextView(LogcatActivity.this);
 		messageTextView.setText(R.string.select_logs_to_delete);
@@ -267,7 +270,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					boolean[] allChecked = new boolean[checkedItems.length];
+					boolean[] allChecked = new boolean[dropdownAdapter.getCount()];
 					
 					for (int i = 0; i < allChecked.length; i++) {
 						allChecked[i] = true;
@@ -281,17 +284,16 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					
-					verifyDelete(filenameArray, checkedItems, dialog);
+					verifyDelete(filenameArray, dropdownAdapter.getCheckedItems(), dialog);
 					
 				}
 			})
 			.setView(messageTextView)
-			.setMultiChoiceItems(filenameArray, checkedItems, 
-					new OnMultiChoiceClickListener() {
+			.setSingleChoiceItems(dropdownAdapter, 0, new OnClickListener() {
 				
 				@Override
-				public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-					checkedItems[which] = isChecked;
+				public void onClick(DialogInterface dialog, int which) {
+					dropdownAdapter.checkOrUncheck(which);
 					
 				}
 			});
@@ -584,32 +586,30 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			return;
 		}
 		
-		final List<String> filenames = SaveLogHelper.getLogFilenames();
+		final List<CharSequence> filenames = new ArrayList<CharSequence>(SaveLogHelper.getLogFilenames());
 		
 		if (filenames.isEmpty()) {
 			Toast.makeText(this, R.string.no_saved_logs, Toast.LENGTH_SHORT).show();
 			return;
 		}
 		
-		ArrayAdapter<CharSequence> dropdownAdapter = new ArrayAdapter<CharSequence>(
-				this, R.layout.simple_spinner_dropdown_item_small, filenames.toArray(new CharSequence[filenames.size()]));
+
+		
+		int logToSelect = currentlyOpenLog != null ? filenames.indexOf(currentlyOpenLog) : -1;
+		
+		ArrayAdapter<CharSequence> dropdownAdapter = new LogFileAdapter(
+				this, filenames, logToSelect, false);
 		
 		Builder builder = new Builder(this);
 		
-		int logToSelect = currentlyOpenLog != null ? filenames.indexOf(currentlyOpenLog) : 0;
-		
-		if (logToSelect == -1) {
-			logToSelect = 0;
-		}
-		
 		builder.setTitle(R.string.open_log)
 			.setCancelable(true)
-			.setSingleChoiceItems(dropdownAdapter, logToSelect, new OnClickListener() {
+			.setSingleChoiceItems(dropdownAdapter, logToSelect == -1 ? 0 : logToSelect, new OnClickListener() {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					dialog.dismiss();
-					String filename = filenames.get(which);
+					String filename = filenames.get(which).toString();
 					openLog(filename);
 					
 				}
