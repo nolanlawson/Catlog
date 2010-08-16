@@ -31,17 +31,6 @@ public class LogLineAdapterUtil {
 		R.color.tag_color_15,
 		R.color.tag_color_16,
 		R.color.tag_color_17,
-		R.color.tag_color_18,
-		R.color.tag_color_19,
-		R.color.tag_color_20,
-		R.color.tag_color_21,
-		R.color.tag_color_22,
-		R.color.tag_color_23,
-		R.color.tag_color_24,
-		R.color.tag_color_25,
-		R.color.tag_color_26,
-		R.color.tag_color_27,
-		R.color.tag_color_28,
 		
 	};
 	private static int tagColorIndex = 0;
