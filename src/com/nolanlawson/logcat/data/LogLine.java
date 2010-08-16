@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 import android.util.Log;
 
+import com.nolanlawson.logcat.util.LogLineAdapterUtil;
 import com.nolanlawson.logcat.util.UtilLogger;
 
 

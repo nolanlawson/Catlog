@@ -35,6 +35,7 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.nolanlawson.logcat.R;
+import com.nolanlawson.logcat.util.LogLineAdapterUtil;
 import com.nolanlawson.logcat.util.UtilLogger;
 
 /**

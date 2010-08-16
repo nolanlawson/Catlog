@@ -14,20 +14,36 @@
 <color name="foreground_info">#FF333333</color>
 <color name="foreground_warn">#FF333333</color>
 
-<color name="tag_color_01">#FFCC9900</color>
-<color name="tag_color_02">#FFCC0000</color>
-<color name="tag_color_03">#FF00CC99</color>
-<color name="tag_color_04">#FFCCCCCC</color>
-<color name="tag_color_05">#FF0066FF</color>
-<color name="tag_color_06">#FF00FF00</color>
+<!--  Android color FTW -->
+<color name="tag_color_01">#FFA4C639</color>
+<color name="tag_color_02">#FF3366FF</color>
+<color name="tag_color_03">#FFCC9900</color>
+<color name="tag_color_04">#FFCC0000</color>
+<color name="tag_color_05">#FF00CC99</color>
+<color name="tag_color_06">#FFCCCCCC</color>
 <color name="tag_color_07">#FF990099</color>
-<color name="tag_color_08">#FFCCFF33</color>
-<color name="tag_color_09">#FFFF9999</color>
-<color name="tag_color_10">#FF999900</color>
-<color name="tag_color_11">#FFFFFF00</color>
-<color name="tag_color_12">#FF66CCFF</color>
-<color name="tag_color_13">#FFFFFFFF</color>
-<color name="tag_color_14">#FFFF9900</color>
-<color name="tag_color_15">#FFCCCCFF</color>
-<color name="tag_color_16">#FF9999CC</color>
+<color name="tag_color_08">#FF00FF00</color>
+<color name="tag_color_09">#FFCCCC33</color>
+<color name="tag_color_10">#FF66CCFF</color>
+<color name="tag_color_11">#FFCC9933</color>
+<color name="tag_color_12">#FFFF9999</color>
+<color name="tag_color_13">#FF999900</color>
+<color name="tag_color_14">#FF33FF99</color>
+<color name="tag_color_15">#FFFF6633</color>
+<color name="tag_color_16">#FFFFFFFF</color>
+<color name="tag_color_17">#FF3366FF</color>
+<color name="tag_color_18">#FFCC9933</color>
+<color name="tag_color_19">#FFCC6699</color>
+<color name="tag_color_20">#FF3399CC</color>
+<color name="tag_color_21">#FFFFFF00</color>
+<color name="tag_color_22">#FFCCCCFF</color>
+<color name="tag_color_23">#FFFF3300</color>
+<color name="tag_color_24">#FFCCFF33</color>
+<color name="tag_color_25">#FFFF9900</color>
+<color name="tag_color_26">#FFCC3399</color>
+<color name="tag_color_27">#FF0066CC</color>
+<color name="tag_color_28">#FFFF9966</color>
+
+
+
 </resources>
