@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.ClipboardManager;
 import android.view.View;
@@ -30,8 +31,9 @@ public class SendActionChooser extends ListActivity {
 	private static UtilLogger log = new UtilLogger(SendActionChooser.class);
 	
 	private AppAdapter adapter=null;
-	private String subject;
-	private String body;
+	private String subject = null;
+	private String body = null;
+	private Object filenameUri = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)	{
@@ -55,16 +57,27 @@ public class SendActionChooser extends ListActivity {
 			log.d("activity name: %s", activity.name);
 		} 
 		Collections.sort(launchables, new ResolveInfo.DisplayNameComparator(packageManager)); 
- 
-		launchables.add(getDummyClipboardLaunchable());
-		
+ 		
 		adapter = new AppAdapter(packageManager, launchables);
 		setListAdapter(adapter);
 		
 		Bundle extras = getIntent().getExtras();
 		
-		body = extras.getString(Intent.EXTRA_TEXT);
+		if (extras.containsKey(Intent.EXTRA_TEXT)) {
+			body = extras.getString(Intent.EXTRA_TEXT);
+		}
+		
 		subject = extras.getString(Intent.EXTRA_SUBJECT);
+		
+		if (extras.containsKey(Intent.EXTRA_STREAM)) {
+			filenameUri = extras.getParcelable(Intent.EXTRA_STREAM);
+			log.d("filename is %s", filenameUri);
+		}
+		
+		if (body != null) {
+			launchables.add(getDummyClipboardLaunchable());
+		}
+		
 	}
  
 	private ResolveInfo getDummyClipboardLaunchable() {
@@ -116,8 +129,15 @@ public class SendActionChooser extends ListActivity {
 
 		actionSendIntent.setType("text/plain");
 		actionSendIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-		actionSendIntent.putExtra(Intent.EXTRA_TEXT, body);
 		
+		if (body != null) {
+			actionSendIntent.putExtra(Intent.EXTRA_TEXT, body);
+		}
+		
+		if (filenameUri != null) {
+			log.d("filename extra is %s", filenameUri);
+			actionSendIntent.putExtra(Intent.EXTRA_STREAM, (Uri)filenameUri);
+		}
 		return actionSendIntent;
 	}
 

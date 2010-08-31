@@ -31,6 +31,15 @@ public class SaveLogHelper {
 		
 	}
 	
+	public static File getFile(String filename) {
+		
+		File catlogDir = getCatlogDirectory();
+		
+		File file = new File(catlogDir, filename);
+	
+		return file;
+	}
+	
 	public static void deleteLog(String filename) {
 		
 		File catlogDir = getCatlogDirectory();

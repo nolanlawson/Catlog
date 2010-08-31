@@ -1,6 +1,7 @@
 package com.nolanlawson.logcat;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.DecimalFormat;
@@ -9,14 +10,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Random;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -447,19 +449,77 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		ServiceHelper.stopBackgroundServiceIfRunning(getApplicationContext());
 		
 	}
+	
 	private void sendLog() {
 		
-		String text = TextUtils.join("\n", getCurrentLogAsListOfStrings());
+		CharSequence[] items = new CharSequence[]{getText(R.string.as_text), getText(R.string.as_attachment)};
 		
-		Bundle extras = new Bundle();
+		new AlertDialog.Builder(this)
+			.setTitle(R.string.choose_format)
+			.setSingleChoiceItems(items, 0, new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					sendLog(which == 0);
+					dialog.dismiss();
+				}
+			})
+			.show();
 		
-		extras.putString(Intent.EXTRA_TEXT, text);
+	}
+	
+	private void sendLog(final boolean asBody) {
 		
-		Intent sendActionChooserIntent = new Intent(this, SendActionChooser.class);
+		// do in the background to avoid jank
+		AsyncTask<Void,Void,String> task = new AsyncTask<Void, Void, String>(){
+
+			@Override
+			protected String doInBackground(Void... params) {
+				
+				if (asBody) {
+					String text = TextUtils.join("\n", getCurrentLogAsListOfStrings());
+					return text;
+				} else {
+					return currentlyOpenLog;
+				}
+			}
+
+			@Override
+			protected void onPostExecute(String textOrFilename) {
+				
+				super.onPostExecute(textOrFilename);
+
+				if (!asBody && textOrFilename == null) { // no filename
+					Toast.makeText(LogcatActivity.this, R.string.save_file_first, Toast.LENGTH_LONG).show();
+				} else {
+					
+					Bundle extras = new Bundle();
+					
+					if (asBody) {
+						extras.putString(Intent.EXTRA_TEXT, textOrFilename);
+					} else { // as attachment
+						
+						File file = SaveLogHelper.getFile(textOrFilename);
+						Uri uri = Uri.fromFile(file);
+						extras.putParcelable(Intent.EXTRA_STREAM, uri);
+						
+						log.d("uri is %s", uri);
+						log.d("file is %s", file);
+						
+					}
+					
+					Intent sendActionChooserIntent = new Intent(LogcatActivity.this, SendActionChooser.class);
+					
+					sendActionChooserIntent.putExtras(extras);
+					startActivity(sendActionChooserIntent);
+				
+				}
+			}
+			
+		};
 		
-		sendActionChooserIntent.putExtras(extras);
-		startActivity(sendActionChooserIntent);
-		
+		task.execute((Void)null);
+			
 	}
 	
 	private List<String> getCurrentLogAsListOfStrings() {

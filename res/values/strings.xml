@@ -65,4 +65,11 @@
     
     <string name="settings">Settings</string>
     
+    <string name="save_file_first">You must save the log to a file first.</string>
+    
+    <string name="as_attachment">As Attachment</string>
+    <string name="as_text">As Mail Body</string>
+    <string name="choose_format">Choose Format</string>
+    
+    
 </resources>
