@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<ListPreference android:key="@string/pref_text_size"
+		android:title="@string/pref_text_size_title" android:persistent="true"
+		android:entries="@array/text_sizes" android:entryValues="@array/text_size_values"
+		android:defaultValue="@string/text_size_medium_value" />
+
+	<CheckBoxPreference android:key="@string/pref_expanded_by_default"
+		android:title="@string/pref_expanded_by_default_title"
+		android:summary="@string/pref_expanded_by_default_summary"
+		android:persistent="true" android:defaultValue="false"/>
+
+</PreferenceScreen>

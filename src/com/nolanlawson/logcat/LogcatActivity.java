@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Random;
 
 import android.app.ListActivity;
 import android.app.AlertDialog.Builder;
@@ -18,6 +19,8 @@ import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -45,11 +48,14 @@ import android.widget.TextView.OnEditorActionListener;
 import com.nolanlawson.logcat.data.LogFileAdapter;
 import com.nolanlawson.logcat.data.LogLine;
 import com.nolanlawson.logcat.data.LogLineAdapter;
+import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
 import com.nolanlawson.logcat.util.UtilLogger;
 
 public class LogcatActivity extends ListActivity implements TextWatcher, OnScrollListener, FilterListener, OnEditorActionListener {
+	
+	private static final int REQUEST_CODE_SETTINGS = 1;
 	
 	private static UtilLogger log = new UtilLogger(LogcatActivity.class);
 	
@@ -60,9 +66,11 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	
 	private int firstVisibleItem = -1;
 	private boolean autoscrollToBottom = true;
-	private boolean collapsedMode = true;
+	private boolean collapsedMode;
 	
 	private String currentlyOpenLog = null;
+	
+	private Handler handler = new Handler(Looper.getMainLooper());
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +79,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         
         setContentView(R.layout.main);
+        
+        collapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(this);
+        
+        log.d("initial collapsed mode is %s", collapsedMode);
         
         setUpWidgets();
         
@@ -85,6 +97,30 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     	super.onResume();
     	
     }
+    
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		log.d("onActivityResult()");
+		
+		collapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(getApplicationContext());
+		
+		// settings activity returned - text size might have changed, so update list
+		if (requestCode == REQUEST_CODE_SETTINGS && resultCode == RESULT_OK) {
+			handler.post(new Runnable(){
+
+				@Override
+				public void run() {
+					
+					expandOrCollapseAll(!collapsedMode);
+					
+					adapter.notifyDataSetChanged();
+					
+				}
+			});
+		}
+		adapter.notifyDataSetChanged();
+	}
 
 	private void startUpMainLog() {
     	
@@ -163,6 +199,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	    case R.id.menu_collapse_all:
 	    	expandOrCollapseAll(false);
 	    	return true;
+	    case R.id.menu_settings:
+	    	startSettingsActivity();
+	    	return true;
 	    	
 	    }
 	    return false;
@@ -208,6 +247,11 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	}
 
 
+	private void startSettingsActivity() {
+		
+		Intent intent = new Intent(this, SettingsActivity.class);
+		startActivityForResult(intent, REQUEST_CODE_SETTINGS);
+	}
 
 	private void expandOrCollapseAll(boolean expanded) {
 		
@@ -639,7 +683,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		adapter.clear();
 		currentlyOpenLog = filename;
-		collapsedMode = true;
+		collapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(getApplicationContext());
 		resetFilter();
 		
 	}
@@ -765,6 +809,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			super.onProgressUpdate(values);
 
 			progressBar.setVisibility(View.GONE);
+			//if (new Random().nextBoolean()) log.d("collapsed mode is %s", collapsedMode);
 			adapter.addWithFilter(LogLine.newLogLine(values[0], !collapsedMode), searchEditText.getText());
 			
 			if (autoscrollToBottom) {

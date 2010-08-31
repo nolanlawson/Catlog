@@ -17,7 +17,10 @@
 		
 		<activity android:name=".AboutActivity" android:theme="@android:style/Theme.Dialog" />
 
+		<activity android:name=".SettingsActivity"/>
+
 		<service android:name=".LogcatRecordingService" />
+		
 
 	</application>
 

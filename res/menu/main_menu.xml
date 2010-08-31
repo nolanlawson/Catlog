@@ -33,7 +33,10 @@
 
 	<item android:id="@+id/menu_delete_saved_log" android:title="@string/manage_saved_logs"
 		android:alphabeticShortcut="@string/manage_saved_logs" android:icon="@drawable/ic_menu_delete" />
-		
+	
+	<item android:id="@+id/menu_settings" android:title="@string/settings"
+		android:alphabeticShortcut="@string/settings" android:icon="@drawable/ic_menu_preferences" />
+				
 	<item android:id="@+id/menu_about" android:title="@string/about"
 		android:alphabeticShortcut="@string/about" android:icon="@drawable/ic_menu_info_details" />
 </menu>

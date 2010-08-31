@@ -35,6 +35,7 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.nolanlawson.logcat.R;
+import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.util.LogLineAdapterUtil;
 import com.nolanlawson.logcat.util.UtilLogger;
 
@@ -351,6 +352,14 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 			mustBeDifferentFrom = getItem(position - 1).getTag();
 		}
 		tagTextView.setTextColor(LogLineAdapterUtil.getTagColor(context, logLine.getTag(), mustBeDifferentFrom));
+		
+		// set the text size based on the preferences
+		
+		float textSize = PreferenceHelper.getTextSizePreference(context);
+		
+		tagTextView.setTextSize(textSize);
+		outputTextView.setTextSize(textSize);
+		levelTextView.setTextSize(textSize);
 		
 		return view;
     }

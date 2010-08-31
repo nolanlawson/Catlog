@@ -46,8 +46,23 @@
 	
 	<string name="about_catlog">About CatLog</string>
 
+	<string name="pref_text_size">text_size</string>
+	<string name="pref_text_size_title">Text Size</string>
+	
+	<string name="pref_expanded_by_default">expand_default</string>
+	<string name="pref_expanded_by_default_title">Expand by Default</string>
+	<string name="pref_expanded_by_default_summary">If true, log text will not be truncated by default.</string>
 
+	<string name="text_size_small_value">S</string>
+    <string name="text_size_medium_value">M</string>
+    <string name="text_size_large_value">L</string>
+    <string name="text_size_xlarge_value">XL</string>
 
-
+	<string name="text_size_small_name">Small (6pt)</string>
+    <string name="text_size_medium_name">Medium (8pt)</string>
+    <string name="text_size_large_name">Large (10pt)</string>
+    <string name="text_size_xlarge_name">Extra Large (12pt)</string>
+    
+    <string name="settings">Settings</string>
     
 </resources>
