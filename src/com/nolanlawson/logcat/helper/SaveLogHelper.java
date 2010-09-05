@@ -15,14 +15,26 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import android.content.Context;
 import android.os.Environment;
+import android.widget.Toast;
 
+import com.nolanlawson.logcat.R;
 import com.nolanlawson.logcat.util.UtilLogger;
 
 public class SaveLogHelper {
 
 	private static UtilLogger log = new UtilLogger(SaveLogHelper.class);
 	
+	public static boolean checkSdCard(Context context) {
+		
+		boolean result = SaveLogHelper.checkIfSdCardExists();
+		
+		if (!result) {
+			Toast.makeText(context, R.string.sd_card_not_found, Toast.LENGTH_LONG).show();
+		}
+		return result;
+	}
 	public static boolean checkIfSdCardExists() {
 		
 		File sdcardDir = Environment.getExternalStorageDirectory();

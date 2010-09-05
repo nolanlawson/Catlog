@@ -4,11 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.app.AlertDialog;
@@ -24,7 +20,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -33,7 +28,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
@@ -50,6 +44,7 @@ import android.widget.TextView.OnEditorActionListener;
 import com.nolanlawson.logcat.data.LogFileAdapter;
 import com.nolanlawson.logcat.data.LogLine;
 import com.nolanlawson.logcat.data.LogLineAdapter;
+import com.nolanlawson.logcat.helper.DialogHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
@@ -175,10 +170,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	    	showSaveLogDialog();
 	    	return true;
 	    case R.id.menu_record_log:
-	    	startRecordingLog();
+	    	DialogHelper.startRecordingLog(this);
 	    	return true;
 	    case R.id.menu_stop_recording_log:
-	    	stopRecordingLog();
+	    	DialogHelper.stopRecordingLog(this);
 	    	return true;	    	
 	    case R.id.menu_clear:
 	    	adapter.clear();
@@ -286,7 +281,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	
 	private void startDeleteSavedLogsDialog() {
 		
-		if (!checkSdCard()) {
+		if (!SaveLogHelper.checkSdCard(this)) {
 			return;
 		}
 		
@@ -395,15 +390,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 	}
 	
-	private boolean checkSdCard() {
-		
-		boolean result = SaveLogHelper.checkIfSdCardExists();
-		
-		if (!result) {
-			Toast.makeText(getApplicationContext(), R.string.sd_card_not_found, Toast.LENGTH_LONG).show();
-		}
-		return result;
-	}
+
 
 	private void startAboutActivity() {
 		
@@ -412,43 +399,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		startActivity(intent);
 		
 	}
-	private void startRecordingLog() {
-		
-		if (!checkSdCard()) {
-			return;
-		}
-		
-		final EditText editText = createEditTextForFilenameSuggestingDialog();
-		
-		OnClickListener onClickListener = new OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				
-				if (isInvalidFilename(editText.getText())) {
-					
-					Toast.makeText(LogcatActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
-				} else {
-					
-					String filename = editText.getText().toString();
-					ServiceHelper.startBackgroundServiceIfNotAlreadyRunning(getApplicationContext(), filename);
-					
-				}
-				
-				dialog.dismiss();
-				
-			}
-		};		
-		
-		showFilenameSuggestingDialog(editText, onClickListener, R.string.record_log);
-		
-	}
 	
-	private void stopRecordingLog() {
-		
-		ServiceHelper.stopBackgroundServiceIfRunning(getApplicationContext());
-		
-	}
 	
 	private void sendLog() {
 		
@@ -535,11 +486,11 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 
 	private void showSaveLogDialog() {
 		
-		if (!checkSdCard()) {
+		if (!SaveLogHelper.checkSdCard(this)) {
 			return;
 		}
 		
-		final EditText editText = createEditTextForFilenameSuggestingDialog();
+		final EditText editText = DialogHelper.createEditTextForFilenameSuggestingDialog(this);
 		
 		OnClickListener onClickListener = new OnClickListener() {
 			
@@ -547,7 +498,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			public void onClick(DialogInterface dialog, int which) {
 
 				
-				if (isInvalidFilename(editText.getText())) {
+				if (DialogHelper.isInvalidFilename(editText.getText())) {
 					Toast.makeText(LogcatActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
 				} else {
 					
@@ -560,69 +511,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			}
 		};
 		
-		showFilenameSuggestingDialog(editText, onClickListener, R.string.save_log);
+		DialogHelper.showFilenameSuggestingDialog(this, editText, onClickListener, R.string.save_log);
 	}
 	
-	private boolean isInvalidFilename(CharSequence filename) {
-		
-		String filenameAsString = null;
-		
-		return TextUtils.isEmpty(filename)
-				|| (filenameAsString = filename.toString()).contains("/")
-				|| filenameAsString.contains(":")
-				|| filenameAsString.contains(" ")
-				|| !filenameAsString.endsWith(".txt");
-				
-	}
 
-	private EditText createEditTextForFilenameSuggestingDialog() {
-		
-		final EditText editText = new EditText(this);
-		editText.setSingleLine();
-		editText.setSingleLine(true);
-		editText.setInputType(InputType.TYPE_TEXT_VARIATION_FILTER);
-		editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-		editText.setOnEditorActionListener(new OnEditorActionListener() {
-			
-			@Override
-			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				
-				if (event != null && event.getAction() == KeyEvent.ACTION_DOWN) {
-					// dismiss soft keyboard
-					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-					imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-					return true;
-				}
-				
-				
-				return false;
-			}
-		});
-		
-		// create an initial filename to suggest to the user
-		String filename = createLogFilename();
-		editText.setText(filename);
-		
-		// highlight everything but the .txt at the end
-		editText.setSelection(0, filename.length() - 4);
-		
-		return editText;
-	}
-	
-	private void showFilenameSuggestingDialog(EditText editText, OnClickListener onClickListener, int titleResId) {
-		
-		Builder builder = new Builder(this);
-		
-		builder.setTitle(titleResId)
-			.setCancelable(true)
-			.setNegativeButton(android.R.string.cancel, null)
-			.setPositiveButton(android.R.string.ok, onClickListener)
-			.setMessage(R.string.enter_filename)
-			.setView(editText);
-		
-		builder.show();
-		
-	}
 
 	private void saveLog(final String filename) {
 		
@@ -657,35 +549,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 	}
 
-	private String createLogFilename() {
-		Date date = new Date();
-		GregorianCalendar calendar = new GregorianCalendar();
-		calendar.setTime(date);
-		
-		DecimalFormat twoDigitDecimalFormat = new DecimalFormat("00");
-		DecimalFormat fourDigitDecimalFormat = new DecimalFormat("0000");
-		
-		String year = fourDigitDecimalFormat.format(calendar.get(Calendar.YEAR));
-		String month = twoDigitDecimalFormat.format(calendar.get(Calendar.MONTH) + 1);
-		String day = twoDigitDecimalFormat.format(calendar.get(Calendar.DAY_OF_MONTH));
-		String hour = twoDigitDecimalFormat.format(calendar.get(Calendar.HOUR_OF_DAY));
-		String minute = twoDigitDecimalFormat.format(calendar.get(Calendar.MINUTE));
-		String second = twoDigitDecimalFormat.format(calendar.get(Calendar.SECOND));
-		
-		StringBuilder stringBuilder = new StringBuilder();
-		
-		stringBuilder.append(year).append("-").append(month).append("-")
-				.append(day).append("-").append(hour).append("-")
-				.append(minute).append("-").append(second);
-		
-		stringBuilder.append(".txt");
-		
-		return stringBuilder.toString();
-	}
-
 	private void showOpenLogDialog() {
 		
-		if (!checkSdCard()) {
+		if (!SaveLogHelper.checkSdCard(this)) {
 			return;
 		}
 		

@@ -14,13 +14,38 @@
 		<activity android:name=".SendActionChooser" android:theme="@android:style/Theme.Light"
 			android:label="@string/send_log" android:configChanges="keyboard|keyboardHidden|orientation">
 		</activity>
-		
-		<activity android:name=".AboutActivity" android:theme="@android:style/Theme.Dialog" />
 
-		<activity android:name=".SettingsActivity"/>
+		<activity android:name=".AboutActivity" android:theme="@android:style/Theme.Dialog" />
+	
+		
+		<activity android:name=".WidgetClickedActivity" android:theme="@android:style/Theme.Dialog" />
+		
+
+		<activity android:name=".SettingsActivity" />
 
 		<service android:name=".LogcatRecordingService" />
+
+		<receiver android:name=".RecordingWidgetProvider">
 		
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+				<data android:scheme="catlog_widget"/>
+			</intent-filter>
+			
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+			</intent-filter>
+			
+			<intent-filter>
+				<action android:name="com.nolanlawson.logcat.action.RECORD_OR_STOP" />
+				<data android:scheme="catlog_widget" />
+			</intent-filter>
+			
+			
+			<meta-data android:name="android.appwidget.provider"
+				android:resource="@xml/recording_widget_info" />
+		</receiver>
+
 
 	</application>
 

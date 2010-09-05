@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
+import com.nolanlawson.logcat.helper.WidgetHelper;
 import com.nolanlawson.logcat.util.UtilLogger;
 
 /**
@@ -111,6 +112,8 @@ public class LogcatRecordingService extends IntentService {
 		
 		stopForegroundCompat(R.string.notification_title);
 		
+		WidgetHelper.updateWidgets(getApplicationContext(), false);
+		
 	}
 
     // This is the old onStart method that will be called on the pre-2.0
@@ -125,6 +128,9 @@ public class LogcatRecordingService extends IntentService {
 
 	private void handleCommand(Intent intent) {
         
+		// notify the widgets that we're running
+		WidgetHelper.updateWidgets(getApplicationContext());
+		
         CharSequence tickerText = getText(R.string.notification_ticker);
 
         // Set the icon, scrolling text and timestamp
@@ -287,7 +293,7 @@ public class LogcatRecordingService extends IntentService {
 			@Override
 			public void run() {
 				
-				Toast.makeText(LogcatRecordingService.this, stringResId, Toast.LENGTH_LONG).show();
+				Toast.makeText(LogcatRecordingService.this, stringResId, Toast.LENGTH_SHORT).show();
 				
 			}
 		});

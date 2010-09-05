@@ -34,7 +34,7 @@ public class ServiceHelper {
 		log.d("Is CatlogService already running: %s", alreadyRunning);
 		
 		if (!alreadyRunning) {
-
+			
 			Intent intent = new Intent(context, LogcatRecordingService.class);
 			intent.putExtra("filename", filename);
 			context.startService(intent);

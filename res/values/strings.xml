@@ -68,8 +68,11 @@
     <string name="save_file_first">You must save the log to a file first.</string>
     
     <string name="as_attachment">As Attachment</string>
-    <string name="as_text">As Mail Body</string>
+    <string name="as_text">As Text</string>
     <string name="choose_format">Choose Format</string>
+    
+    <string name="widget_recording_in_progress">Recording...</string>
+    
     
     
 </resources>

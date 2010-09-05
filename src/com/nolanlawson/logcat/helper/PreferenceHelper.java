@@ -1,14 +1,41 @@
 package com.nolanlawson.logcat.helper;
 
-import com.nolanlawson.logcat.R;
-
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+
+import com.nolanlawson.logcat.R;
 
 public class PreferenceHelper {
 	
 	private static float textSize = -1;
+	
+	private static final String widgetExistsPrefix = "widget_";
+	
+	public static boolean getWidgetExistsPreference(Context context, int appWidgetId) {
+		
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+		String widgetExists = widgetExistsPrefix.concat(Integer.toString(appWidgetId));
+		
+		return sharedPrefs.getBoolean(widgetExists, false);
+	}
+	
+	public static void setWidgetExistsPreference(Context context, int[] appWidgetIds) {
+		
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+		
+		Editor editor = sharedPrefs.edit();
+		
+		for (int appWidgetId : appWidgetIds) {
+			String widgetExists = widgetExistsPrefix.concat(Integer.toString(appWidgetId));
+			editor.putBoolean(widgetExists, true);
+		}
+		
+		editor.commit();
+		
+		
+	}
 	
 	public static float getTextSizePreference(Context context) {
 		
