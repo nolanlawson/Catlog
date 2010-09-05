@@ -605,22 +605,41 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		builder.show();
 		
 	}	
-	private void openLog(String filename) {
+	private void openLog(final String filename) {
 		
 		if (task != null && !task.isCancelled()) {
 			task.cancel(true);
 		}
 		
-		resetDisplayedLog(filename);
+		// do in background to avoid jank
 		
-		List<String> logLines = SaveLogHelper.openLog(filename);
+		AsyncTask<Void, Void, List<String>> openFileTask = new AsyncTask<Void, Void, List<String>>(){
+
+			@Override
+			protected List<String> doInBackground(Void... params) {
+
+				List<String> logLines = SaveLogHelper.openLog(filename);
+				return logLines;
+			}
+
+			@Override
+			protected void onPostExecute(List<String> logLines) {
+				super.onPostExecute(logLines);
+				resetDisplayedLog(filename);
+				progressBar.setVisibility(View.GONE);
+				
+				for (String line : logLines) {
+					adapter.add(LogLine.newLogLine(line, !collapsedMode));
+				}
+				
+				// scroll to bottom
+				getListView().setSelection(getListView().getCount());
+				
+				
+			}
+		};
 		
-		progressBar.setVisibility(View.GONE);
-		for (String line : logLines) {
-			adapter.add(LogLine.newLogLine(line, !collapsedMode));
-		}
-		// scroll to bottom
-		getListView().setSelection(getListView().getCount());
+		openFileTask.execute((Void)null);
 		
 	}
 	
