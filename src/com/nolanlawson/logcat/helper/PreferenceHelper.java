@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
-import android.util.DisplayMetrics;
-import android.view.WindowManager;
 
 import com.nolanlawson.logcat.R;
 import com.nolanlawson.logcat.util.UtilLogger;

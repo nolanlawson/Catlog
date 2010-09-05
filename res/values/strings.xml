@@ -28,8 +28,8 @@
 	<string name="no_saved_logs">No saved logs found.</string>
 	<string name="recording_in_progress">Recording already in progress.</string>
 	<string name="enter_good_filename">Please enter a valid filename.</string>
-	<string name="log_saved">Log saved to SD card.</string>
-	<string name="log_saved_from_recording">\'%s\' saved to SD card. Now opening…</string>
+	<string name="log_saved">Log saved to the SD card.</string>
+	<string name="log_saved_from_recording">Log saved to the SD card as \'%s\'.</string>
 	<string name="copy_to_clipboard">Copy to clipboard</string>
 	<string name="copied_to_clipboard">Copied to clipboard.</string>
 	<string name="enter_filename">Enter a filename to save to the SD card:</string>
@@ -52,7 +52,7 @@
 	
 	<string name="pref_expanded_by_default">expand_default</string>
 	<string name="pref_expanded_by_default_title">Expand by Default</string>
-	<string name="pref_expanded_by_default_summary">If true, log text will not be truncated by default.</string>
+	<string name="pref_expanded_by_default_summary">If checked, log text will not be truncated by default.</string>
 
 	<string name="text_size_xsmall_value">XS</string>
 	<string name="text_size_small_value">S</string>

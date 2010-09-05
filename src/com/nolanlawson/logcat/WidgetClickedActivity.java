@@ -15,7 +15,7 @@ import com.nolanlawson.logcat.helper.ServiceHelper;
 import com.nolanlawson.logcat.helper.WidgetHelper;
 
 public class WidgetClickedActivity extends Activity {
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,7 +44,6 @@ public class WidgetClickedActivity extends Activity {
 				if (DialogHelper.isInvalidFilename(editText.getText())) {
 					
 					Toast.makeText(WidgetClickedActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
-					WidgetHelper.updateWidgets(WidgetClickedActivity.this);
 				} else {
 					
 					String filename = editText.getText().toString();
@@ -59,12 +58,18 @@ public class WidgetClickedActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				finish();
-				WidgetHelper.updateWidgets(WidgetClickedActivity.this);
 				
 			}
 		});
 	}
 
 	
-	
+	@Override
+	public void onPause() {
+		super.onPause();
+		// update widgets when the dialog is complete
+		
+		WidgetHelper.updateWidgets(this);
+		
+	}
 }
