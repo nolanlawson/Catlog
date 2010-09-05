@@ -26,6 +26,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.text.TextUtils.TruncateAt;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -357,9 +358,9 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 		
 		float textSize = PreferenceHelper.getTextSizePreference(context);
 		
-		tagTextView.setTextSize(textSize);
-		outputTextView.setTextSize(textSize);
-		levelTextView.setTextSize(textSize);
+		tagTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+		outputTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+		levelTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
 		
 		return view;
     }

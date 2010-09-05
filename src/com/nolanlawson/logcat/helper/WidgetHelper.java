@@ -97,7 +97,7 @@ public class WidgetHelper {
         intent.setData(data);
         
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                0 /* no requestCode */, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                0 /* no requestCode */, intent, PendingIntent.FLAG_ONE_SHOT);
 
 		return pendingIntent;
 	}

@@ -29,6 +29,7 @@
 	<string name="recording_in_progress">Recording already in progress.</string>
 	<string name="enter_good_filename">Please enter a valid filename.</string>
 	<string name="log_saved">Log saved to SD card.</string>
+	<string name="log_saved_from_recording">\'%s\' saved to SD card. Now opening…</string>
 	<string name="copy_to_clipboard">Copy to clipboard</string>
 	<string name="copied_to_clipboard">Copied to clipboard.</string>
 	<string name="enter_filename">Enter a filename to save to the SD card:</string>
@@ -53,15 +54,17 @@
 	<string name="pref_expanded_by_default_title">Expand by Default</string>
 	<string name="pref_expanded_by_default_summary">If true, log text will not be truncated by default.</string>
 
+	<string name="text_size_xsmall_value">XS</string>
 	<string name="text_size_small_value">S</string>
     <string name="text_size_medium_value">M</string>
     <string name="text_size_large_value">L</string>
     <string name="text_size_xlarge_value">XL</string>
 
-	<string name="text_size_small_name">Small (6pt)</string>
-    <string name="text_size_medium_name">Medium (8pt)</string>
-    <string name="text_size_large_name">Large (10pt)</string>
-    <string name="text_size_xlarge_name">Extra Large (12pt)</string>
+	<string name="text_size_xsmall_name">Extra Small (8pt)</string>
+	<string name="text_size_small_name">Small (10pt)</string>
+    <string name="text_size_medium_name">Medium (12pt)</string>
+    <string name="text_size_large_name">Large (14pt)</string>
+    <string name="text_size_xlarge_name">Extra Large (16pt)</string>
     
     <string name="settings">Settings</string>
     

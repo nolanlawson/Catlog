@@ -144,7 +144,15 @@ public class SaveLogHelper {
 		return result;
 	}
 	
+	public static boolean saveLog(CharSequence logString, String filename) {
+		return saveLog(null, logString, filename);
+	}
+	
 	public static boolean saveLog(List<String> logLines, String filename) {
+		return saveLog(logLines, null, filename);
+	}
+	
+	private static boolean saveLog(List<String> logLines, CharSequence logString, String filename) {
 		
 		File catlogDir = getCatlogDirectory();
 		
@@ -161,9 +169,15 @@ public class SaveLogHelper {
 		try {
 			out = new PrintStream(new FileOutputStream(newFile));
 			
-			for (String line : logLines) {
-				out.println(line);
+			// save a log as either a list of strings or as a charsequence
+			if (logLines != null) {
+				for (String line : logLines) {
+					out.println(line);
+				}				
+			} else if (logString != null) {
+				out.print(logString);
 			}
+			
 			
 		} catch (FileNotFoundException ex) {
 			log.e(ex,"unexpected exception");

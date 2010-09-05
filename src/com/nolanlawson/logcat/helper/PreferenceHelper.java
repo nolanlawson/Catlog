@@ -4,12 +4,17 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
+import android.view.WindowManager;
 
 import com.nolanlawson.logcat.R;
+import com.nolanlawson.logcat.util.UtilLogger;
 
 public class PreferenceHelper {
 	
 	private static float textSize = -1;
+	
+	private static UtilLogger log = new UtilLogger(PreferenceHelper.class);
 	
 	private static final String widgetExistsPrefix = "widget_";
 	
@@ -46,8 +51,10 @@ public class PreferenceHelper {
 			String textSizePref = sharedPrefs.getString(
 					context.getText(R.string.pref_text_size).toString(), 
 					context.getText(R.string.text_size_small_value).toString());
-			
-			if (textSizePref.equals(context.getText(R.string.text_size_small_value))) {
+
+			if (textSizePref.equals(context.getText(R.string.text_size_xsmall_value))) {
+				cacheTextsize(context, R.dimen.text_size_xsmall);
+			} else if (textSizePref.equals(context.getText(R.string.text_size_small_value))) {
 				cacheTextsize(context, R.dimen.text_size_small);
 			} else if (textSizePref.equals(context.getText(R.string.text_size_medium_value))) {
 				cacheTextsize(context, R.dimen.text_size_medium);
@@ -67,7 +74,12 @@ public class PreferenceHelper {
 	}
 	
 	private static void cacheTextsize(Context context, int dimenId) {
-		textSize = context.getResources().getDimension(dimenId);
+		
+		float unscaledSize = context.getResources().getDimension(dimenId);
+		
+		log.d("unscaledSize is %g", unscaledSize);
+		
+		textSize = unscaledSize;
 	}
 	
 	public static boolean getExpandedByDefaultPreference(Context context) {

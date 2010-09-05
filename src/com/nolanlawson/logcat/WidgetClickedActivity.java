@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.nolanlawson.logcat.helper.DialogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
+import com.nolanlawson.logcat.helper.WidgetHelper;
 
 public class WidgetClickedActivity extends Activity {
 
@@ -43,6 +44,7 @@ public class WidgetClickedActivity extends Activity {
 				if (DialogHelper.isInvalidFilename(editText.getText())) {
 					
 					Toast.makeText(WidgetClickedActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
+					WidgetHelper.updateWidgets(WidgetClickedActivity.this);
 				} else {
 					
 					String filename = editText.getText().toString();
@@ -57,6 +59,7 @@ public class WidgetClickedActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				finish();
+				WidgetHelper.updateWidgets(WidgetClickedActivity.this);
 				
 			}
 		});

@@ -5,7 +5,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -25,6 +28,7 @@ import android.widget.Toast;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
 import com.nolanlawson.logcat.helper.WidgetHelper;
+import com.nolanlawson.logcat.util.StringUtil;
 import com.nolanlawson.logcat.util.UtilLogger;
 
 /**
@@ -43,9 +47,11 @@ public class LogcatRecordingService extends IntentService {
 	private static final String ACTION_STOP_RECORDING = "com.nolanlawson.catlog.action.STOP_RECORDING";
 	public static final String URI_SCHEME = "catlog_recording_service";
 	
+	private static final String DATE_FORMAT = "MM-dd HH:mm:ss.SSS";
+	
 	private static UtilLogger log = new UtilLogger(LogcatRecordingService.class);
 
-	private boolean kill = false;
+	private Process logcatProcess;
 
 	private NotificationManager mNM;
 	private Method mStartForeground;
@@ -61,7 +67,7 @@ public class LogcatRecordingService extends IntentService {
 			log.d("onReceive()");
 			
 			// received broadcast to kill service
-			kill = true;
+			killProcess();
 			ServiceHelper.stopBackgroundServiceIfRunning(context);
 		}
 	};
@@ -106,13 +112,14 @@ public class LogcatRecordingService extends IntentService {
 	public void onDestroy() {
 		log.d("onDestroy()");
 		super.onDestroy();
-		kill = true;
+		killProcess();
 
 		unregisterReceiver(receiver);
 		
 		stopForegroundCompat(R.string.notification_title);
 		
 		WidgetHelper.updateWidgets(getApplicationContext(), false);
+		
 		
 	}
 
@@ -218,40 +225,61 @@ public class LogcatRecordingService extends IntentService {
 		
 		log.d("Starting up AppTrackerService now with intent: %s", intent);
 
-		makeToast(R.string.log_recording_started);
+		makeToast(R.string.log_recording_started, Toast.LENGTH_SHORT);
 		
-		Process logcatProcess = null;
+		logcatProcess = null;
 		BufferedReader reader = null;
 		
-		List<String> lines = new ArrayList<String>();
+		StringBuilder stringBuilder = new StringBuilder();
 		
 		try {
 			
-			int numLines = getNumberOfExistingLogLines();
-			
-			log.d("number of existing lines in logcat log is %d", numLines);
-			
-			int currentLine = 0;
-			
+			// use the "time" log so we can see what time the logs were logged at
 			logcatProcess = Runtime.getRuntime().exec(
-					new String[] { "logcat" });
+					new String[] { "logcat", "-v", "time" });
 
 			reader = new BufferedReader(new InputStreamReader(logcatProcess
 					.getInputStream()));
+		
+			Date currentDate = new Date(System.currentTimeMillis());
+			SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
 			
 			String line;
 			
+			// keep skipping lines until we find one that is past the current time.
+			// unfortunately, Android logcat does not print out the year, so if
+			// somebody starts this process at January 1st at 12:01am he/she
+			// will get the entire log buffer.  But that's not the end of the world.
+			
 			while ((line = reader.readLine()) != null) {
-								
-				if (kill) {
-					log.d("manually killed CatlogService");
-					break;
-				}
-				if (++currentLine <= numLines) {
-					log.d("skipping line %d", currentLine);
+
+				if (line.length() < 19) { // length of date format at beginning of log line
 					continue;
 				}
-				lines.add(line);
+				
+				// first get the timestamp
+				Date lineDate = null;
+				
+				try {
+					lineDate = dateFormat.parse(line);
+				} catch (ParseException e) {
+					continue;
+				}
+				
+				if (lineDate == null) {
+					continue;
+				}
+				
+				// assume that the date in logcat comes from this year
+				lineDate.setYear(currentDate.getYear());
+				
+				if (lineDate.before(currentDate)) {
+					continue;
+				}
+				
+				line = line.substring(19);
+				
+				stringBuilder.append(line).append("\n");
 			}
 
 		}
@@ -275,66 +303,62 @@ public class LogcatRecordingService extends IntentService {
 
 			log.d("CatlogService ended");
 			
-			boolean logSaved = SaveLogHelper.saveLog(lines, filename);
+			boolean logSaved = SaveLogHelper.saveLog(stringBuilder, filename);
 			
 			if (logSaved) {
-				makeToast(R.string.log_saved);
+				String savedText = String.format(getText(R.string.log_saved_from_recording).toString(),filename);
+				makeToast(savedText, Toast.LENGTH_LONG);
+				startLogcatActivityToViewSavedFile();
 			} else {
-				makeToast(R.string.unable_to_save_log);
+				makeToast(R.string.unable_to_save_log, Toast.LENGTH_LONG);
 			}
 			
 
 		}
 	}
 
-	private void makeToast(final int stringResId) {
+	private void startLogcatActivityToViewSavedFile() {
+		
+		// start up the logcat activity if necessary and show the saved file
+		
+		Intent targetIntent = new Intent(getApplicationContext(), LogcatActivity.class);
+		targetIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+		targetIntent.setAction(Intent.ACTION_MAIN);
+		targetIntent.putExtra("filename", filename);
+		
+		startActivity(targetIntent);
+		
+	}
+
+
+	private void makeToast(final int stringResId, final int toastLength) {
 		handler.post(new Runnable() {
 			
 			@Override
 			public void run() {
 				
-				Toast.makeText(LogcatRecordingService.this, stringResId, Toast.LENGTH_SHORT).show();
+				Toast.makeText(LogcatRecordingService.this, stringResId, toastLength).show();
 				
 			}
 		});
 		
 	}
-
-
-	private int getNumberOfExistingLogLines() throws IOException {
-		
-		// figure out how many lines are already in the logcat log
-		// to do this, just use the -d (for "dump") command in logcat
-		
-		Process logcatProcess = Runtime.getRuntime().exec(
-				new String[] { "logcat", "-d",});
-
-		BufferedReader reader = new BufferedReader(new InputStreamReader(logcatProcess
-				.getInputStream()));
-		try {
-			int lines = 0;
+	private void makeToast(final String str, final int toastLength) {
+		handler.post(new Runnable() {
 			
-			while (reader.readLine() != null) {
-				lines++;
+			@Override
+			public void run() {
+				
+				Toast.makeText(LogcatRecordingService.this, str, toastLength).show();
+				
 			}
-			
-			reader.close();
+		});
+		
+	}	
+	private void killProcess() {
+		// kill the logcat process
+		if (logcatProcess != null) {
 			logcatProcess.destroy();
-			
-			return lines;
-		} finally {
-			
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					log.e(e, "unexpected exception");
-				}
-			}
-			
-			if (logcatProcess != null) {
-				logcatProcess.destroy();
-			}
 		}
 	}
 	

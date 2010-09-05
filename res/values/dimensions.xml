@@ -1,6 +1,7 @@
 <resources>
-	<dimen name="text_size_small">6sp</dimen>
-	<dimen name="text_size_medium">8sp</dimen>
-	<dimen name="text_size_large">10sp</dimen>
-	<dimen name="text_size_xlarge">12sp</dimen>
+	<dimen name="text_size_xsmall">8px</dimen>
+	<dimen name="text_size_small">10px</dimen>
+	<dimen name="text_size_medium">12px</dimen>
+	<dimen name="text_size_large">14px</dimen>
+	<dimen name="text_size_xlarge">16px</dimen>
 </resources>

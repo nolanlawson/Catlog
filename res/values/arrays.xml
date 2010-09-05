@@ -9,6 +9,7 @@
 	</string-array>
 	
 	<string-array name="text_size_values">
+		<item>@string/text_size_xsmall_value</item>
 		<item>@string/text_size_small_value</item>
 		<item>@string/text_size_medium_value</item>
 		<item>@string/text_size_large_value</item>
@@ -16,6 +17,7 @@
 	</string-array>
 		
 	<string-array name="text_sizes">
+		<item>@string/text_size_xsmall_name</item>
 		<item>@string/text_size_small_name</item>
 		<item>@string/text_size_medium_name</item>
 		<item>@string/text_size_large_name</item>

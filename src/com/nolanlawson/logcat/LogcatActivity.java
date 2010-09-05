@@ -85,7 +85,14 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         
         setUpAdapter();
         
-    	startUpMainLog();
+        Intent intent = getIntent();
+        
+        if (intent == null || !intent.hasExtra("filename")) {
+        	startUpMainLog();
+        } else {
+        	String filename = intent.getStringExtra("filename");
+        	openLog(filename);
+        }
         
     }
     
@@ -95,6 +102,17 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     	
     }
     
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		
+		// launched from the widget or notification
+        if (intent != null && intent.hasExtra("filename")) {
+        	String filename = intent.getStringExtra("filename");
+        	openLog(filename);
+        }
+	}
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -597,6 +615,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		List<String> logLines = SaveLogHelper.openLog(filename);
 		
+		progressBar.setVisibility(View.GONE);
 		for (String line : logLines) {
 			adapter.add(LogLine.newLogLine(line, !collapsedMode));
 		}
