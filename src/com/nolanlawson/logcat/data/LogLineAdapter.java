@@ -202,6 +202,17 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
         }
         if (mNotifyOnChange) notifyDataSetChanged();
     }
+    
+    public void removeFirst(int n) {
+    	if (mOriginalValues != null) {
+    		synchronized (mLock) {
+    			mOriginalValues = new ArrayList<LogLine>(mOriginalValues.subList(n, mOriginalValues.size()));
+    		}
+    	} else {
+    		mObjects = mObjects.subList(n, mObjects.size());
+    	}
+    	if (mNotifyOnChange) notifyDataSetChanged();
+    }
 
     /**
      * Remove all elements from the list.

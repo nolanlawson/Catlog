@@ -251,30 +251,37 @@ public class LogcatRecordingService extends IntentService {
 			// somebody starts this process at January 1st at 12:01am he/she
 			// will get the entire log buffer.  But that's not the end of the world.
 			
+			boolean pastCurrentTime = false;
+			
 			while ((line = reader.readLine()) != null) {
 
-				if (line.length() < 19) { // length of date format at beginning of log line
-					continue;
-				}
-				
-				// first get the timestamp
-				Date lineDate = null;
-				
-				try {
-					lineDate = dateFormat.parse(line);
-				} catch (ParseException e) {
-					continue;
-				}
-				
-				if (lineDate == null) {
-					continue;
-				}
-				
-				// assume that the date in logcat comes from this year
-				lineDate.setYear(currentDate.getYear());
-				
-				if (lineDate.before(currentDate)) {
-					continue;
+				if (!pastCurrentTime) {
+					
+					if (line.length() < 19) { // length of date format at beginning of log line
+						continue;
+					}
+					
+					// first get the timestamp
+					Date lineDate = null;
+					
+					try {
+						lineDate = dateFormat.parse(line);
+					} catch (ParseException e) {
+						continue;
+					}
+					
+					if (lineDate == null) {
+						continue;
+					}
+					
+					// assume that the date in logcat comes from this year
+					lineDate.setYear(currentDate.getYear());
+					
+					if (lineDate.before(currentDate)) {
+						continue;
+					} else {
+						pastCurrentTime = true;
+					}
 				}
 				
 				line = line.substring(19);
