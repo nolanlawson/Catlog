@@ -46,7 +46,7 @@ public class RecordingWidgetProvider extends AppWidgetProvider {
 			// start or stop recording as necessary
 			synchronized (RecordingWidgetProvider.class) {
 			
-				boolean alreadyRunning = ServiceHelper.checkIfServiceIsRunning(context);
+				boolean alreadyRunning = ServiceHelper.checkIfServiceIsRunning(context, LogcatRecordingService.class);
 				
 				if (alreadyRunning) {
 					// stop the current recording process

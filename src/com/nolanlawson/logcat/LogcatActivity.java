@@ -223,6 +223,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	    case R.id.menu_settings:
 	    	startSettingsActivity();
 	    	return true;
+	    case R.id.menu_crazy_logger_service:
+	    	ServiceHelper.startOrStopCrazyLogger(this);
+	    	return true;
 	    	
 	    }
 	    return false;
@@ -243,7 +246,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		mainLogMenuItem.setEnabled(!showingMainLog);
 		mainLogMenuItem.setVisible(!showingMainLog);
 		
-		boolean recordingInProgress = ServiceHelper.checkIfServiceIsRunning(getApplicationContext());
+		boolean recordingInProgress = ServiceHelper.checkIfServiceIsRunning(getApplicationContext(), LogcatRecordingService.class);
 	
 		MenuItem recordMenuItem = menu.findItem(R.id.menu_record_log);
 		MenuItem stopRecordingMenuItem = menu.findItem(R.id.menu_stop_recording_log);
@@ -262,6 +265,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		collapseAllMenuItem.setEnabled(!collapsedMode);
 		collapseAllMenuItem.setVisible(!collapsedMode);
+		
+		MenuItem crazyLoggerMenuItem = menu.findItem(R.id.menu_crazy_logger_service);
+		crazyLoggerMenuItem.setEnabled(UtilLogger.DEBUG_MODE);
+		crazyLoggerMenuItem.setVisible(UtilLogger.DEBUG_MODE);
 		
 		
 		return super.onPrepareOptionsMenu(menu);
@@ -302,6 +309,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		
 	}
+
 	
 	private void startDeleteSavedLogsDialog() {
 		

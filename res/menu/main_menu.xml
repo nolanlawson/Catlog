@@ -39,4 +39,8 @@
 				
 	<item android:id="@+id/menu_about" android:title="@string/about"
 		android:alphabeticShortcut="@string/about" android:icon="@drawable/ic_menu_info_details" />
+		
+	<item android:id="@+id/menu_crazy_logger_service" android:title="Crazy Logger"
+			android:alphabeticShortcut="Crazy Logger" />
+		
 </menu>

@@ -25,6 +25,8 @@
 
 		<service android:name=".LogcatRecordingService" />
 
+		<service android:name=".CrazyLoggerService"/>
+
 		<receiver android:name=".RecordingWidgetProvider">
 		
 			<intent-filter>

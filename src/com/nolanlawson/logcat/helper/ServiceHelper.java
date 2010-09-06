@@ -8,14 +8,30 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.nolanlawson.logcat.LogcatRecordingService;
+import com.nolanlawson.logcat.CrazyLoggerService;
 import com.nolanlawson.logcat.util.UtilLogger;
 
 public class ServiceHelper {
 
 	private static UtilLogger log = new UtilLogger(ServiceHelper.class);
 	
+	public static void startOrStopCrazyLogger(Context context) {
+		
+		boolean alreadyRunning = checkIfServiceIsRunning(context, CrazyLoggerService.class);
+		
+		Intent intent = new Intent(context, CrazyLoggerService.class);
+		
+		if (!alreadyRunning) {
+			
+			context.startService(intent);
+		} else {
+			context.stopService(intent);
+		}
+		
+	}
+	
 	public static synchronized void stopBackgroundServiceIfRunning(Context context) {
-		boolean alreadyRunning = ServiceHelper.checkIfServiceIsRunning(context);
+		boolean alreadyRunning = ServiceHelper.checkIfServiceIsRunning(context, LogcatRecordingService.class);
 		
 		log.d("Is CatlogService running: %s", alreadyRunning);
 		
@@ -29,7 +45,7 @@ public class ServiceHelper {
 	public static synchronized void startBackgroundServiceIfNotAlreadyRunning(
 			Context context, String filename) {
 		
-		boolean alreadyRunning = ServiceHelper.checkIfServiceIsRunning(context);
+		boolean alreadyRunning = ServiceHelper.checkIfServiceIsRunning(context, LogcatRecordingService.class);
 		
 		log.d("Is CatlogService already running: %s", alreadyRunning);
 		
@@ -41,9 +57,9 @@ public class ServiceHelper {
 		}
 	}
 	
-	public static boolean checkIfServiceIsRunning(Context context) {
+	public static boolean checkIfServiceIsRunning(Context context, Class<?> service) {
 		
-		String serviceName = LogcatRecordingService.class.getName();
+		String serviceName = service.getName();
 		
 		ComponentName componentName = new ComponentName(context.getPackageName(), serviceName);
 		

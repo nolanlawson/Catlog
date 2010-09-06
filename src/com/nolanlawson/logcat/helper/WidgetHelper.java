@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import com.nolanlawson.logcat.LogcatRecordingService;
 import com.nolanlawson.logcat.R;
 import com.nolanlawson.logcat.RecordingWidgetProvider;
 import com.nolanlawson.logcat.util.UtilLogger;
@@ -41,7 +42,7 @@ public class WidgetHelper {
 	
 	public static void updateWidgets(Context context, int[] appWidgetIds) {
 		
-		boolean serviceRunning = ServiceHelper.checkIfServiceIsRunning(context);
+		boolean serviceRunning = ServiceHelper.checkIfServiceIsRunning(context, LogcatRecordingService.class);
 		
 		updateWidgets(context, appWidgetIds, serviceRunning);
 		

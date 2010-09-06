@@ -157,12 +157,16 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
                 }
                 
                 List<LogLine> inputList = Arrays.asList(object);
+                
                 mObjects.addAll(mFilter.performFilteringOnList(inputList, text));
+                
                 
                 if (mNotifyOnChange) notifyDataSetChanged();
             }
         } else {
-            mObjects.add(object);
+        	synchronized (mLock) {
+        		mObjects.add(object);
+        	}
             if (mNotifyOnChange) notifyDataSetChanged();
         }
         
@@ -206,10 +210,17 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
     public void removeFirst(int n) {
     	if (mOriginalValues != null) {
     		synchronized (mLock) {
-    			mOriginalValues = new ArrayList<LogLine>(mOriginalValues.subList(n, mOriginalValues.size()));
+    			List<LogLine> subList = mOriginalValues.subList(n, mOriginalValues.size());
+    			for (int i = 0; i < n; i++) { 
+    				// value to delete - delete it from the mObjects as well
+    				mObjects.remove(mOriginalValues.get(i));
+    			}
+    			mOriginalValues = new ArrayList<LogLine>(subList);
     		}
     	} else {
-    		mObjects = mObjects.subList(n, mObjects.size());
+    		synchronized (mLock) {
+    			mObjects = mObjects.subList(n, mObjects.size());
+    		}
     	}
     	if (mNotifyOnChange) notifyDataSetChanged();
     }
