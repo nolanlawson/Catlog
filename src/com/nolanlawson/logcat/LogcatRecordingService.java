@@ -7,9 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Random;
 
 import android.app.IntentService;
@@ -25,10 +23,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
+import com.nolanlawson.logcat.data.LogLine;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
 import com.nolanlawson.logcat.helper.WidgetHelper;
-import com.nolanlawson.logcat.util.StringUtil;
 import com.nolanlawson.logcat.util.UtilLogger;
 
 /**
@@ -46,8 +44,6 @@ public class LogcatRecordingService extends IntentService {
 	
 	private static final String ACTION_STOP_RECORDING = "com.nolanlawson.catlog.action.STOP_RECORDING";
 	public static final String URI_SCHEME = "catlog_recording_service";
-	
-	private static final String DATE_FORMAT = "MM-dd HH:mm:ss.SSS";
 	
 	private static UtilLogger log = new UtilLogger(LogcatRecordingService.class);
 
@@ -242,7 +238,7 @@ public class LogcatRecordingService extends IntentService {
 					.getInputStream()));
 		
 			Date currentDate = new Date(System.currentTimeMillis());
-			SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+			SimpleDateFormat dateFormat = new SimpleDateFormat(LogLine.LOGCAT_DATE_FORMAT);
 			
 			String line;
 			
@@ -283,8 +279,6 @@ public class LogcatRecordingService extends IntentService {
 						pastCurrentTime = true;
 					}
 				}
-				
-				line = line.substring(19);
 				
 				stringBuilder.append(line).append("\n");
 			}

@@ -19,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.nolanlawson.logcat.LogcatActivity;
 import com.nolanlawson.logcat.R;
 
 public class DialogHelper {

@@ -14,12 +14,12 @@ public class PreferenceHelper {
 	
 	private static UtilLogger log = new UtilLogger(PreferenceHelper.class);
 	
-	private static final String widgetExistsPrefix = "widget_";
+	private static final String WIDGET_EXISTS_PREFIX = "widget_";
 	
 	public static boolean getWidgetExistsPreference(Context context, int appWidgetId) {
 		
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-		String widgetExists = widgetExistsPrefix.concat(Integer.toString(appWidgetId));
+		String widgetExists = WIDGET_EXISTS_PREFIX.concat(Integer.toString(appWidgetId));
 		
 		return sharedPrefs.getBoolean(widgetExists, false);
 	}
@@ -31,7 +31,7 @@ public class PreferenceHelper {
 		Editor editor = sharedPrefs.edit();
 		
 		for (int appWidgetId : appWidgetIds) {
-			String widgetExists = widgetExistsPrefix.concat(Integer.toString(appWidgetId));
+			String widgetExists = WIDGET_EXISTS_PREFIX.concat(Integer.toString(appWidgetId));
 			editor.putBoolean(widgetExists, true);
 		}
 		
@@ -79,6 +79,14 @@ public class PreferenceHelper {
 		
 		textSize = unscaledSize;
 	}
+
+	public static boolean getShowTimestampAndPidPreference(Context context) {
+
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+		
+		return sharedPrefs.getBoolean(
+				context.getText(R.string.pref_show_timestamp).toString(), true);
+	}
 	
 	public static boolean getExpandedByDefaultPreference(Context context) {
 
@@ -86,6 +94,22 @@ public class PreferenceHelper {
 		
 		return sharedPrefs.getBoolean(
 				context.getText(R.string.pref_expanded_by_default).toString(), false);
+	}
+	public static void setFirstRunPreference(Context context, boolean bool) {
+
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+		Editor editor = sharedPrefs.edit();
+		
+		editor.putBoolean(context.getString(R.string.first_run), bool);
+		
+		editor.commit();
+
+	}
+	public static boolean getFirstRunPreference(Context context) {
+
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+		return sharedPrefs.getBoolean(context.getString(R.string.first_run), true);
+
 	}
 	
 }

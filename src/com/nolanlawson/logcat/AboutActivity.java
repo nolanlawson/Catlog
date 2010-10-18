@@ -19,6 +19,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
+import com.nolanlawson.logcat.helper.PackageHelper;
 import com.nolanlawson.logcat.util.UtilLogger;
 
 public class AboutActivity extends Activity implements OnClickListener {
@@ -61,7 +62,16 @@ public class AboutActivity extends Activity implements OnClickListener {
 	
 	public void initializeWebView() {
 		
-		aboutWebView.loadData(loadTextFile(R.raw.about_body), "text/html", "utf-8");
+		String text;
+		if (PackageHelper.isCatlogDonateInstalled(getApplicationContext())) {
+			text = loadTextFile(R.raw.about_body_preamble_donate);
+		} else {
+			text = loadTextFile(R.raw.about_body_preamble_free);
+		}
+		
+		text += loadTextFile(R.raw.about_body);
+		
+		aboutWebView.loadData(text, "text/html", "utf-8");
 	}
 
 

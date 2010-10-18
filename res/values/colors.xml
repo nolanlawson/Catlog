@@ -1,5 +1,5 @@
 <resources>
-
+<color name="linkColorBlue">#0099dd</color>
 <color name="background_wtf">#FF999900</color>
 <color name="background_error">#FFCC0000</color>
 <color name="background_verbose">#FF666666</color>

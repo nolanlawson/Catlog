@@ -1,14 +1,10 @@
 package com.nolanlawson.logcat;
 
-import com.nolanlawson.logcat.helper.PreferenceHelper;
-
-import android.content.Context;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.view.KeyEvent;
-import android.view.inputmethod.InputMethodManager;
+
+import com.nolanlawson.logcat.helper.PreferenceHelper;
 
 public class SettingsActivity extends PreferenceActivity {
 	

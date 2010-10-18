@@ -7,8 +7,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 
-import com.nolanlawson.logcat.LogcatRecordingService;
 import com.nolanlawson.logcat.CrazyLoggerService;
+import com.nolanlawson.logcat.LogcatRecordingService;
 import com.nolanlawson.logcat.util.UtilLogger;
 
 public class ServiceHelper {

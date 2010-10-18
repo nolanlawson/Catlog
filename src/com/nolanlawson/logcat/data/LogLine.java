@@ -3,6 +3,7 @@ package com.nolanlawson.logcat.data;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.nolanlawson.logcat.util.LogLineAdapterUtil;
@@ -11,6 +12,9 @@ import com.nolanlawson.logcat.util.UtilLogger;
 
 public class LogLine {
 
+
+	public static final String LOGCAT_DATE_FORMAT = "MM-dd HH:mm:ss.SSS";
+	
 	private static Pattern logPattern = Pattern.compile("(\\w)/([^(]+)\\(\\s*(\\d+)\\): (.*)");
 	
 	private static UtilLogger log = new UtilLogger(LogLine.class);
@@ -20,6 +24,7 @@ public class LogLine {
 	private String tag;
 	private String logOutput;
 	private int processId;
+	private String timestamp;
 	private boolean expanded = false;
 	
 	public String getOriginalLine() {
@@ -57,6 +62,12 @@ public class LogLine {
 	
 	
 	
+	public String getTimestamp() {
+		return timestamp;
+	}
+	public void setTimestamp(String timestamp) {
+		this.timestamp = timestamp;
+	}
 	public boolean isExpanded() {
 		return expanded;
 	}
@@ -65,11 +76,21 @@ public class LogLine {
 	}
 	public static LogLine newLogLine(String originalLine, boolean expanded) {
 		
-		//log.d("originalLine is: " + originalLine);
-		
 		LogLine logLine = new LogLine();
 		logLine.setOriginalLine(originalLine);
 		logLine.setExpanded(expanded);
+		
+		// first get the timestamp
+		String timestamp = null;
+		
+		// if the first char is a digit, then this starts out with a timestamp
+		// otherwise, it's a legacy log or the beginning of the log output or something
+		if (TextUtils.isDigitsOnly(originalLine.substring(0, 1))) {
+			timestamp = originalLine.substring(0,19);
+			originalLine = originalLine.substring(19); // cut off timestamp
+		}
+		
+		logLine.setTimestamp(timestamp);
 		
 		Matcher matcher = logPattern.matcher(originalLine);
 		

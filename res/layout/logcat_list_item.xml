@@ -1,9 +1,29 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="wrap_content"
-	android:orientation="horizontal" android:paddingLeft="3dp"
+	android:orientation="vertical" android:paddingLeft="3dp"
 	android:paddingRight="3dp" android:paddingBottom="1dp"
 	android:paddingTop="1dp">
+<LinearLayout 
+	android:layout_width="fill_parent" android:layout_height="wrap_content"
+	android:orientation="horizontal"	android:paddingTop="1dp"
+	android:id="@+id/extra_info_layout">
+	
+	<TextView android:layout_width="0px" android:layout_weight="0.3" android:layout_height="wrap_content"
+			android:paddingRight="2dp" android:textSize="12sp" android:text="165"
+			android:id="@+id/pid_text"
+			android:typeface="monospace" />
+			
+	<TextView android:layout_width="0px" android:layout_weight="0.7" 
+		android:layout_height="wrap_content" android:textSize="12sp"
+		android:text="November 11, 2010" android:id="@+id/timestamp_text" 
+		android:typeface="monospace"/>
+	
+	
+	</LinearLayout>	
+<LinearLayout 
+	android:layout_width="fill_parent" android:layout_height="wrap_content"
+	android:orientation="horizontal" android:paddingTop="1dp">
 
 
 
@@ -26,4 +46,5 @@
 		android:typeface="monospace"/>
 
 
+</LinearLayout>
 </LinearLayout>

@@ -17,7 +17,7 @@ import com.nolanlawson.logcat.helper.SaveLogHelper;
 
 public class LogFileAdapter extends ArrayAdapter<CharSequence> {
 
-	private static final String DATE_FORMAT = "MMM dd, yyyy hh:mm aaa";
+	public static final String USER_READABLE_DATE_FORMAT = "MMM dd, yyyy hh:mm aaa";
 	
 	private List<CharSequence> objects;
 	private int checked;
@@ -62,7 +62,7 @@ public class LogFileAdapter extends ArrayAdapter<CharSequence> {
 		}
 		
 		Date lastModified = SaveLogHelper.getLastModifiedDate(filename.toString());
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(USER_READABLE_DATE_FORMAT);
 		
 		text2.setText(simpleDateFormat.format(lastModified));
 		

@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.os.Looper;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -100,9 +102,39 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         	openLog(filename);
         }
         
+        showInitialMessage();
+        
     }
     
-    @Override
+    private void showInitialMessage() {
+
+		boolean isFirstRun = PreferenceHelper.getFirstRunPreference(getApplicationContext());
+		if (isFirstRun) {
+			
+			View view = View.inflate(this, R.layout.intro_dialog, null);
+			TextView textView = (TextView) view.findViewById(R.id.first_run_text_view);
+			textView.setMovementMethod(LinkMovementMethod.getInstance());
+			textView.setText(R.string.first_run_message);
+			textView.setLinkTextColor(ColorStateList.valueOf(getResources().getColor(R.color.linkColorBlue)));
+			new AlertDialog.Builder(this)
+					.setTitle(R.string.first_run_title)
+			        .setView(view)
+			        .setPositiveButton(android.R.string.ok,
+						new DialogInterface.OnClickListener() {
+	
+							public void onClick(DialogInterface dialog, int which) {
+								PreferenceHelper.setFirstRunPreference(getApplicationContext(), false);
+							}
+						})
+					.setCancelable(false)
+			        .setIcon(R.drawable.icon).show();
+
+		}
+
+		
+	}
+
+	@Override
     public void onResume() {
     	super.onResume();
     	
@@ -735,7 +767,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			try {
 
 				logcatProcess = Runtime.getRuntime().exec(
-						new String[] { "logcat"});
+						new String[] { "logcat", "-v", "time" });
 
 				reader = new BufferedReader(new InputStreamReader(logcatProcess
 						.getInputStream()));
@@ -788,9 +820,11 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		protected void onProgressUpdate(String... values) {
 			super.onProgressUpdate(values);
 
+			String line = values[0];
+			
 			progressBar.setVisibility(View.GONE);
-			//if (new Random().nextBoolean()) log.d("collapsed mode is %s", collapsedMode);
-			adapter.addWithFilter(LogLine.newLogLine(values[0], !collapsedMode), searchEditText.getText());
+			
+			adapter.addWithFilter(LogLine.newLogLine(line, !collapsedMode), searchEditText.getText());
 			
 			// check to see if the list needs to be truncated to avoid out of memory errors
 			if (++counter % UPDATE_CHECK_INTERVAL == 0 

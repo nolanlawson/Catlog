@@ -58,7 +58,6 @@ import com.nolanlawson.logcat.util.UtilLogger;
 public class LogLineAdapter extends BaseAdapter implements Filterable {
 	
 	private static UtilLogger log = new UtilLogger(LogLineAdapter.class);
-
 	
 	private Comparator<? super LogLine> mComparator;
 	
@@ -368,6 +367,19 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 		tagTextView.setSingleLine(!logLine.isExpanded());
 		tagTextView.setEllipsize(logLine.isExpanded() ? null : TruncateAt.END);
 		tagTextView.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
+		
+		View extraInfoLayout = view.findViewById(R.id.extra_info_layout);
+		extraInfoLayout.setVisibility(
+				(logLine.isExpanded() && PreferenceHelper.getShowTimestampAndPidPreference(context)) 
+				? View.VISIBLE 
+				: View.GONE);
+		
+		TextView pidTextView = (TextView) view.findViewById(R.id.pid_text);
+		TextView timestampTextView = (TextView) view.findViewById(R.id.timestamp_text);
+		
+		pidTextView.setText(Integer.toString(logLine.getProcessId()));
+		timestampTextView.setText(logLine.getTimestamp());
+
 		
 		// adjacent tags should be different colors, ideally
 		String mustBeDifferentFrom = null;

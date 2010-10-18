@@ -54,6 +54,11 @@
 	<string name="pref_expanded_by_default_title">Expand by Default</string>
 	<string name="pref_expanded_by_default_summary">If checked, log text will not be truncated by default.</string>
 
+	<string name="pref_show_timestamp">show_timestamp</string>
+	<string name="pref_show_timestamp_title">Show Pid &amp; Timestamp</string>
+	<string name="pref_show_timestamp_summary">If checked, the process id and timestamp will be shown when expanded.</string>
+
+
 	<string name="text_size_xsmall_value">XS</string>
 	<string name="text_size_small_value">S</string>
     <string name="text_size_medium_value">M</string>
@@ -75,7 +80,18 @@
     <string name="choose_format">Choose Format</string>
     
     <string name="widget_recording_in_progress">Recording...</string>
-    
-    
+    <string name="first_run">first_run</string>
+    <string name="first_run_pref_title">Reset introduction</string>
+    <string name="first_run_pref_summary">Show introductory message again</string>
+    <string name="first_run_title">Welcome to CatLog!</string>
+    <string name="first_run_message">\
+Go to <b>Menu → About</b>\n\
+&#160;&#160;&#160;for changelog and info.\n\n\
+Do <b>Long press → Widgets</b>\n\
+&#160;&#160;&#160;from the homescreen to create a widget.\n\n\
+I can has donation?  If you like CatLog,\n\
+you can show your support by buying\n\
+him some catnip. <a href='market://details?id=com.nolanlawson.logcat.donate'>Click here</a> to donate.\n\n\
+</string> 
     
 </resources>

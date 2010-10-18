@@ -11,4 +11,15 @@
 		android:summary="@string/pref_expanded_by_default_summary"
 		android:persistent="true" android:defaultValue="false"/>
 
+	<CheckBoxPreference android:key="@string/pref_show_timestamp"
+		android:title="@string/pref_show_timestamp_title"
+		android:summary="@string/pref_show_timestamp_summary"
+		android:persistent="true" android:defaultValue="true"/>
+		
+
+	<CheckBoxPreference android:key="@string/first_run"
+		android:title="@string/first_run_pref_title"
+		android:summary="@string/first_run_pref_summary"
+		android:persistent="true" android:defaultValue="true"/>		
+
 </PreferenceScreen>
