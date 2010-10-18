@@ -23,7 +23,7 @@ public class LogLine {
 	private int logLevel;
 	private String tag;
 	private String logOutput;
-	private int processId;
+	private int processId = -1;
 	private String timestamp;
 	private boolean expanded = false;
 	

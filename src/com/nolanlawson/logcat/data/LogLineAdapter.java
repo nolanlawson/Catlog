@@ -370,16 +370,17 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 		
 		View extraInfoLayout = view.findViewById(R.id.extra_info_layout);
 		extraInfoLayout.setVisibility(
-				(logLine.isExpanded() && PreferenceHelper.getShowTimestampAndPidPreference(context)) 
+				(logLine.isExpanded() 
+						&& PreferenceHelper.getShowTimestampAndPidPreference(context)
+						&& logLine.getProcessId() != -1) // -1 marks lines like 'beginning of /dev/log...' 
 				? View.VISIBLE 
 				: View.GONE);
 		
 		TextView pidTextView = (TextView) view.findViewById(R.id.pid_text);
 		TextView timestampTextView = (TextView) view.findViewById(R.id.timestamp_text);
 		
-		pidTextView.setText(Integer.toString(logLine.getProcessId()));
+		pidTextView.setText(logLine.getProcessId() != -1 ? Integer.toString(logLine.getProcessId()) : null);
 		timestampTextView.setText(logLine.getTimestamp());
-
 		
 		// adjacent tags should be different colors, ideally
 		String mustBeDifferentFrom = null;
