@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.text.TextUtils.TruncateAt;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -38,6 +39,7 @@ import android.widget.TextView;
 import com.nolanlawson.logcat.R;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.util.LogLineAdapterUtil;
+import com.nolanlawson.logcat.util.StopWatch;
 import com.nolanlawson.logcat.util.UtilLogger;
 
 /**
@@ -207,6 +209,7 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
     }
     
     public void removeFirst(int n) {
+    	StopWatch stopWatch = new StopWatch("removeFirst()");
     	if (mOriginalValues != null) {
     		synchronized (mLock) {
     			List<LogLine> subList = mOriginalValues.subList(n, mOriginalValues.size());
@@ -218,10 +221,11 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
     		}
     	} else {
     		synchronized (mLock) {
-    			mObjects = mObjects.subList(n, mObjects.size());
+    			mObjects = new ArrayList<LogLine>(mObjects.subList(n, mObjects.size()));
     		}
     	}
     	if (mNotifyOnChange) notifyDataSetChanged();
+    	stopWatch.log(log);
     }
 
     /**
@@ -312,7 +316,7 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
     }
     
     public List<LogLine> getTrueValues() {
-    	return new ArrayList<LogLine>(mOriginalValues != null ? mOriginalValues : mObjects);
+    	return mOriginalValues != null ? mOriginalValues : mObjects;
     }
 
     /**

@@ -60,7 +60,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	// this avoids OutOfMemoryErrors
 	private static final int MAX_NUM_LOG_LINES = 1000;
 	// how often to check to see if we've gone over the max size
-	private static final int UPDATE_CHECK_INTERVAL = 30;
+	private static final int UPDATE_CHECK_INTERVAL = 200;
 	
 	private static UtilLogger log = new UtilLogger(LogcatActivity.class);
 	
