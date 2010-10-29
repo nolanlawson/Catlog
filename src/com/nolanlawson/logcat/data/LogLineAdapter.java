@@ -479,7 +479,7 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
             ArrayList<LogLine> finalValues = allValues;
             
             // search by prefix
-            if (prefix != null && prefix.length() > 0) {
+            if (!TextUtils.isEmpty(prefix)) {
                 String prefixString = prefix.toString().toLowerCase();
 
                 final ArrayList<LogLine> values = allValues;
@@ -490,9 +490,10 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
                 for (int i = 0; i < count; i++) {
                     final LogLine value = values.get(i);
                     // search the tag and the log output
-                    final String valueText = (value.getTag() + " " + value.getLogOutput()).toLowerCase();
-
-                    if (valueText.contains(prefixString)) {
+                    if ((value.getTag() != null 
+                    		&& value.getTag().toLowerCase().contains(prefixString))
+                    		|| (value.getLogOutput() != null 
+                    		&& value.getLogOutput().toLowerCase().contains(prefixString))) {
                         newValues.add(value);
                     }
                 }
