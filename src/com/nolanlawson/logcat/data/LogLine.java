@@ -85,7 +85,7 @@ public class LogLine {
 		
 		// if the first char is a digit, then this starts out with a timestamp
 		// otherwise, it's a legacy log or the beginning of the log output or something
-		if (TextUtils.isDigitsOnly(originalLine.substring(0, 1))) {
+		if (!TextUtils.isEmpty(originalLine) && TextUtils.isDigitsOnly(Character.toString(originalLine.charAt(0)))) {
 			timestamp = originalLine.substring(0,19);
 			originalLine = originalLine.substring(19); // cut off timestamp
 		}
