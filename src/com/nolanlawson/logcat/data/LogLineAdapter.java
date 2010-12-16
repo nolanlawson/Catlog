@@ -481,6 +481,10 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
             // search by prefix
             if (!TextUtils.isEmpty(prefix)) {
                 String prefixString = prefix.toString().toLowerCase();
+                int prefixInt = -1;
+                try {
+                	prefixInt = Integer.parseInt(prefixString);
+                } catch (NumberFormatException ignore) { }
 
                 final ArrayList<LogLine> values = allValues;
                 final int count = values.size();
@@ -493,7 +497,9 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
                     if ((value.getTag() != null 
                     		&& value.getTag().toLowerCase().contains(prefixString))
                     		|| (value.getLogOutput() != null 
-                    		&& value.getLogOutput().toLowerCase().contains(prefixString))) {
+                    		&& value.getLogOutput().toLowerCase().contains(prefixString))
+                    		|| (prefixInt != -1
+                    		&& prefixInt == value.getProcessId())) {
                         newValues.add(value);
                     }
                 }

@@ -1,5 +1,6 @@
 package com.nolanlawson.logcat.helper;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -52,7 +53,7 @@ public class SaveLogHelper {
 		return file;
 	}
 	
-	public static void deleteLog(String filename) {
+	public static void deleteLogIfExists(String filename) {
 		
 		File catlogDir = getCatlogDirectory();
 		
@@ -167,7 +168,7 @@ public class SaveLogHelper {
 		}
 		PrintStream out = null;
 		try {
-			out = new PrintStream(new FileOutputStream(newFile));
+			out = new PrintStream(new BufferedOutputStream(new FileOutputStream(newFile, true)));
 			
 			// save a log as either a list of strings or as a charsequence
 			if (logLines != null) {

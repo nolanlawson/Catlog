@@ -37,6 +37,8 @@ import com.nolanlawson.logcat.util.UtilLogger;
  */
 public class LogcatRecordingService extends IntentService {
 
+	private static final int MAX_STRINGBUILDER_SIZE = 10000;
+	
 	private static final Class<?>[] mStartForegroundSignature = new Class[] {
 	    int.class, Notification.class};
 	private static final Class<?>[] mStopForegroundSignature = new Class[] {
@@ -223,6 +225,8 @@ public class LogcatRecordingService extends IntentService {
 
 		makeToast(R.string.log_recording_started, Toast.LENGTH_SHORT);
 		
+		SaveLogHelper.deleteLogIfExists(filename);
+		
 		logcatProcess = null;
 		BufferedReader reader = null;
 		
@@ -281,6 +285,13 @@ public class LogcatRecordingService extends IntentService {
 				}
 				
 				stringBuilder.append(line).append("\n");
+				
+				if (stringBuilder.length() > MAX_STRINGBUILDER_SIZE) {
+					// avoid OutOfMemoryErrors; flush now
+					SaveLogHelper.saveLog(stringBuilder, filename);
+					stringBuilder = new StringBuilder();
+					
+				}
 			}
 
 		}

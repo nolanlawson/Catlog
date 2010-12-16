@@ -435,7 +435,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 					
 					for (int i = 0; i < checkedItems.length; i++) {
 						if (checkedItems[i]) {
-							SaveLogHelper.deleteLog(filenameArray[i].toString());
+							SaveLogHelper.deleteLogIfExists(filenameArray[i].toString());
 						}
 					}
 					
@@ -590,6 +590,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 
 			@Override
 			protected Boolean doInBackground(Void... params) {
+				SaveLogHelper.deleteLogIfExists(filename);
 				return SaveLogHelper.saveLog(logLines, filename);
 				
 			}
