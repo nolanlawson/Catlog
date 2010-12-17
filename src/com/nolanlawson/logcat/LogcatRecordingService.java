@@ -57,7 +57,6 @@ public class LogcatRecordingService extends IntentService {
 	private Object[] mStartForegroundArgs = new Object[2];
 	private Object[] mStopForegroundArgs = new Object[1];
 	
-	private String filename;
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		
 		@Override
@@ -127,7 +126,6 @@ public class LogcatRecordingService extends IntentService {
     public void onStart(Intent intent, int startId) {
     	log.d("onStart()");
     	super.onStart(intent, startId);
-    	filename = intent.getStringExtra("filename");
         handleCommand(intent);
     }
 
@@ -225,6 +223,8 @@ public class LogcatRecordingService extends IntentService {
 
 		makeToast(R.string.log_recording_started, Toast.LENGTH_SHORT);
 		
+		String filename = intent.getStringExtra("filename");
+		
 		SaveLogHelper.deleteLogIfExists(filename);
 		
 		logcatProcess = null;
@@ -320,7 +320,7 @@ public class LogcatRecordingService extends IntentService {
 			if (logSaved) {
 				String savedText = String.format(getText(R.string.log_saved_from_recording).toString(),filename);
 				makeToast(savedText, Toast.LENGTH_LONG);
-				startLogcatActivityToViewSavedFile();
+				startLogcatActivityToViewSavedFile(filename);
 			} else {
 				makeToast(R.string.unable_to_save_log, Toast.LENGTH_LONG);
 			}
@@ -329,7 +329,7 @@ public class LogcatRecordingService extends IntentService {
 		}
 	}
 
-	private void startLogcatActivityToViewSavedFile() {
+	private void startLogcatActivityToViewSavedFile(String filename) {
 		
 		// start up the logcat activity if necessary and show the saved file
 		

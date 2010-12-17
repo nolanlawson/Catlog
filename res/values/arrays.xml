@@ -1,4 +1,9 @@
 <resources>
+	<string-array name="filter_choices">
+		<item>@string/filter_choice_tag</item>
+		<item>@string/filter_choice_pid</item>
+	</string-array>
+
 	<string-array name="log_levels">
 		<item>@string/log_level_verbose</item>
 		<item>@string/log_level_debug</item>

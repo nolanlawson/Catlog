@@ -93,7 +93,7 @@ public class LogLineAdapterUtil {
 		return context.getResources().getColor(result);
 	}	
 	
-	public static synchronized int getTagColor(Context context, String tag, String mustBeDifferentFromTag) {
+	public static synchronized int getOrCreateTagColor(Context context, String tag, String mustBeDifferentFromTag) {
 		
 		if (TextUtils.isEmpty(tag)) {
 			return context.getResources().getColor(android.R.color.black); // color doesn't matter in this case

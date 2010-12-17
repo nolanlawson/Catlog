@@ -3,6 +3,10 @@
     <string name="app_name">CatLog</string>
     <string name="main_edit_text_hint">Search logs</string>
     
+    <string name="filter_choice">Search by</string>
+    <string name="filter_choice_tag">Tag</string>
+    <string name="filter_choice_pid">Process id</string>
+    
     
 	<string name="save_log">Save Log</string>
 	<string name="log_level">Log Level</string>

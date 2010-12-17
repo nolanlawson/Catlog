@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import android.app.AlertDialog;
@@ -13,7 +14,6 @@ import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.DialogInterface.OnClickListener;
 import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -25,34 +25,41 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Filter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Filter.FilterListener;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.nolanlawson.logcat.data.LogFileAdapter;
 import com.nolanlawson.logcat.data.LogLine;
 import com.nolanlawson.logcat.data.LogLineAdapter;
+import com.nolanlawson.logcat.data.TagAndProcessIdAdapter;
 import com.nolanlawson.logcat.helper.DialogHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
+import com.nolanlawson.logcat.util.LogLineAdapterUtil;
 import com.nolanlawson.logcat.util.UtilLogger;
 
-public class LogcatActivity extends ListActivity implements TextWatcher, OnScrollListener, FilterListener, OnEditorActionListener {
+public class LogcatActivity extends ListActivity implements TextWatcher, OnScrollListener, FilterListener, OnEditorActionListener, OnItemLongClickListener, OnClickListener {
 	
 	private static final int REQUEST_CODE_SETTINGS = 1;
 	
@@ -370,7 +377,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		builder.setTitle(R.string.manage_saved_logs)
 			.setCancelable(true)
 			.setNegativeButton(android.R.string.cancel, null)
-			.setNeutralButton(R.string.delete_all, new OnClickListener() {
+			.setNeutralButton(R.string.delete_all, new DialogInterface.OnClickListener() {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -383,7 +390,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 					
 				}
 			})
-			.setPositiveButton(android.R.string.ok, new OnClickListener() {
+			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -393,7 +400,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				}
 			})
 			.setView(messageTextView)
-			.setSingleChoiceItems(dropdownAdapter, 0, new OnClickListener() {
+			.setSingleChoiceItems(dropdownAdapter, 0, new DialogInterface.OnClickListener() {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -427,7 +434,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			builder.setTitle(R.string.delete_saved_log)
 				.setCancelable(true)
 				.setMessage(String.format(getText(R.string.are_you_sure).toString(), finalDeleteCount))
-				.setPositiveButton(android.R.string.ok, new OnClickListener() {
+				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -471,7 +478,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		new AlertDialog.Builder(this)
 			.setTitle(R.string.choose_format)
-			.setSingleChoiceItems(items, 0, new OnClickListener() {
+			.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -556,7 +563,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		final EditText editText = DialogHelper.createEditTextForFilenameSuggestingDialog(this);
 		
-		OnClickListener onClickListener = new OnClickListener() {
+		DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -638,7 +645,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		builder.setTitle(R.string.open_log)
 			.setCancelable(true)
-			.setSingleChoiceItems(dropdownAdapter, logToSelect == -1 ? 0 : logToSelect, new OnClickListener() {
+			.setSingleChoiceItems(dropdownAdapter, logToSelect == -1 ? 0 : logToSelect, new DialogInterface.OnClickListener() {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -716,7 +723,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		builder.setTitle(R.string.log_level)
 			.setCancelable(true)
-			.setSingleChoiceItems(R.array.log_levels, adapter.getLogLevelLimit(), new OnClickListener() {
+			.setSingleChoiceItems(R.array.log_levels, adapter.getLogLevelLimit(), new DialogInterface.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -736,6 +743,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		searchEditText = (EditText) findViewById(R.id.main_edit_text);
 		searchEditText.addTextChangedListener(this);
 		searchEditText.setOnEditorActionListener(this);
+		searchEditText.setOnClickListener(this);
 		
 		progressBar = (ProgressBar) findViewById(R.id.main_progress_bar);
 		progressBar.setVisibility(View.VISIBLE);
@@ -750,6 +758,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		setListAdapter(adapter);
 		
 		getListView().setOnScrollListener(this);
+		getListView().setOnItemLongClickListener(this);
 		
 		
 	}	
@@ -862,6 +871,49 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		adapter.notifyDataSetChanged();
 		
 	}
+	
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+		
+		final LogLine logLine = adapter.getItem(position);
+		
+		List<CharSequence> choices = Arrays.<CharSequence>asList(getResources().getStringArray(R.array.filter_choices));
+		List<CharSequence> choicesSubtexts = Arrays.<CharSequence>asList(logLine.getTag(), Integer.toString(logLine.getProcessId()));
+		
+		int tagColor = LogLineAdapterUtil.getOrCreateTagColor(this, logLine.getTag(), "");
+		
+		TagAndProcessIdAdapter textAndSubtextAdapter = new TagAndProcessIdAdapter(this, choices, choicesSubtexts, tagColor, -1);
+		
+		
+		new AlertDialog.Builder(this)
+			.setCancelable(true)
+			.setTitle(R.string.filter_choice)
+			.setIcon(R.drawable.ic_search_category_default)
+	        .setSingleChoiceItems(textAndSubtextAdapter, -1, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+
+					if (which == 0) { // tag
+						searchEditText.setText(logLine.getTag());
+					} else { // which == 1, i.e. process id
+						searchEditText.setText(Integer.toString(logLine.getProcessId()));
+					}
+					
+					// put the cursor at the end
+					searchEditText.setSelection(searchEditText.length());
+					dialog.dismiss();
+					
+				}
+			}).create().show();
+		
+		
+		
+		return true;
+	}
+	
+	
 
 	@Override
 	public void afterTextChanged(Editable s) {
@@ -911,6 +963,16 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 	}
 
+	@Override
+	public void onClick(View v) {
+		// editText clicked
+		if (searchEditText.length() > 0) {
+			// I think it's intuitive to click an edit text and have all the text selected
+			searchEditText.setSelection(0, searchEditText.length());
+		}
+		
+	}
+	
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {

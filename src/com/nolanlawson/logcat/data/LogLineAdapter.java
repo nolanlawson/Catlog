@@ -391,7 +391,7 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 		if (position > 0 ) {
 			mustBeDifferentFrom = getItem(position - 1).getTag();
 		}
-		tagTextView.setTextColor(LogLineAdapterUtil.getTagColor(context, logLine.getTag(), mustBeDifferentFrom));
+		tagTextView.setTextColor(LogLineAdapterUtil.getOrCreateTagColor(context, logLine.getTag(), mustBeDifferentFrom));
 		
 		// set the text size based on the preferences
 		

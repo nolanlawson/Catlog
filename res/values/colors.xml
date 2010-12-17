@@ -1,4 +1,5 @@
 <resources>
+<color name="darkGray">#FF333333</color>
 <color name="linkColorBlue">#0099dd</color>
 <color name="background_wtf">#FF999900</color>
 <color name="background_error">#FFCC0000</color>
