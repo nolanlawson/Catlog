@@ -23,7 +23,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
-import com.nolanlawson.logcat.data.LogLine;
+import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
 import com.nolanlawson.logcat.helper.WidgetHelper;
@@ -37,8 +37,8 @@ import com.nolanlawson.logcat.util.UtilLogger;
  */
 public class LogcatRecordingService extends IntentService {
 
-	private static final int MAX_STRINGBUILDER_SIZE = 10000;
-	
+	private static final String LOGCAT_DATE_FORMAT = "MM-dd HH:mm:ss.SSS";
+
 	private static final Class<?>[] mStartForegroundSignature = new Class[] {
 	    int.class, Notification.class};
 	private static final Class<?>[] mStopForegroundSignature = new Class[] {
@@ -242,9 +242,11 @@ public class LogcatRecordingService extends IntentService {
 					.getInputStream()));
 		
 			Date currentDate = new Date(System.currentTimeMillis());
-			SimpleDateFormat dateFormat = new SimpleDateFormat(LogLine.LOGCAT_DATE_FORMAT);
+			SimpleDateFormat dateFormat = new SimpleDateFormat(LOGCAT_DATE_FORMAT);
 			
 			String line;
+			int lineCount = 0;
+			int logLinePeriod = PreferenceHelper.getLogLinePeriodPreference(getApplicationContext());
 			
 			// keep skipping lines until we find one that is past the current time.
 			// unfortunately, Android logcat does not print out the year, so if
@@ -254,7 +256,7 @@ public class LogcatRecordingService extends IntentService {
 			boolean pastCurrentTime = false;
 			
 			while ((line = reader.readLine()) != null) {
-
+				
 				if (!pastCurrentTime) {
 					
 					if (line.length() < 19) { // length of date format at beginning of log line
@@ -286,11 +288,10 @@ public class LogcatRecordingService extends IntentService {
 				
 				stringBuilder.append(line).append("\n");
 				
-				if (stringBuilder.length() > MAX_STRINGBUILDER_SIZE) {
+				if (++lineCount % logLinePeriod == 0) {
 					// avoid OutOfMemoryErrors; flush now
 					SaveLogHelper.saveLog(stringBuilder, filename);
-					stringBuilder = new StringBuilder();
-					
+					stringBuilder.delete(0, stringBuilder.length()); // clear
 				}
 			}
 

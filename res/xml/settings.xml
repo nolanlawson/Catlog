@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+	<PreferenceCategory android:title="@string/pref_cat_appearance">
+
 	<ListPreference android:key="@string/pref_text_size"
 		android:title="@string/pref_text_size_title" android:persistent="true"
 		android:entries="@array/text_sizes" android:entryValues="@array/text_size_values"
@@ -16,10 +18,21 @@
 		android:summary="@string/pref_show_timestamp_summary"
 		android:persistent="true" android:defaultValue="true"/>
 		
-
+	</PreferenceCategory>
+	
+	<PreferenceCategory android:title="@string/pref_cat_configuration">
+		
+	<EditTextPreference android:key="@string/pref_log_line_period"
+		android:title="@string/pref_log_line_period_title"
+		android:summary="@string/pref_log_line_period_summary"
+		android:persistent="true" android:defaultValue="@string/pref_log_line_period_default"/>
+		
+		
 	<CheckBoxPreference android:key="@string/first_run"
 		android:title="@string/first_run_pref_title"
 		android:summary="@string/first_run_pref_summary"
 		android:persistent="true" android:defaultValue="true"/>		
+		
+	</PreferenceCategory>
 
 </PreferenceScreen>

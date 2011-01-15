@@ -100,7 +100,7 @@ public class SaveLogHelper {
 
 			@Override
 			public int compare(File object1, File object2) {
-				return new Long(object2.lastModified() - object1.lastModified()).intValue();
+				return new Long(object2.lastModified()).compareTo(object1.lastModified());
 			}});
 		
 		List<String> result = new ArrayList<String>();
@@ -145,15 +145,15 @@ public class SaveLogHelper {
 		return result;
 	}
 	
-	public static boolean saveLog(CharSequence logString, String filename) {
+	public static synchronized boolean saveLog(CharSequence logString, String filename) {
 		return saveLog(null, logString, filename);
 	}
 	
-	public static boolean saveLog(List<String> logLines, String filename) {
+	public static synchronized boolean saveLog(List<CharSequence> logLines, String filename) {
 		return saveLog(logLines, null, filename);
 	}
 	
-	private static boolean saveLog(List<String> logLines, CharSequence logString, String filename) {
+	private static boolean saveLog(List<CharSequence> logLines, CharSequence logString, String filename) {
 		
 		File catlogDir = getCatlogDirectory();
 		
@@ -168,11 +168,12 @@ public class SaveLogHelper {
 		}
 		PrintStream out = null;
 		try {
-			out = new PrintStream(new BufferedOutputStream(new FileOutputStream(newFile, true)));
+			// specifying 8192 gets rid of an annoying warning message
+			out = new PrintStream(new BufferedOutputStream(new FileOutputStream(newFile, true), 8192));
 			
 			// save a log as either a list of strings or as a charsequence
 			if (logLines != null) {
-				for (String line : logLines) {
+				for (CharSequence line : logLines) {
 					out.println(line);
 				}				
 			} else if (logString != null) {

@@ -9,8 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.app.AlertDialog.Builder;
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,28 +25,26 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Filter;
-import android.widget.LinearLayout;
+import android.widget.Filter.FilterListener;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.Filter.FilterListener;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.nolanlawson.logcat.data.LogFileAdapter;
 import com.nolanlawson.logcat.data.LogLine;
@@ -478,7 +476,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		new AlertDialog.Builder(this)
 			.setTitle(R.string.choose_format)
-			.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+			.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -544,9 +542,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			
 	}
 	
-	private List<String> getCurrentLogAsListOfStrings() {
+	private List<CharSequence> getCurrentLogAsListOfStrings() {
 		
-		List<String> result = new ArrayList<String>();
+		List<CharSequence> result = new ArrayList<CharSequence>(adapter.getCount());
 		
 		for (int i = 0; i < adapter.getCount(); i ++) {
 			result.add(adapter.getItem(i).getOriginalLine());
@@ -572,8 +570,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				if (DialogHelper.isInvalidFilename(editText.getText())) {
 					Toast.makeText(LogcatActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
 				} else {
-					
-					saveLog(editText.getText().toString());
+					String filename = editText.getText().toString();
+					saveLog(filename);
 				}
 				
 				
@@ -591,7 +589,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		// do in background to avoid jankiness
 		
-		final List<String> logLines = getCurrentLogAsListOfStrings();
+		final List<CharSequence> logLines = getCurrentLogAsListOfStrings();
 		
 		AsyncTask<Void,Void,Boolean> saveTask = new AsyncTask<Void, Void, Boolean>(){
 
@@ -609,6 +607,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				
 				if (successfullySavedLog) {
 					Toast.makeText(getApplicationContext(), R.string.log_saved, Toast.LENGTH_SHORT).show();
+					openLog(filename);
 				} else {
 					Toast.makeText(getApplicationContext(), R.string.unable_to_save_log, Toast.LENGTH_LONG).show();
 				}

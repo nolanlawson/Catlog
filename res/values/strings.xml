@@ -56,12 +56,20 @@
 	
 	<string name="pref_expanded_by_default">expand_default</string>
 	<string name="pref_expanded_by_default_title">Expand by Default</string>
-	<string name="pref_expanded_by_default_summary">If checked, log text will not be truncated by default.</string>
+	<string name="pref_expanded_by_default_summary">Show full log text by default.</string>
 
 	<string name="pref_show_timestamp">show_timestamp</string>
 	<string name="pref_show_timestamp_title">Show Pid &amp; Timestamp</string>
-	<string name="pref_show_timestamp_summary">If checked, the process id and timestamp will be shown when expanded.</string>
+	<string name="pref_show_timestamp_summary">Show process id and timestamp when expanded.</string>
 
+	<string name="pref_log_line_period">log_line_period</string>
+	<string name="pref_log_line_period_default">200</string>
+	<string name="pref_log_line_period_title">Write Period</string>
+	<string name="pref_log_line_period_summary" formatted="false">When recording, write to SD card every %d line%s (default: %s).</string>
+	<string name="pref_log_line_period_error"><![CDATA[Please enter an integer >=1 and <=1000.]]></string>
+
+	<string name="pref_cat_appearance">Appearance</string>
+	<string name="pref_cat_configuration">Configuration</string>
 
 	<string name="text_size_xsmall_value">XS</string>
 	<string name="text_size_small_value">S</string>

@@ -346,15 +346,18 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
             int resource) {
     	
     	Context context = parent.getContext();
+    	LogLineViewWrapper wrapper;
 		if (view == null) {
-			LayoutInflater vi = (LayoutInflater) context
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = vi.inflate(R.layout.logcat_list_item, parent, false);
+			view = mInflater.inflate(R.layout.logcat_list_item, parent, false);
+			wrapper = new LogLineViewWrapper(view);
+			view.setTag(wrapper);
+		} else {
+			wrapper = (LogLineViewWrapper) view.getTag();
 		}
 		
-		TextView levelTextView = (TextView) view.findViewById(R.id.log_level_text);
-		TextView outputTextView = (TextView) view.findViewById(R.id.log_output_text);
-		TextView tagTextView = (TextView) view.findViewById(R.id.tag_text);
+		TextView levelTextView = wrapper.getLevelTextView();
+		TextView outputTextView = wrapper.getOutputTextView();
+		TextView tagTextView = wrapper.getTagTextView();
 		
 		LogLine logLine = getItem(position);
 		
@@ -372,24 +375,29 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 		tagTextView.setEllipsize(logLine.isExpanded() ? null : TruncateAt.END);
 		tagTextView.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
 		
-		View extraInfoLayout = view.findViewById(R.id.extra_info_layout);
-		extraInfoLayout.setVisibility(
-				(logLine.isExpanded() 
-						&& PreferenceHelper.getShowTimestampAndPidPreference(context)
-						&& logLine.getProcessId() != -1) // -1 marks lines like 'beginning of /dev/log...' 
-				? View.VISIBLE 
-				: View.GONE);
+		View extraInfoLayout = wrapper.getExtraInfoLayout();
+		boolean extraInfoIsVisible = logLine.isExpanded() 
+				&& PreferenceHelper.getShowTimestampAndPidPreference(context)
+				&& logLine.getProcessId() != -1; // -1 marks lines like 'beginning of /dev/log...' 
 		
-		TextView pidTextView = (TextView) view.findViewById(R.id.pid_text);
-		TextView timestampTextView = (TextView) view.findViewById(R.id.timestamp_text);
-		
-		pidTextView.setText(logLine.getProcessId() != -1 ? Integer.toString(logLine.getProcessId()) : null);
-		timestampTextView.setText(logLine.getTimestamp());
+		extraInfoLayout.setVisibility(extraInfoIsVisible ? View.VISIBLE : View.GONE);
+				
+		if (extraInfoIsVisible) {
+			TextView pidTextView = wrapper.getPidTextView();
+			TextView timestampTextView = wrapper.getTimestampTextView();
+			
+			pidTextView.setText(logLine.getProcessId() != -1 ? Integer.toString(logLine.getProcessId()) : null);
+			timestampTextView.setText(logLine.getTimestamp());
+		}
 		
 		// adjacent tags should be different colors, ideally
 		String mustBeDifferentFrom = null;
 		if (position > 0 ) {
-			mustBeDifferentFrom = getItem(position - 1).getTag();
+			try {
+				mustBeDifferentFrom = getItem(position - 1).getTag();
+			} catch (IndexOutOfBoundsException ignore) {
+				// give up on getting the "mustBeDifferentFrom" string
+			}
 		}
 		tagTextView.setTextColor(LogLineAdapterUtil.getOrCreateTagColor(context, logLine.getTag(), mustBeDifferentFrom));
 		

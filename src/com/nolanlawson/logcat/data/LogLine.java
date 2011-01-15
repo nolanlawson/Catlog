@@ -12,14 +12,10 @@ import com.nolanlawson.logcat.util.UtilLogger;
 
 public class LogLine {
 
-
-	public static final String LOGCAT_DATE_FORMAT = "MM-dd HH:mm:ss.SSS";
-	
 	private static Pattern logPattern = Pattern.compile("(\\w)/([^(]+)\\(\\s*(\\d+)\\): (.*)");
 	
 	private static UtilLogger log = new UtilLogger(LogLine.class);
 	
-	private String originalLine;
 	private int logLevel;
 	private String tag;
 	private String logOutput;
@@ -27,12 +23,29 @@ public class LogLine {
 	private String timestamp;
 	private boolean expanded = false;
 	
-	public String getOriginalLine() {
-		return originalLine;
+	public CharSequence getOriginalLine() {
+		
+		if (logLevel == -1) { // starter line like "begin of log etc. etc."
+			return logOutput;
+		}
+		
+		StringBuilder stringBuilder = new StringBuilder();
+		
+		if (timestamp != null) {
+			stringBuilder.append(timestamp).append(' ');
+		}
+		
+		stringBuilder.append(convertLogLevelToChar(logLevel))
+			.append('/')
+			.append(tag)
+			.append('(')
+			.append(processId)
+			.append("): ")
+			.append(logOutput);
+		
+		return stringBuilder;
 	}
-	public void setOriginalLine(String originalLine) {
-		this.originalLine = originalLine;
-	}
+
 	public int getLogLevel() {
 		return logLevel;
 	}
@@ -77,7 +90,6 @@ public class LogLine {
 	public static LogLine newLogLine(String originalLine, boolean expanded) {
 		
 		LogLine logLine = new LogLine();
-		logLine.setOriginalLine(originalLine);
 		logLine.setExpanded(expanded);
 		
 		// first get the timestamp
@@ -86,7 +98,7 @@ public class LogLine {
 		// if the first char is a digit, then this starts out with a timestamp
 		// otherwise, it's a legacy log or the beginning of the log output or something
 		if (!TextUtils.isEmpty(originalLine) && TextUtils.isDigitsOnly(Character.toString(originalLine.charAt(0)))) {
-			timestamp = originalLine.substring(0,19);
+			timestamp = originalLine.substring(0,18);
 			originalLine = originalLine.substring(19); // cut off timestamp
 		}
 		
@@ -114,52 +126,39 @@ public class LogLine {
 	}
 	public static int convertCharToLogLevel(char logLevelChar) {
 		
-		int logLevel = -1;
 		switch (logLevelChar) {
-		case 'D':
-			logLevel = Log.DEBUG;
-			break;
-		case 'E':
-			logLevel = Log.ERROR;
-			break;
-		case 'I':
-			logLevel = Log.INFO;
-			break;
-		case 'V':
-			logLevel = Log.VERBOSE;
-			break;
-		case 'W':
-			logLevel = Log.WARN;
-			break;
-		case 'F':
-			logLevel = LogLineAdapterUtil.LOG_WTF; // 'F' actually stands for 'WTF', which is a real Android log level in 2.2
-			break;
+			case 'D':
+				return Log.DEBUG;
+			case 'E':
+				return Log.ERROR;
+			case 'I':
+				return Log.INFO;
+			case 'V':
+				return Log.VERBOSE;
+			case 'W':
+				return Log.WARN;
+			case 'F':
+				return LogLineAdapterUtil.LOG_WTF; // 'F' actually stands for 'WTF', which is a real Android log level in 2.2
 		}
-		return logLevel;
+		return -1;
 	}
 	
 	public static char convertLogLevelToChar(int logLevel) {
-		
-		char result = ' ';
+
 		switch (logLevel) {
-		case Log.DEBUG:
-			result = 'D';
-			break;
-		case Log.ERROR:
-			result = 'E';
-			break;
-		case Log.INFO:
-			result = 'I';
-			break;
-		case Log.VERBOSE:
-			result = 'V';
-			break;
-		case Log.WARN:
-			result = 'W';
-			break;
-		case LogLineAdapterUtil.LOG_WTF:
-			result = 'F';
+			case Log.DEBUG:
+				return 'D';
+			case Log.ERROR:
+				return 'E';
+			case Log.INFO:
+				return 'I';
+			case Log.VERBOSE:
+				return 'V';
+			case Log.WARN:
+				return 'W';
+			case LogLineAdapterUtil.LOG_WTF:
+				return 'F';
 		}
-		return result;
-	}	
+		return ' ';
+	}
 }

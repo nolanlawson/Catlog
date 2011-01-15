@@ -11,6 +11,7 @@ import com.nolanlawson.logcat.util.UtilLogger;
 public class PreferenceHelper {
 	
 	private static float textSize = -1;
+	private static Boolean showTimestampAndPid = null;
 	
 	private static UtilLogger log = new UtilLogger(PreferenceHelper.class);
 	
@@ -38,6 +39,29 @@ public class PreferenceHelper {
 		editor.commit();
 		
 		
+	}
+	
+	public static int getLogLinePeriodPreference(Context context) {
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+		
+		String defaultValue = context.getText(R.string.pref_log_line_period_default).toString();
+		
+		String intAsString = sharedPrefs.getString(context.getText(R.string.pref_log_line_period).toString(), defaultValue);
+		
+		try { 
+			return Integer.parseInt(intAsString);
+		} catch (NumberFormatException e) {
+			return Integer.parseInt(defaultValue);
+		}
+	}
+	
+	public static void setLogLinePeriodPreference(Context context, int value) {
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+		Editor editor = sharedPrefs.edit();
+		
+		editor.putString(context.getText(R.string.pref_log_line_period).toString(), Integer.toString(value));
+		
+		editor.commit();
 	}
 	
 	public static float getTextSizePreference(Context context) {
@@ -69,6 +93,7 @@ public class PreferenceHelper {
 	
 	public static void clearCache() {
 		textSize = -1;
+		showTimestampAndPid = null;
 	}
 	
 	private static void cacheTextsize(Context context, int dimenId) {
@@ -82,10 +107,14 @@ public class PreferenceHelper {
 
 	public static boolean getShowTimestampAndPidPreference(Context context) {
 
-		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+		if (showTimestampAndPid == null) {
+			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+			
+			showTimestampAndPid = sharedPrefs.getBoolean(context.getText(R.string.pref_show_timestamp).toString(), true);
+		}	
 		
-		return sharedPrefs.getBoolean(
-				context.getText(R.string.pref_show_timestamp).toString(), true);
+		return showTimestampAndPid;
+		
 	}
 	
 	public static boolean getExpandedByDefaultPreference(Context context) {
