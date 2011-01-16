@@ -75,8 +75,8 @@ public class LogLineAdapterUtil {
 	
 	public static synchronized int getOrCreateTagColor(Context context, String tag) {
 		
-		if (TextUtils.isEmpty(tag)) {
-			return context.getResources().getColor(android.R.color.black); // color doesn't matter in this case
+		if (tag == null) {
+			tag = "";
 		}
 		
 		int hashedTag = hashStringToInt(tag);
