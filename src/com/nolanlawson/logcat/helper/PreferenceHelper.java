@@ -74,7 +74,7 @@ public class PreferenceHelper {
 			
 			String textSizePref = sharedPrefs.getString(
 					context.getText(R.string.pref_text_size).toString(), 
-					context.getText(R.string.text_size_small_value).toString());
+					context.getText(R.string.text_size_medium_value).toString());
 
 			if (textSizePref.equals(context.getText(R.string.text_size_xsmall_value))) {
 				cacheTextsize(context, R.dimen.text_size_xsmall);
