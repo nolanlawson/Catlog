@@ -904,7 +904,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		List<CharSequence> choices = Arrays.<CharSequence>asList(getResources().getStringArray(R.array.filter_choices));
 		List<CharSequence> choicesSubtexts = Arrays.<CharSequence>asList(logLine.getTag(), Integer.toString(logLine.getProcessId()));
 		
-		int tagColor = LogLineAdapterUtil.getOrCreateTagColor(this, logLine.getTag(), "");
+		int tagColor = LogLineAdapterUtil.getOrCreateTagColor(this, logLine.getTag());
 		
 		TagAndProcessIdAdapter textAndSubtextAdapter = new TagAndProcessIdAdapter(this, choices, choicesSubtexts, tagColor, -1);
 		

@@ -17,12 +17,10 @@ public class LogLineAdapterUtil {
 	
 	private static final int NUM_COLORS = 17;
 	
-	private static int tagColorIndex = 0;
-	
 	// used to cycle through colors for each tag to make the UI more visually appealing
 	private static Map<Integer, Integer> tagsToColors = new HashMap<Integer, Integer>();
 	
-	
+	private static int colorIndex = 0;
 	
 	public static int getBackgroundColorForLogLevel(Context context, int logLevel) {
 		int result = android.R.color.black;
@@ -46,8 +44,6 @@ public class LogLineAdapterUtil {
 			result = R.color.background_wtf;
 			break;
 		}	
-
-
 
 		return context.getResources().getColor(result);
 	}
@@ -77,7 +73,7 @@ public class LogLineAdapterUtil {
 		return context.getResources().getColor(result);
 	}	
 	
-	public static synchronized int getOrCreateTagColor(Context context, String tag, String mustBeDifferentFromTag) {
+	public static synchronized int getOrCreateTagColor(Context context, String tag) {
 		
 		if (TextUtils.isEmpty(tag)) {
 			return context.getResources().getColor(android.R.color.black); // color doesn't matter in this case
@@ -89,23 +85,7 @@ public class LogLineAdapterUtil {
 		
 		if (result == null) {
 			
-			Integer mustBeDifferentFrom = TextUtils.isEmpty(mustBeDifferentFromTag) 
-					? null : tagsToColors.get(hashStringToInt(mustBeDifferentFromTag));
-			
-			do {
-			
-				result = getColorAt(tagColorIndex, context);
-				
-				// cycle through
-				if (tagColorIndex == NUM_COLORS - 1) {
-					tagColorIndex = 0;
-				} else {
-					tagColorIndex++;
-				}
-				
-			} while (mustBeDifferentFrom != null 
-					&& !tag.equals(mustBeDifferentFromTag) 
-					&& result.equals(mustBeDifferentFrom));
+			result = getNewColor(context);
 			
 			tagsToColors.put(hashedTag, result);
 		}
@@ -115,6 +95,17 @@ public class LogLineAdapterUtil {
 		
 	}
 	
+	private static Integer getNewColor(Context context) {
+		
+		if (colorIndex == NUM_COLORS) {
+			colorIndex = 0;
+		}
+	
+		// cycle through
+		return getColorAt(colorIndex, context);
+
+	}
+
 	private static Integer getColorAt(int i, Context context) {
 		
 		ColorScheme colorScheme = PreferenceHelper.getColorScheme(context);
@@ -161,11 +152,12 @@ public class LogLineAdapterUtil {
 	 * Appending the string to the reverse of itself makes the hash codes less likely to collide.
 	 */
 	private static int hashStringToInt(String str) {
-		return (str + StringUtil.reverse(str)).hashCode();
+		return StringUtil.strongHashCode(str);
 	}
 	
 	public static void clearTagColorCache() {
-		tagColorIndex = 0;
+		colorIndex = 0;
 		tagsToColors.clear();
 	}
+
 }

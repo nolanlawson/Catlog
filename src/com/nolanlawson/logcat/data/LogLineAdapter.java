@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -89,13 +88,6 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
      * array adapter in a drop down widget.
      */
     private int mDropDownResource;
-
-    /**
-     * If the inflated resource is not a TextView, {@link #mFieldId} is used to find
-     * a TextView inside the inflated views hierarchy. This field must contain the
-     * identifier that matches the one defined in the resource file.
-     */
-    private int mFieldId = 0;
 
     /**
      * Indicates whether or not {@link #notifyDataSetChanged()} must be called whenever
@@ -289,7 +281,6 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
         mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mResource = mDropDownResource = resource;
         mObjects = objects;
-        mFieldId = textViewResourceId;
     }
 
     /**
@@ -396,17 +387,8 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 			pidTextView.setText(logLine.getProcessId() != -1 ? Integer.toString(logLine.getProcessId()) : null);
 			timestampTextView.setText(logLine.getTimestamp());
 		}
-		
-		// adjacent tags should be different colors, ideally
-		String mustBeDifferentFrom = null;
-		if (position > 0 ) {
-			try {
-				mustBeDifferentFrom = getItem(position - 1).getTag();
-			} catch (IndexOutOfBoundsException ignore) {
-				// give up on getting the "mustBeDifferentFrom" string
-			}
-		}
-		tagTextView.setTextColor(LogLineAdapterUtil.getOrCreateTagColor(context, logLine.getTag(), mustBeDifferentFrom));
+
+		tagTextView.setTextColor(LogLineAdapterUtil.getOrCreateTagColor(context, logLine.getTag()));
 		
 		// set the text size based on the preferences
 		
