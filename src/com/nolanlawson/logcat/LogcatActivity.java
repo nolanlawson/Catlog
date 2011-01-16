@@ -896,6 +896,11 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		final LogLine logLine = adapter.getItem(position);
 		
+		if (logLine.getProcessId() == -1) {
+			// invalid line
+			return false;
+		}
+		
 		List<CharSequence> choices = Arrays.<CharSequence>asList(getResources().getStringArray(R.array.filter_choices));
 		List<CharSequence> choicesSubtexts = Arrays.<CharSequence>asList(logLine.getTag(), Integer.toString(logLine.getProcessId()));
 		
