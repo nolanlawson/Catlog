@@ -96,13 +96,17 @@ public class LogLineAdapterUtil {
 	}
 	
 	private static Integer getNewColor(Context context) {
-		
-		if (colorIndex == NUM_COLORS) {
-			colorIndex = 0;
-		}
 	
 		// cycle through
-		return getColorAt(colorIndex, context);
+		Integer result = getColorAt(colorIndex, context);
+		
+		if (colorIndex == NUM_COLORS - 1) {
+			colorIndex = 0;
+		} else {
+			colorIndex++;
+		}
+		
+		return result;
 
 	}
 
