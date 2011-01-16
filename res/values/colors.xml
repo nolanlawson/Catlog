@@ -2,7 +2,7 @@
 
 
 <color name="spinner_droptown_dark">#FF333333</color>
-<color name="spinner_droptown_light">#FFFFFFF0</color>
+<color name="spinner_droptown_light">#00000000</color>
 <color name="spinner_droptown_android">#FFA4C639</color>
 
 
