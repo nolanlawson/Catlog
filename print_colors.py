@@ -3,13 +3,14 @@
 import re,sys
 
 text = open(sys.argv[1],"r").read()
+background = sys.argv[2]
 
-print "<html><body bgcolor=\"#000000\">"
+print "<html><body bgcolor=\"#%s\">" % (background)
 
 
-#pattern = "#FF([0-9A-F]+)"
-pattern = "\\S+"
+pattern = re.compile("#FF([0-9A-F]+)",re.IGNORECASE)
+#pattern = "\\S+"
 
-for color in re.findall(pattern,text):
+for color in pattern.findall(text):
 	print "<font color=\"#%s\">%s</font><p/>" % (color,color)
 print "</body></html>"

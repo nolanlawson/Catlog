@@ -6,11 +6,12 @@ import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
+import com.nolanlawson.logcat.helper.DonateHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
 
 public class SettingsActivity extends PreferenceActivity implements OnPreferenceChangeListener{
@@ -18,8 +19,9 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	private static final int MAX_LOG_LINE_PERIOD = 1000;
 	private static final int MIN_LOG_LINE_PERIOD = 1;
 	
-	EditTextPreference logLinePeriodPreference;
-	ListPreference textSizePreference;
+	private EditTextPreference logLinePeriodPreference;
+	private ListPreference textSizePreference;
+	private ListPreference themePreference;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +30,6 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 		addPreferencesFromResource(R.xml.settings);
 		
 		setUpPreferences();
-		
 	}
 	
 	private void setUpPreferences() {
@@ -47,6 +48,22 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 		textSizePreference.setSummary(textSizePreference.getEntry());
 		
 		textSizePreference.setOnPreferenceChangeListener(this);
+		
+		themePreference = (ListPreference) findPreference(getText(R.string.pref_theme));
+		
+		themePreference.setOnPreferenceChangeListener(this);
+		
+		boolean donateInstalled = DonateHelper.isDonateVersionInstalled(this) ;
+		
+		String themeSummary = getText(donateInstalled 
+				? PreferenceHelper.getColorScheme(this).getNameResource()
+				: R.string.pref_theme_summary_free).toString();
+		
+		themeSummary = String.format(themeSummary, getText(PreferenceHelper.getColorScheme(this).getNameResource()));
+		
+		themePreference.setSummary(themeSummary);
+		
+		themePreference.setEnabled(donateInstalled);
 		
 	}
 	
@@ -71,6 +88,10 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 
 			Toast.makeText(this, R.string.pref_log_line_period_error, Toast.LENGTH_LONG).show();
 			return false;
+			
+		} else if (preference.getKey().equals(getText(R.string.pref_theme))) {
+			themePreference.setSummary(newValue.toString());
+			return true;
 			
 		} else { // text size pref
 			
@@ -100,10 +121,4 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	    return super.onKeyDown(keyCode, event);
 	}
 	
-	
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		PreferenceHelper.clearCache();
-	}
 }

@@ -9,8 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.ListActivity;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,23 +29,25 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Filter;
-import android.widget.Filter.FilterListener;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Filter.FilterListener;
+import android.widget.TextView.OnEditorActionListener;
 
+import com.nolanlawson.logcat.data.ColorScheme;
 import com.nolanlawson.logcat.data.LogFileAdapter;
 import com.nolanlawson.logcat.data.LogLine;
 import com.nolanlawson.logcat.data.LogLineAdapter;
@@ -69,8 +71,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	
 	private static UtilLogger log = new UtilLogger(LogcatActivity.class);
 	
+	private LinearLayout backgroundLinearLayout;
 	private EditText searchEditText;
-	private ProgressBar progressBar;
+	private ProgressBar darkProgressBar, lightProgressBar;
 	private LogLineAdapter adapter;
 	private LogReaderAsyncTask task;
 	
@@ -97,6 +100,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         setUpWidgets();
         
         setUpAdapter();
+        
+        updateBackgroundColor();
         
         Intent intent = getIntent();
         
@@ -161,6 +166,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		super.onActivityResult(requestCode, resultCode, data);
 		log.d("onActivityResult()");
 		
+		// preferences may have changed
+		PreferenceHelper.clearCache();
+		LogLineAdapterUtil.clearTagColorCache();
+		
 		collapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(getApplicationContext());
 		
 		// settings activity returned - text size might have changed, so update list
@@ -178,6 +187,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			});
 		}
 		adapter.notifyDataSetChanged();
+		updateBackgroundColor();
 	}
 
 	private void startUpMainLog() {
@@ -679,7 +689,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			protected void onPostExecute(List<String> logLines) {
 				super.onPostExecute(logLines);
 				resetDisplayedLog(filename);
-				progressBar.setVisibility(View.GONE);
+				darkProgressBar.setVisibility(View.GONE);
+				lightProgressBar.setVisibility(View.GONE);
 				
 				for (String line : logLines) {
 					adapter.add(LogLine.newLogLine(line, !collapsedMode));
@@ -744,8 +755,15 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		searchEditText.setOnEditorActionListener(this);
 		searchEditText.setOnClickListener(this);
 		
-		progressBar = (ProgressBar) findViewById(R.id.main_progress_bar);
-		progressBar.setVisibility(View.VISIBLE);
+		darkProgressBar = (ProgressBar) findViewById(R.id.main_dark_progress_bar);
+		lightProgressBar = (ProgressBar) findViewById(R.id.main_light_progress_bar);
+		
+		ColorScheme colorScheme = PreferenceHelper.getColorScheme(this);
+		
+		darkProgressBar.setVisibility(colorScheme == ColorScheme.Light ? View.GONE : View.VISIBLE);
+		lightProgressBar.setVisibility(colorScheme == ColorScheme.Light ? View.VISIBLE : View.GONE);
+		
+		backgroundLinearLayout = (LinearLayout) findViewById(R.id.main_background);
 		
 		
 	}
@@ -831,7 +849,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 
 			String line = values[0];
 			
-			progressBar.setVisibility(View.GONE);
+			darkProgressBar.setVisibility(View.GONE);
+			lightProgressBar.setVisibility(View.GONE);
 			
 			adapter.addWithFilter(LogLine.newLogLine(line, !collapsedMode), searchEditText.getText());
 			
@@ -1020,5 +1039,18 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	
 	private void logLevelChanged() {
 		filter(searchEditText.getText());
+	}
+	
+	private void updateBackgroundColor() {
+		ColorScheme colorScheme = PreferenceHelper.getColorScheme(this);
+
+		final int color = colorScheme.getBackgroundColor(LogcatActivity.this);
+		
+		handler.post(new Runnable() {
+			public void run() {
+				backgroundLinearLayout.setBackgroundColor(color);
+			}
+		});
+		
 	}
 }

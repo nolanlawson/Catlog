@@ -8,31 +8,15 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.nolanlawson.logcat.R;
+import com.nolanlawson.logcat.data.ColorScheme;
+import com.nolanlawson.logcat.helper.PreferenceHelper;
 
 public class LogLineAdapterUtil {
 	
 	public static final int LOG_WTF = 100; // arbitrary int to signify 'wtf' log level
 	
-	private static final int[] TAG_COLORS = new int[]{
-		R.color.tag_color_01,
-		R.color.tag_color_02,
-		R.color.tag_color_03,
-		R.color.tag_color_04,
-		R.color.tag_color_05,
-		R.color.tag_color_06,
-		R.color.tag_color_07,
-		R.color.tag_color_08,
-		R.color.tag_color_09,
-		R.color.tag_color_10,
-		R.color.tag_color_11,
-		R.color.tag_color_12,
-		R.color.tag_color_13,
-		R.color.tag_color_14,
-		R.color.tag_color_15,
-		R.color.tag_color_16,
-		R.color.tag_color_17,
-		
-	};
+	private static final int NUM_COLORS = 17;
+	
 	private static int tagColorIndex = 0;
 	
 	// used to cycle through colors for each tag to make the UI more visually appealing
@@ -110,10 +94,10 @@ public class LogLineAdapterUtil {
 			
 			do {
 			
-				result = TAG_COLORS[tagColorIndex];
+				result = getColorAt(tagColorIndex, context);
 				
 				// cycle through
-				if (tagColorIndex == TAG_COLORS.length - 1) {
+				if (tagColorIndex == NUM_COLORS - 1) {
 					tagColorIndex = 0;
 				} else {
 					tagColorIndex++;
@@ -126,11 +110,21 @@ public class LogLineAdapterUtil {
 			tagsToColors.put(hashedTag, result);
 		}
 		
-		return context.getResources().getColor(result);
+		return result;
 		
 		
 	}
 	
+	private static Integer getColorAt(int i, Context context) {
+		
+		ColorScheme colorScheme = PreferenceHelper.getColorScheme(context);
+		
+		int[] colorArray = colorScheme.getTagColors(context);
+		
+		return colorArray[i];
+		
+	}
+
 	public static boolean logLevelIsAcceptableGivenLogLevelLimit(int logLevel, int logLevelLimit) {
 			
 		int minVal = 0;
@@ -168,5 +162,10 @@ public class LogLineAdapterUtil {
 	 */
 	private static int hashStringToInt(String str) {
 		return (str + StringUtil.reverse(str)).hashCode();
+	}
+	
+	public static void clearTagColorCache() {
+		tagColorIndex = 0;
+		tagsToColors.clear();
 	}
 }

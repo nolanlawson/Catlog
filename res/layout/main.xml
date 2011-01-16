@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical" android:layout_width="fill_parent"
-	android:layout_height="fill_parent" android:gravity="center_horizontal">
+	android:layout_height="fill_parent" android:gravity="center_horizontal"
+	android:id="@+id/main_background">
 
 	<LinearLayout android:orientation="vertical"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
@@ -15,9 +16,13 @@
 
 	</LinearLayout>
 
-	<ProgressBar android:id="@+id/main_progress_bar"
+	<ProgressBar android:id="@+id/main_dark_progress_bar"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:indeterminate="true" />
+		android:indeterminate="true"/>
+
+	<ProgressBar android:id="@+id/main_light_progress_bar"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:indeterminate="true" style="@android:style/Widget.ProgressBar.Inverse"/>
 
 	<ListView android:layout_width="fill_parent"
 		android:layout_height="0px" android:layout_weight="1.0" android:id="@android:id/list"

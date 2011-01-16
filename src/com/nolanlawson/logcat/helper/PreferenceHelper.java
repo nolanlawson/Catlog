@@ -6,12 +6,14 @@ import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
 import com.nolanlawson.logcat.R;
+import com.nolanlawson.logcat.data.ColorScheme;
 import com.nolanlawson.logcat.util.UtilLogger;
 
 public class PreferenceHelper {
 	
 	private static float textSize = -1;
 	private static Boolean showTimestampAndPid = null;
+	private static ColorScheme colorScheme = null;
 	
 	private static UtilLogger log = new UtilLogger(PreferenceHelper.class);
 	
@@ -94,6 +96,7 @@ public class PreferenceHelper {
 	public static void clearCache() {
 		textSize = -1;
 		showTimestampAndPid = null;
+		colorScheme = null;
 	}
 	
 	private static void cacheTextsize(Context context, int dimenId) {
@@ -139,6 +142,36 @@ public class PreferenceHelper {
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 		return sharedPrefs.getBoolean(context.getString(R.string.first_run), true);
 
+	}
+	
+	public static ColorScheme getColorScheme(Context context) {
+		
+		if (colorScheme == null) {
+		
+			if (!DonateHelper.isDonateVersionInstalled(context)) {
+				colorScheme = ColorScheme.Dark; // hard-coded in free version
+			} else {
+				SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+				String colorSchemeName = sharedPrefs.getString(
+						context.getText(R.string.pref_theme).toString(), ColorScheme.Dark.name());
+				
+				colorScheme = Enum.valueOf(ColorScheme.class, colorSchemeName);
+			}
+		}
+		
+		return colorScheme;
+		
+	}
+		
+	public static void setColorScheme(Context context, ColorScheme colorScheme) {
+		
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+		Editor editor = sharedPrefs.edit();
+		
+		editor.putString(context.getString(R.string.pref_theme).toString(), colorScheme.name());
+		
+		editor.commit();
+		
 	}
 	
 }

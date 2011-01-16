@@ -11,7 +11,7 @@ import android.widget.CheckedTextView;
 import android.widget.TextView;
 
 import com.nolanlawson.logcat.R;
-import com.nolanlawson.logcat.util.LogLineAdapterUtil;
+import com.nolanlawson.logcat.helper.PreferenceHelper;
 
 public class TagAndProcessIdAdapter extends ArrayAdapter<CharSequence> {
 	
@@ -49,6 +49,20 @@ public class TagAndProcessIdAdapter extends ArrayAdapter<CharSequence> {
 		
 		text1.setText(tag);
 		text2.setText(subtexts.get(position));
+		int backgroundColorId;
+		switch (PreferenceHelper.getColorScheme(context)) {
+		case Dark:
+			backgroundColorId = R.color.spinner_droptown_dark;
+			break;
+		case Light:
+			backgroundColorId = R.color.spinner_droptown_light;
+			break;
+		default : // Android
+			backgroundColorId = R.color.spinner_droptown_android;
+			break;
+		}
+		int backgroundColor = context.getResources().getColor(backgroundColorId);
+		text2.setBackgroundColor(backgroundColor);
 		
 		if (position == 0) { // tag
 			// color should match whatever's in the main log line listview

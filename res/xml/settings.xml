@@ -18,6 +18,11 @@
 		android:summary="@string/pref_show_timestamp_summary"
 		android:persistent="true" android:defaultValue="true"/>
 		
+	<ListPreference android:key="@string/pref_theme"
+		android:title="@string/pref_theme_title" android:persistent="true"
+		android:entries="@array/pref_theme_choices" android:entryValues="@array/pref_theme_choices"
+		android:defaultValue="@string/pref_theme_choice_dark" />		
+		
 	</PreferenceCategory>
 	
 	<PreferenceCategory android:title="@string/pref_cat_configuration">

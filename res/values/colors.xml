@@ -1,5 +1,11 @@
 <resources>
-<color name="darkGray">#FF333333</color>
+
+
+<color name="spinner_droptown_dark">#FF333333</color>
+<color name="spinner_droptown_light">#FFFFFFF0</color>
+<color name="spinner_droptown_android">#FFA4C639</color>
+
+
 <color name="linkColorBlue">#0099dd</color>
 <color name="background_wtf">#FF999900</color>
 <color name="background_error">#FFCC0000</color>
@@ -7,6 +13,14 @@
 <color name="background_debug">#FF0066CC</color>
 <color name="background_info">#FF00CC00</color>
 <color name="background_warn">#FFFFFF00</color>
+
+<color name="main_background_dark">#FF000000</color>
+<color name="main_background_light">#FFFFFFF0</color>
+<color name="main_background_android">#FFA4C639</color>
+
+<color name="main_foreground_dark">@android:color/darker_gray</color>
+<color name="main_foreground_light">@android:color/black</color>
+<color name="main_foreground_android">@android:color/black</color>
 
 <color name="foreground_wtf">#FFFFFFFF</color>
 <color name="foreground_error">#FFFFFFFF</color>
@@ -33,6 +47,42 @@
 <color name="tag_color_15">#FF999900</color>
 <color name="tag_color_16">#FFCC3399</color>
 <color name="tag_color_17">#FFFFCC99</color>
+
+<color name="light_tag_color_01">#FF5b39c6</color>
+<color name="light_tag_color_02">#FFcc9900</color>
+<color name="light_tag_color_03">#FF3366ff</color>
+<color name="light_tag_color_04">#FF006600</color>
+<color name="light_tag_color_05">#FF990000</color>
+<color name="light_tag_color_06">#FF000066</color>
+<color name="light_tag_color_07">#FFff33ff</color>
+<color name="light_tag_color_08">#FF993300</color>
+<color name="light_tag_color_09">#FFff3366</color>
+<color name="light_tag_color_10">#FF0099cc</color>
+<color name="light_tag_color_11">#FF000000</color>
+<color name="light_tag_color_12">#FF333300</color>
+<color name="light_tag_color_13">#FF0000ff</color>
+<color name="light_tag_color_14">#FFff6633</color>
+<color name="light_tag_color_15">#FF6666ff</color>
+<color name="light_tag_color_16">#FF33cc66</color>
+<color name="light_tag_color_17">#FF003366</color>
+
+<color name="android_theme_tag_color_01">#FF222222</color>
+<color name="android_theme_tag_color_02">#FF996666</color>
+<color name="android_theme_tag_color_03">#FFFFCC99</color>
+<color name="android_theme_tag_color_04">#FFCC0000</color>
+<color name="android_theme_tag_color_05">#FF666633</color>
+<color name="android_theme_tag_color_06">#FF990099</color>
+<color name="android_theme_tag_color_07">#FF006600</color>
+<color name="android_theme_tag_color_08">#FF660066</color>
+<color name="android_theme_tag_color_09">#FF003399</color>
+<color name="android_theme_tag_color_10">#FFFF6633</color>
+<color name="android_theme_tag_color_11">#FFFFFFFF</color>
+<color name="android_theme_tag_color_12">#FFCC3333</color>
+<color name="android_theme_tag_color_13">#FFFFFF00</color>
+<color name="android_theme_tag_color_14">#FF0099CC</color>
+<color name="android_theme_tag_color_15">#FF009933</color>
+<color name="android_theme_tag_color_16">#FFCC3399</color>
+<color name="android_theme_tag_color_17">#FFCCCCFF</color>
 
 
 </resources>

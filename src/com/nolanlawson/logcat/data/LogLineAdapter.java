@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -366,9 +367,13 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 		levelTextView.setTextColor(LogLineAdapterUtil.getForegroundColorForLogLevel(context, logLine.getLogLevel()));
 		levelTextView.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
 		
+		int foregroundColor = PreferenceHelper.getColorScheme(context).getForegroundColor(context);
+		
+		
 		outputTextView.setText(logLine.getLogOutput());
 		outputTextView.setSingleLine(!logLine.isExpanded());
-		outputTextView.setEllipsize(logLine.isExpanded() ? null : TruncateAt.END);
+		outputTextView.setEllipsize(logLine.isExpanded() ? null : TruncateAt.END);		
+		outputTextView.setTextColor(foregroundColor);
 		
 		tagTextView.setText(logLine.getTag());
 		tagTextView.setSingleLine(!logLine.isExpanded());
@@ -384,7 +389,9 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 				
 		if (extraInfoIsVisible) {
 			TextView pidTextView = wrapper.getPidTextView();
+			pidTextView.setTextColor(foregroundColor);
 			TextView timestampTextView = wrapper.getTimestampTextView();
+			timestampTextView.setTextColor(foregroundColor);
 			
 			pidTextView.setText(logLine.getProcessId() != -1 ? Integer.toString(logLine.getProcessId()) : null);
 			timestampTextView.setText(logLine.getTimestamp());
