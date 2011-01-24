@@ -377,19 +377,7 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 				&& logLine.getProcessId() != -1; // -1 marks lines like 'beginning of /dev/log...' 
 		
 		extraInfoLayout.setVisibility(extraInfoIsVisible ? View.VISIBLE : View.GONE);
-				
-		if (extraInfoIsVisible) {
-			TextView pidTextView = wrapper.getPidTextView();
-			pidTextView.setTextColor(foregroundColor);
-			TextView timestampTextView = wrapper.getTimestampTextView();
-			timestampTextView.setTextColor(foregroundColor);
-			
-			pidTextView.setText(logLine.getProcessId() != -1 ? Integer.toString(logLine.getProcessId()) : null);
-			timestampTextView.setText(logLine.getTimestamp());
-		}
 
-		tagTextView.setTextColor(LogLineAdapterUtil.getOrCreateTagColor(context, logLine.getTag()));
-		
 		// set the text size based on the preferences
 		
 		float textSize = PreferenceHelper.getTextSizePreference(context);
@@ -397,6 +385,23 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 		tagTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
 		outputTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
 		levelTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+		
+		if (extraInfoIsVisible) {
+			
+			TextView pidTextView = wrapper.getPidTextView();
+			TextView timestampTextView = wrapper.getTimestampTextView();
+			
+			pidTextView.setTextColor(foregroundColor);
+			timestampTextView.setTextColor(foregroundColor);
+			
+			pidTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+			timestampTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+			
+			pidTextView.setText(logLine.getProcessId() != -1 ? Integer.toString(logLine.getProcessId()) : null);
+			timestampTextView.setText(logLine.getTimestamp());
+		}
+
+		tagTextView.setTextColor(LogLineAdapterUtil.getOrCreateTagColor(context, logLine.getTag()));
 		
 		return view;
     }
