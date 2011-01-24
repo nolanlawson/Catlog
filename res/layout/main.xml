@@ -41,10 +41,14 @@
 	<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:gravity="center_horizontal|center_vertical" >
 		
-		<TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:id="@+id/main_filename_text_view" android:textColor="@android:color/black"
-			android:paddingLeft="5dp" android:paddingRight="5dp" android:paddingTop="1dp"
-			android:paddingBottom="1dp"/>
+		<LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:id="@+id/main_filename_text_view_border" android:padding="1dp">
+		
+			<TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:id="@+id/main_filename_text_view"
+				android:paddingLeft="5dp" android:paddingRight="5dp" android:paddingTop="1dp"
+				android:paddingBottom="1dp"/>
+		</LinearLayout>
 	</LinearLayout>
 
 	<ListView android:layout_width="fill_parent"

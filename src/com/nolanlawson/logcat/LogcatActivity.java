@@ -75,7 +75,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	
 	private static UtilLogger log = new UtilLogger(LogcatActivity.class);
 	
-	private LinearLayout backgroundLinearLayout;
+	private LinearLayout backgroundLinearLayout, borderLinearLayout;
 	private EditText searchEditText;
 	private ProgressBar darkProgressBar, lightProgressBar;
 	private LogLineAdapter adapter;
@@ -194,6 +194,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		}
 		adapter.notifyDataSetChanged();
 		updateBackgroundColor();
+		updateDisplayedFilename();
 	}
 
 	private void startUpMainLog() {
@@ -713,15 +714,23 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		clearButton.setVisibility(filename == null? View.VISIBLE : View.GONE);
 		expandButton.setVisibility(collapsedMode ? View.VISIBLE : View.GONE);
 		collapseButton.setVisibility(collapsedMode ? View.GONE : View.VISIBLE);
-		filenameTextView.setVisibility(filename != null ? View.VISIBLE : View.GONE);
-		if (filename != null) {
-			filenameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, PreferenceHelper.getTextSizePreference(this));
-			ColorScheme colorScheme = PreferenceHelper.getColorScheme(this);
-			filenameTextView.setBackgroundColor(colorScheme.getBubbleBackgroundColor(this));
-			filenameTextView.setText(filename);
-		}
 		
 		resetFilter();
+		updateDisplayedFilename();
+		
+	}
+
+	private void updateDisplayedFilename() {
+		borderLinearLayout.setVisibility(currentlyOpenLog != null ? View.VISIBLE : View.GONE);
+		if (currentlyOpenLog != null) {
+			
+			filenameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, PreferenceHelper.getTextSizePreference(this) + 2);
+			ColorScheme colorScheme = PreferenceHelper.getColorScheme(this);
+			borderLinearLayout.setBackgroundColor(colorScheme.getForegroundColor(this));
+			filenameTextView.setTextColor(colorScheme.getForegroundColor(this));
+			filenameTextView.setBackgroundColor(colorScheme.getBubbleBackgroundColor(this));
+			filenameTextView.setText(currentlyOpenLog);
+		}
 		
 	}
 
@@ -784,6 +793,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		clearButton.setOnLongClickListener(this);
 		
 		filenameTextView = (TextView) findViewById(R.id.main_filename_text_view);
+		borderLinearLayout = (LinearLayout) findViewById(R.id.main_filename_text_view_border);
 		
 	}
 	
