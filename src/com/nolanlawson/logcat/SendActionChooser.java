@@ -37,6 +37,15 @@ public class SendActionChooser extends ListActivity {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)	{
+		
+		Bundle extras = getIntent().getExtras();
+		
+		if (extras.containsKey("title")) {
+			setTitle(extras.getString("title"));
+		} else {
+			setTitle(R.string.send_log);
+		}
+		
 		super.onCreate(savedInstanceState);
 
 		Intent actionSendIntent= createIntent();
@@ -60,8 +69,6 @@ public class SendActionChooser extends ListActivity {
  		
 		adapter = new AppAdapter(packageManager, launchables);
 		setListAdapter(adapter);
-		
-		Bundle extras = getIntent().getExtras();
 		
 		if (extras.containsKey(Intent.EXTRA_TEXT)) {
 			body = extras.getString(Intent.EXTRA_TEXT);

@@ -3,12 +3,13 @@
     <string name="app_name">CatLog</string>
     <string name="main_edit_text_hint">Search logs</string>
     
-    <string name="log_cleared">Log cleared. Long-press to unclear.</string>
+    <string name="log_cleared">Logs cleared from display. Long-press to reload.</string>
     <string name="filter_choice">Search by</string>
     <string name="filter_choice_tag">Tag</string>
     <string name="filter_choice_pid">Process id</string>
     
-    
+    <string name="send_as_text">Send as Text</string>
+    <string name="send_as_attachment">Send as Attachment</string>
     <string name="save">Save</string>
 	<string name="save_log">Save Log</string>
 	<string name="log_level">Log Level</string>
@@ -36,7 +37,7 @@
 	<string name="no_saved_logs">No saved logs found.</string>
 	<string name="recording_in_progress">Recording already in progress.</string>
 	<string name="enter_good_filename">Please enter a valid filename.</string>
-	<string name="log_saved">Log saved to the SD card.</string>
+	<string name="log_saved">Log saved. Showing saved log.</string>
 	<string name="log_saved_from_recording">Log saved to the SD card as \'%s\'.</string>
 	<string name="copy_to_clipboard">Copy to clipboard</string>
 	<string name="copied_to_clipboard">Copied to clipboard.</string>
@@ -116,7 +117,7 @@ Go to <b>Menu → About</b>\n\
 &#160;&#160;&#160;for changelog and info.\n\n\
 Do <b>Long press → Widgets</b>\n\
 &#160;&#160;&#160;from the homescreen to add a widget.\n\n\
-I can has donation?  If you like CatLog,\n\
+<b>I can has donation?</b>  If you like CatLog,\n\
 you can show your support by buying\n\
 him some catnip. <a href='market://details?id=com.nolanlawson.logcat.donate'>Click here</a> to donate.\n\n\
 </string> 

@@ -521,7 +521,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 					
 					if (asBody) {
 						extras.putString(Intent.EXTRA_TEXT, textOrFilename);
+						extras.putString("title", getText(R.string.send_as_text).toString());
 					} else { // as attachment
+						extras.putString("title", getText(R.string.send_as_attachment).toString());
 						
 						File file = SaveLogHelper.getFile(textOrFilename);
 						Uri uri = Uri.fromFile(file);
@@ -610,7 +612,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				super.onPostExecute(successfullySavedLog);
 				
 				if (successfullySavedLog) {
-					Toast.makeText(getApplicationContext(), R.string.log_saved, Toast.LENGTH_SHORT).show();
+					Toast.makeText(getApplicationContext(), R.string.log_saved, Toast.LENGTH_LONG).show();
 					openLog(filename);
 				} else {
 					Toast.makeText(getApplicationContext(), R.string.unable_to_save_log, Toast.LENGTH_LONG).show();
