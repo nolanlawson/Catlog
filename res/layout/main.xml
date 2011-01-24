@@ -4,15 +4,29 @@
 	android:layout_height="fill_parent" android:gravity="center_horizontal"
 	android:id="@+id/main_background">
 
-	<LinearLayout android:orientation="vertical"
+	<LinearLayout android:orientation="horizontal"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:gravity="center_horizontal" android:paddingLeft="2dp"
-		android:paddingRight="2dp" android:paddingTop="2dp">
+		android:gravity="center_vertical" android:paddingLeft="1dp"
+		android:paddingRight="1dp" android:paddingTop="1dp">
 
-		<EditText android:layout_width="fill_parent"
-			android:layout_height="wrap_content" android:id="@+id/main_edit_text"
+		<EditText android:layout_height="wrap_content" android:id="@+id/main_edit_text"
 			android:singleLine="true" android:imeOptions="actionSearch"
-			android:inputType="textFilter" android:hint="@string/main_edit_text_hint" />
+			android:inputType="textFilter" 
+			android:drawableLeft="@drawable/ic_btn_search"
+			android:drawablePadding="4dp"
+			android:layout_width="0px"	android:layout_weight="1" />
+		
+		<Button android:drawableLeft="@drawable/ic_menu_more_32"
+			android:layout_height="wrap_content" android:layout_width="wrap_content"
+			android:id="@+id/main_more_button"/>
+			
+		<Button android:drawableLeft="@drawable/ic_menu_less_32_4"
+			android:layout_height="wrap_content" android:layout_width="wrap_content"
+			android:id="@+id/main_less_button" android:visible="false"/>
+									
+		<Button android:drawableLeft="@drawable/ic_menu_close_clear_cancel_32"
+			android:layout_height="wrap_content" android:layout_width="wrap_content"
+			android:id="@+id/main_clear_button"/>
 
 	</LinearLayout>
 

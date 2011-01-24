@@ -512,12 +512,14 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
             return finalValues;        	
         }
 
-        @Override
+        @SuppressWarnings("unchecked")
+		@Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             //noinspection unchecked
         	
         	//log.d("filtering: %s", constraint);
         	
+			
             mObjects = (List<LogLine>) results.values;
             if (results.count > 0) {
                 notifyDataSetChanged();

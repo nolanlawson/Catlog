@@ -3,17 +3,22 @@
     <string name="app_name">CatLog</string>
     <string name="main_edit_text_hint">Search logs</string>
     
+    <string name="log_cleared">Log cleared.</string>
+    
     <string name="filter_choice">Search by</string>
     <string name="filter_choice_tag">Tag</string>
     <string name="filter_choice_pid">Process id</string>
     
     
+    <string name="save">Save</string>
 	<string name="save_log">Save Log</string>
 	<string name="log_level">Log Level</string>
-	<string name="open_log">Open Saved Log</string>
+	<string name="open">Open</string>
+	<string name="open_log">Open Log</string>
 	<string name="record_log">Record Log</string>
-	<string name="clear">Clear</string>
-	<string name="send_log">Send Log</string>
+	<string name="start_recording_log">Record</string>
+	<string name="clear">Clear All</string>
+	<string name="send_log">Send</string>
 	<string name="main_log">Play Main Log</string>
 	<string name="stop_recording_log">Stop Recording</string>
 	<string name="about">About</string>

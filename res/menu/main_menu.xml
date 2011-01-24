@@ -4,33 +4,27 @@
 	<item android:id="@+id/menu_log_level" android:title="@string/log_level"
 		android:alphabeticShortcut="@string/log_level" android:icon="@drawable/ic_menu_sort_by_size" />
 		
-	<item android:id="@+id/menu_clear" android:title="@string/clear"
-		android:alphabeticShortcut="@string/clear" android:icon="@drawable/ic_menu_close_clear_cancel" />
-		
 	<item android:id="@+id/menu_main_log" android:title="@string/main_log"
 		android:alphabeticShortcut="@string/main_log" android:icon="@drawable/ic_menu_play_clip" />
 						
-	<item android:id="@+id/menu_save_log" android:title="@string/save_log"
-		android:alphabeticShortcut="@string/save_log" android:icon="@drawable/ic_menu_save" />
+	<item android:id="@+id/menu_save_log" android:title="@string/save"
+		android:alphabeticShortcut="@string/save" android:icon="@drawable/ic_menu_save" />
 		
-	<item android:id="@+id/menu_open_log" android:title="@string/open_log"
-		android:alphabeticShortcut="@string/open_log" android:icon="@drawable/ic_menu_set_as" />
+	<item android:id="@+id/menu_open_log" android:title="@string/open"
+		android:alphabeticShortcut="@string/open" android:icon="@drawable/ic_menu_upload" />
 		
-	<item android:id="@+id/menu_record_log" android:title="@string/record_log"
-		android:alphabeticShortcut="@string/record_log" android:icon="@drawable/ic_menu_record2" />
-		
+	<item android:id="@+id/menu_record_log" android:title="@string/start_recording_log"
+		android:alphabeticShortcut="@string/start_recording_log" android:icon="@drawable/ic_menu_record2" />
+	
 	<item android:id="@+id/menu_stop_recording_log" android:title="@string/stop_recording_log"
 		android:alphabeticShortcut="@string/stop_recording_log" android:icon="@drawable/ic_menu_stop" />
 	
-	<item android:id="@+id/menu_expand_all" android:title="@string/expand_all"
-		android:alphabeticShortcut="@string/expand_all" android:icon="@drawable/ic_menu_more" />
-	
-	<item android:id="@+id/menu_collapse_all" android:title="@string/collapse_all"
-		android:alphabeticShortcut="@string/collapse_all" android:icon="@drawable/ic_menu_less" />
-			
 	<item android:id="@+id/menu_send_log" android:title="@string/send_log"
 		android:alphabeticShortcut="@string/send_log" android:icon="@drawable/ic_menu_send" />
-
+		
+	<item android:id="@+id/menu_save_log2" android:title="@string/save"
+		android:alphabeticShortcut="@string/save" android:icon="@drawable/ic_menu_save" />
+	
 	<item android:id="@+id/menu_delete_saved_log" android:title="@string/manage_saved_logs"
 		android:alphabeticShortcut="@string/manage_saved_logs" android:icon="@drawable/ic_menu_delete" />
 	

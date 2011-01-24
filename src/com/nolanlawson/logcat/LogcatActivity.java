@@ -35,6 +35,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.LinearLayout;
@@ -76,6 +77,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	private ProgressBar darkProgressBar, lightProgressBar;
 	private LogLineAdapter adapter;
 	private LogReaderAsyncTask task;
+	private Button clearButton, expandButton, collapseButton;
 	
 	private int firstVisibleItem = -1;
 	private boolean autoscrollToBottom = true;
@@ -238,6 +240,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	    	showOpenLogDialog();
 	    	return true;
 	    case R.id.menu_save_log:
+	    case R.id.menu_save_log2:
 	    	showSaveLogDialog();
 	    	return true;
 	    case R.id.menu_record_log:
@@ -246,9 +249,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	    case R.id.menu_stop_recording_log:
 	    	DialogHelper.stopRecordingLog(this);
 	    	return true;	    	
-	    case R.id.menu_clear:
-	    	adapter.clear();
-	    	return true;
 	    case R.id.menu_send_log:
 	    	sendLog();
 	    	return true;
@@ -260,12 +260,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	    	return true;
 	    case R.id.menu_delete_saved_log:
 	    	startDeleteSavedLogsDialog();
-	    	return true;
-	    case R.id.menu_expand_all:
-	    	expandOrCollapseAll(true);
-	    	return true;
-	    case R.id.menu_collapse_all:
-	    	expandOrCollapseAll(false);
 	    	return true;
 	    case R.id.menu_settings:
 	    	startSettingsActivity();
@@ -284,14 +278,18 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		boolean showingMainLog = (task != null && !task.isCancelled());
 		
-		MenuItem clearMenuItem = menu.findItem(R.id.menu_clear);
 		MenuItem mainLogMenuItem = menu.findItem(R.id.menu_main_log);
-		
-		clearMenuItem.setEnabled(showingMainLog);
-		clearMenuItem.setVisible(showingMainLog);
+		MenuItem saveLogMenuItem = menu.findItem(R.id.menu_save_log);
+		MenuItem saveLogMenuItem2 = menu.findItem(R.id.menu_save_log2);
 		
 		mainLogMenuItem.setEnabled(!showingMainLog);
 		mainLogMenuItem.setVisible(!showingMainLog);
+		
+		saveLogMenuItem.setEnabled(showingMainLog);
+		saveLogMenuItem.setVisible(showingMainLog);
+		
+		saveLogMenuItem2.setEnabled(!showingMainLog);
+		saveLogMenuItem2.setVisible(!showingMainLog);
 		
 		boolean recordingInProgress = ServiceHelper.checkIfServiceIsRunning(getApplicationContext(), LogcatRecordingService.class);
 	
@@ -303,15 +301,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		stopRecordingMenuItem.setEnabled(recordingInProgress);
 		stopRecordingMenuItem.setVisible(recordingInProgress);
-		
-		MenuItem expandAllMenuItem = menu.findItem(R.id.menu_expand_all);
-		MenuItem collapseAllMenuItem = menu.findItem(R.id.menu_collapse_all);
-		
-		expandAllMenuItem.setEnabled(collapsedMode);
-		expandAllMenuItem.setVisible(collapsedMode);
-		
-		collapseAllMenuItem.setEnabled(!collapsedMode);
-		collapseAllMenuItem.setVisible(!collapsedMode);
 		
 		MenuItem crazyLoggerMenuItem = menu.findItem(R.id.menu_crazy_logger_service);
 		crazyLoggerMenuItem.setEnabled(UtilLogger.DEBUG_MODE);
@@ -337,6 +326,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		for (LogLine logLine : adapter.getTrueValues()) {
 			logLine.setExpanded(expanded);
 		}
+		
+		expandButton.setVisibility(collapsedMode ? View.VISIBLE : View.GONE);
+		collapseButton.setVisibility(collapsedMode ? View.GONE : View.VISIBLE);
 		
 		adapter.notifyDataSetChanged();
 		
@@ -712,6 +704,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		adapter.clear();
 		currentlyOpenLog = filename;
 		collapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(getApplicationContext());
+		clearButton.setVisibility(filename == null? View.VISIBLE : View.GONE);
+		expandButton.setVisibility(collapsedMode ? View.VISIBLE : View.GONE);
+		collapseButton.setVisibility(collapsedMode ? View.GONE : View.VISIBLE);
+		
 		resetFilter();
 		
 	}
@@ -765,6 +761,13 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		backgroundLinearLayout = (LinearLayout) findViewById(R.id.main_background);
 		
+		clearButton = (Button) findViewById(R.id.main_clear_button);
+		expandButton = (Button) findViewById(R.id.main_more_button);
+		collapseButton = (Button) findViewById(R.id.main_less_button);
+		
+		for (Button button : new Button[]{clearButton, expandButton, collapseButton}) {
+			button.setOnClickListener(this);
+		}
 		
 	}
 	
@@ -988,10 +991,25 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 
 	@Override
 	public void onClick(View v) {
-		// editText clicked
-		if (searchEditText.length() > 0) {
-			// I think it's intuitive to click an edit text and have all the text selected
-			searchEditText.setSelection(0, searchEditText.length());
+
+		switch (v.getId()) {
+			case R.id.main_edit_text:
+				// editText clicked
+				if (searchEditText.length() > 0) {
+					// I think it's intuitive to click an edit text and have all the text selected
+					searchEditText.setSelection(0, searchEditText.length());
+				}
+				break;
+			case R.id.main_clear_button:
+				adapter.clear();
+				Toast.makeText(this, R.string.log_cleared, Toast.LENGTH_SHORT).show();
+				break;
+			case R.id.main_more_button:
+				expandOrCollapseAll(true);
+				break;
+			case R.id.main_less_button:
+				expandOrCollapseAll(false);
+				break;
 		}
 		
 	}
