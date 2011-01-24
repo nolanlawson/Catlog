@@ -12,16 +12,17 @@
 		
 	<item android:id="@+id/menu_open_log" android:title="@string/open"
 		android:alphabeticShortcut="@string/open" android:icon="@drawable/ic_menu_upload" />
+	
+	<item android:id="@+id/menu_send_log" android:title="@string/send_log"
+		android:alphabeticShortcut="@string/send_log" android:icon="@drawable/ic_menu_send" />
 		
+				
 	<item android:id="@+id/menu_record_log" android:title="@string/start_recording_log"
 		android:alphabeticShortcut="@string/start_recording_log" android:icon="@drawable/ic_menu_record2" />
 	
 	<item android:id="@+id/menu_stop_recording_log" android:title="@string/stop_recording_log"
 		android:alphabeticShortcut="@string/stop_recording_log" android:icon="@drawable/ic_menu_stop" />
-	
-	<item android:id="@+id/menu_send_log" android:title="@string/send_log"
-		android:alphabeticShortcut="@string/send_log" android:icon="@drawable/ic_menu_send" />
-		
+
 	<item android:id="@+id/menu_save_log2" android:title="@string/save"
 		android:alphabeticShortcut="@string/save" android:icon="@drawable/ic_menu_save" />
 	

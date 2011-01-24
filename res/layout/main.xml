@@ -24,7 +24,7 @@
 			android:layout_height="wrap_content" android:layout_width="wrap_content"
 			android:id="@+id/main_less_button" android:visible="false"/>
 									
-		<Button android:drawableLeft="@drawable/ic_menu_close_clear_cancel_32"
+		<Button android:drawableLeft="@drawable/ic_menu_clear_playlist_32"
 			android:layout_height="wrap_content" android:layout_width="wrap_content"
 			android:id="@+id/main_clear_button"/>
 

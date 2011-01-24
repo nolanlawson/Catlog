@@ -31,6 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -60,7 +61,8 @@ import com.nolanlawson.logcat.helper.ServiceHelper;
 import com.nolanlawson.logcat.util.LogLineAdapterUtil;
 import com.nolanlawson.logcat.util.UtilLogger;
 
-public class LogcatActivity extends ListActivity implements TextWatcher, OnScrollListener, FilterListener, OnEditorActionListener, OnItemLongClickListener, OnClickListener {
+public class LogcatActivity extends ListActivity implements TextWatcher, OnScrollListener, 
+		FilterListener, OnEditorActionListener, OnItemLongClickListener, OnClickListener, OnLongClickListener {
 	
 	private static final int REQUEST_CODE_SETTINGS = 1;
 	
@@ -768,6 +770,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		for (Button button : new Button[]{clearButton, expandButton, collapseButton}) {
 			button.setOnClickListener(this);
 		}
+		clearButton.setOnLongClickListener(this);
 		
 	}
 	
@@ -990,19 +993,27 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	}
 
 	@Override
+	public boolean onLongClick(View v) {
+		// clear button long-pressed, undo clear
+		startUpMainLog();
+		return true;
+		
+	}
+	
+	@Override
 	public void onClick(View v) {
 
 		switch (v.getId()) {
 			case R.id.main_edit_text:
-				// editText clicked
 				if (searchEditText.length() > 0) {
 					// I think it's intuitive to click an edit text and have all the text selected
 					searchEditText.setSelection(0, searchEditText.length());
 				}
 				break;
 			case R.id.main_clear_button:
+				searchEditText.setText("");
 				adapter.clear();
-				Toast.makeText(this, R.string.log_cleared, Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, R.string.log_cleared, Toast.LENGTH_LONG).show();
 				break;
 			case R.id.main_more_button:
 				expandOrCollapseAll(true);
@@ -1076,4 +1087,5 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		});
 		
 	}
+
 }

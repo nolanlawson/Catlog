@@ -3,8 +3,7 @@
     <string name="app_name">CatLog</string>
     <string name="main_edit_text_hint">Search logs</string>
     
-    <string name="log_cleared">Log cleared.</string>
-    
+    <string name="log_cleared">Log cleared. Long-press to unclear.</string>
     <string name="filter_choice">Search by</string>
     <string name="filter_choice_tag">Tag</string>
     <string name="filter_choice_pid">Process id</string>
