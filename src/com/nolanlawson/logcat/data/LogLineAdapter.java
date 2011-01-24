@@ -469,7 +469,8 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
             ArrayList<LogLine> allValues = new ArrayList<LogLine>(inputList.size());
             
             for (LogLine logLine : new ArrayList<LogLine>(inputList)) {
-            	if (LogLineAdapterUtil.logLevelIsAcceptableGivenLogLevelLimit(logLine.getLogLevel(), logLevelLimit)) {
+            	if (logLine != null && 
+            			LogLineAdapterUtil.logLevelIsAcceptableGivenLogLevelLimit(logLine.getLogLevel(), logLevelLimit)) {
             		allValues.add(logLine);
             	}
             }
