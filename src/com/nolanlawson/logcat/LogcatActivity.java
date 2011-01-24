@@ -24,6 +24,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -80,6 +81,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	private LogLineAdapter adapter;
 	private LogReaderAsyncTask task;
 	private Button clearButton, expandButton, collapseButton;
+	private TextView filenameTextView;
 	
 	private int firstVisibleItem = -1;
 	private boolean autoscrollToBottom = true;
@@ -711,6 +713,13 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		clearButton.setVisibility(filename == null? View.VISIBLE : View.GONE);
 		expandButton.setVisibility(collapsedMode ? View.VISIBLE : View.GONE);
 		collapseButton.setVisibility(collapsedMode ? View.GONE : View.VISIBLE);
+		filenameTextView.setVisibility(filename != null ? View.VISIBLE : View.GONE);
+		if (filename != null) {
+			filenameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, PreferenceHelper.getTextSizePreference(this));
+			ColorScheme colorScheme = PreferenceHelper.getColorScheme(this);
+			filenameTextView.setBackgroundColor(colorScheme.getBubbleBackgroundColor(this));
+			filenameTextView.setText(filename);
+		}
 		
 		resetFilter();
 		
@@ -773,6 +782,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			button.setOnClickListener(this);
 		}
 		clearButton.setOnLongClickListener(this);
+		
+		filenameTextView = (TextView) findViewById(R.id.main_filename_text_view);
 		
 	}
 	

@@ -8,6 +8,9 @@
 <color name="background_info">#FF00CC00</color>
 <color name="background_warn">#FFFFFF00</color>
 
+<color name="main_bubble_background_dark">#99333333</color>
+<color name="main_bubble_background_light">#99cccccc</color>
+
 <color name="main_background_dark">#FF000000</color>
 <color name="main_background_light">#FFFFFFF0</color>
 <color name="main_background_android">#FFA4C639</color>
