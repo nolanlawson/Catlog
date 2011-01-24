@@ -8,8 +8,9 @@
 <color name="background_info">#FF00CC00</color>
 <color name="background_warn">#FFFFFF00</color>
 
-<color name="main_bubble_background_dark">#cc333333</color>
-<color name="main_bubble_background_light">#cccccccc</color>
+<color name="main_bubble_background_dark">#44FFFFFF</color>
+<color name="main_bubble_background_light">#33000000</color>
+<color name="main_bubble_background_tmobile">#33333333</color>
 
 <color name="main_background_dark">#FF000000</color>
 <color name="main_background_light">#FFFFFFF0</color>

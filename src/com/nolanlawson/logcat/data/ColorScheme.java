@@ -29,7 +29,7 @@ public enum ColorScheme {
 			R.color.main_bubble_background_dark),
 	Tmobile (R.string.pref_theme_choice_tmobile, R.color.main_background_tmobile, 
 			R.color.main_foreground_tmobile, R.array.light_theme_colors, R.color.spinner_droptown_tmobile,
-			R.color.main_bubble_background_light),
+			R.color.main_bubble_background_tmobile),
 
 	;
 	

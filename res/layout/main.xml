@@ -39,15 +39,33 @@
 		android:indeterminate="true" style="@android:style/Widget.ProgressBar.Inverse"/>
 
 	<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:gravity="center_horizontal|center_vertical" >
+		android:gravity="center_horizontal|center_vertical" android:id="@+id/main_filename_linear_layout"
+		android:orientation="vertical" android:paddingRight="1dp" android:paddingLeft="1dp">
 		
 		<LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:id="@+id/main_filename_text_view_border" android:padding="1dp">
-		
-			<TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-				android:id="@+id/main_filename_text_view"
-				android:paddingLeft="5dp" android:paddingRight="5dp" android:paddingTop="1dp"
-				android:paddingBottom="1dp"/>
+			android:orientation="vertical">
+			
+			<View android:layout_height="1dp" android:id="@+id/main_border_view_1"
+				android:layout_width="fill_parent"/>
+				
+			<LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:orientation="horizontal">
+					
+				<View android:id="@+id/main_border_view_2"
+					android:layout_width="1dp" android:layout_height="fill_parent"/>
+					
+				<TextView android:layout_width="0px" android:layout_weight="1" android:layout_height="wrap_content"
+					android:id="@+id/main_filename_text_view"
+					android:paddingLeft="5dp" android:paddingRight="5dp" android:paddingTop="1dp"
+					android:paddingBottom="1dp" android:typeface="monospace"/>
+				
+				<View android:id="@+id/main_border_view_3"
+					android:layout_width="1dp" android:layout_height="fill_parent"/>	
+			</LinearLayout>
+			
+			<View android:layout_height="1dp" android:id="@+id/main_border_view_4"
+				android:layout_width="fill_parent"/>
+
 		</LinearLayout>
 	</LinearLayout>
 
