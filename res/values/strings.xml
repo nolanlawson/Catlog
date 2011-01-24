@@ -74,6 +74,10 @@
 	<string name="pref_theme_choice_dark">Dark</string>
 	<string name="pref_theme_choice_light">Light</string>
 	<string name="pref_theme_choice_android">Android</string>
+	<string name="pref_theme_choice_verizon">Big Red</string>
+	<string name="pref_theme_choice_att">Ma Bell</string>
+	<string name="pref_theme_choice_sprint">Big Yellow</string>
+	<string name="pref_theme_choice_tmobile">T-Mo</string>
 
 	<string name="pref_cat_appearance">Appearance</string>
 	<string name="pref_cat_configuration">Configuration</string>

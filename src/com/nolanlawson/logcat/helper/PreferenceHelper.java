@@ -153,9 +153,9 @@ public class PreferenceHelper {
 			} else {
 				SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 				String colorSchemeName = sharedPrefs.getString(
-						context.getText(R.string.pref_theme).toString(), ColorScheme.Dark.name());
+						context.getText(R.string.pref_theme).toString(), context.getText(ColorScheme.Dark.getNameResource()).toString());
 				
-				colorScheme = Enum.valueOf(ColorScheme.class, colorSchemeName);
+				colorScheme = ColorScheme.findByPreferenceName(colorSchemeName, context);
 			}
 		}
 		
@@ -168,7 +168,7 @@ public class PreferenceHelper {
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 		Editor editor = sharedPrefs.edit();
 		
-		editor.putString(context.getString(R.string.pref_theme).toString(), colorScheme.name());
+		editor.putString(context.getString(R.string.pref_theme).toString(), context.getText(colorScheme.getNameResource()).toString());
 		
 		editor.commit();
 		

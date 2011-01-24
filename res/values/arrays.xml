@@ -4,6 +4,10 @@
 		<item>@string/pref_theme_choice_dark</item>
 		<item>@string/pref_theme_choice_light</item>
 		<item>@string/pref_theme_choice_android</item>
+		<item>@string/pref_theme_choice_verizon</item>
+		<item>@string/pref_theme_choice_att</item>
+		<item>@string/pref_theme_choice_sprint</item>
+		<item>@string/pref_theme_choice_tmobile</item>
 	</string-array>
 	
 	<string-array name="filter_choices">

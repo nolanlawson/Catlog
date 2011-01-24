@@ -1,11 +1,5 @@
 <resources>
 
-
-<color name="spinner_droptown_dark">#FF333333</color>
-<color name="spinner_droptown_light">#00000000</color>
-<color name="spinner_droptown_android">#FFA4C639</color>
-
-
 <color name="linkColorBlue">#0099dd</color>
 <color name="background_wtf">#FF999900</color>
 <color name="background_error">#FFCC0000</color>
@@ -17,10 +11,26 @@
 <color name="main_background_dark">#FF000000</color>
 <color name="main_background_light">#FFFFFFF0</color>
 <color name="main_background_android">#FFA4C639</color>
+<color name="main_background_verizon">#FF000000</color>
+<color name="main_background_att">#FFFFFFFF</color>
+<color name="main_background_sprint">#FF000000</color>
+<color name="main_background_tmobile">#FFeaeff3</color>
 
 <color name="main_foreground_dark">@android:color/darker_gray</color>
 <color name="main_foreground_light">@android:color/black</color>
 <color name="main_foreground_android">@android:color/black</color>
+<color name="main_foreground_verizon">#FFed1f24</color>
+<color name="main_foreground_att">#FF0c7db5</color>
+<color name="main_foreground_sprint">#FFffde00</color>
+<color name="main_foreground_tmobile">#FFe9098d</color>
+
+<color name="spinner_droptown_dark">#FF333333</color>
+<color name="spinner_droptown_light">#00000000</color>
+<color name="spinner_droptown_android">#FFA4C639</color>
+<color name="spinner_droptown_verizon">#FF333333</color>
+<color name="spinner_droptown_att">#00000000</color>
+<color name="spinner_droptown_sprint">#FF333333</color>
+<color name="spinner_droptown_tmobile">#00000000</color>
 
 <color name="foreground_wtf">#FFFFFFFF</color>
 <color name="foreground_error">#FFFFFFFF</color>

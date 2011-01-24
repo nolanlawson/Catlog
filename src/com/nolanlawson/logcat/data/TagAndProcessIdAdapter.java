@@ -49,20 +49,9 @@ public class TagAndProcessIdAdapter extends ArrayAdapter<CharSequence> {
 		
 		text1.setText(tag);
 		text2.setText(subtexts.get(position));
-		int backgroundColorId;
 		ColorScheme colorScheme = PreferenceHelper.getColorScheme(context);
-		switch (colorScheme) {
-		case Dark:
-			backgroundColorId = R.color.spinner_droptown_dark;
-			break;
-		case Light:
-			backgroundColorId = R.color.spinner_droptown_light;
-			break;
-		default : // Android
-			backgroundColorId = R.color.spinner_droptown_android;
-			break;
-		}
-		int backgroundColor = context.getResources().getColor(backgroundColorId);
+
+		int backgroundColor = colorScheme.getSpinnerColor(context);
 		text2.setBackgroundColor(backgroundColor);
 		
 		if (position == 0) { // tag
