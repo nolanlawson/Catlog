@@ -616,7 +616,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				super.onPostExecute(successfullySavedLog);
 				
 				if (successfullySavedLog) {
-					Toast.makeText(getApplicationContext(), R.string.log_saved, Toast.LENGTH_LONG).show();
+					Toast.makeText(getApplicationContext(), R.string.log_saved, Toast.LENGTH_SHORT).show();
 					openLog(filename);
 				} else {
 					Toast.makeText(getApplicationContext(), R.string.unable_to_save_log, Toast.LENGTH_LONG).show();
@@ -782,8 +782,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		ColorScheme colorScheme = PreferenceHelper.getColorScheme(this);
 		
-		darkProgressBar.setVisibility(colorScheme == ColorScheme.Light ? View.GONE : View.VISIBLE);
-		lightProgressBar.setVisibility(colorScheme == ColorScheme.Light ? View.VISIBLE : View.GONE);
+		darkProgressBar.setVisibility(colorScheme.isUseLightProgressBar() ? View.GONE : View.VISIBLE);
+		lightProgressBar.setVisibility(colorScheme.isUseLightProgressBar() ? View.VISIBLE : View.GONE);
 		
 		backgroundLinearLayout = (LinearLayout) findViewById(R.id.main_background);
 		

@@ -37,8 +37,7 @@
 	<string name="no_saved_logs">No saved logs found.</string>
 	<string name="recording_in_progress">Recording already in progress.</string>
 	<string name="enter_good_filename">Please enter a valid filename.</string>
-	<string name="log_saved">Log saved. Showing saved log.</string>
-	<string name="log_saved_from_recording">Log saved to the SD card as \'%s\'.</string>
+	<string name="log_saved">Log saved.</string>
 	<string name="copy_to_clipboard">Copy to clipboard</string>
 	<string name="copied_to_clipboard">Copied to clipboard.</string>
 	<string name="enter_filename">Enter a filename to save to the SD card:</string>

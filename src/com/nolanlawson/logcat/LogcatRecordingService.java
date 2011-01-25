@@ -319,8 +319,7 @@ public class LogcatRecordingService extends IntentService {
 			boolean logSaved = SaveLogHelper.saveLog(stringBuilder, filename);
 			
 			if (logSaved) {
-				String savedText = String.format(getText(R.string.log_saved_from_recording).toString(),filename);
-				makeToast(savedText, Toast.LENGTH_LONG);
+				makeToast(R.string.log_saved, Toast.LENGTH_SHORT);
 				startLogcatActivityToViewSavedFile(filename);
 			} else {
 				makeToast(R.string.unable_to_save_log, Toast.LENGTH_LONG);
@@ -356,18 +355,7 @@ public class LogcatRecordingService extends IntentService {
 		});
 		
 	}
-	private void makeToast(final String str, final int toastLength) {
-		handler.post(new Runnable() {
-			
-			@Override
-			public void run() {
-				
-				Toast.makeText(LogcatRecordingService.this, str, toastLength).show();
-				
-			}
-		});
-		
-	}	
+	
 	private void killProcess() {
 		// kill the logcat process
 		if (logcatProcess != null) {

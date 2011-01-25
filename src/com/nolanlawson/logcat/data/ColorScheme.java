@@ -11,25 +11,25 @@ import com.nolanlawson.logcat.R;
 public enum ColorScheme {
 	Dark (R.string.pref_theme_choice_dark, R.color.main_background_dark, 
 			R.color.main_foreground_dark, R.array.dark_theme_colors, R.color.spinner_droptown_dark,
-			R.color.main_bubble_background_dark),
+			R.color.main_bubble_background_dark_2, false),
 	Light (R.string.pref_theme_choice_light, R.color.main_background_light, 
 			R.color.main_foreground_light, R.array.light_theme_colors, R.color.spinner_droptown_light,
-			R.color.main_bubble_background_light),
+			R.color.main_bubble_background_light_2, true),
 	Android (R.string.pref_theme_choice_android, R.color.main_background_android, 
 			R.color.main_foreground_android, R.array.android_theme_colors, R.color.spinner_droptown_android,
-			R.color.main_bubble_background_light),
+			R.color.main_bubble_background_light, true),
 	Verizon (R.string.pref_theme_choice_verizon, R.color.main_background_verizon, 
 			R.color.main_foreground_verizon, R.array.dark_theme_colors, R.color.spinner_droptown_verizon,
-			R.color.main_bubble_background_dark),
+			R.color.main_bubble_background_verizon, false),
 	Att (R.string.pref_theme_choice_att, R.color.main_background_att, 
 			R.color.main_foreground_att, R.array.light_theme_colors, R.color.spinner_droptown_att,
-			R.color.main_bubble_background_light),
+			R.color.main_bubble_background_light, true),
 	Sprint (R.string.pref_theme_choice_sprint, R.color.main_background_sprint, 
 			R.color.main_foreground_sprint, R.array.dark_theme_colors, R.color.spinner_droptown_sprint,
-			R.color.main_bubble_background_dark),
+			R.color.main_bubble_background_dark, false),
 	Tmobile (R.string.pref_theme_choice_tmobile, R.color.main_background_tmobile, 
 			R.color.main_foreground_tmobile, R.array.light_theme_colors, R.color.spinner_droptown_tmobile,
-			R.color.main_bubble_background_tmobile),
+			R.color.main_bubble_background_tmobile, true),
 
 	;
 	
@@ -39,6 +39,7 @@ public enum ColorScheme {
 	private int spinnerColorResource;
 	private int bubbleBackgroundColorResource;
 	private int tagColorsResource;
+	private boolean useLightProgressBar;
 	
 	private int backgroundColor = -1;
 	private int foregroundColor = -1;
@@ -49,13 +50,15 @@ public enum ColorScheme {
 	private static Map<String, ColorScheme> preferenceNameToColorScheme = new HashMap<String, ColorScheme>();
 	
 	private ColorScheme(int nameResource, int backgroundColorResource, int foregroundColorResource,
-			int tagColorsResource, int spinnerColorResource, int bubbleBackgroundColorResource) {
+			int tagColorsResource, int spinnerColorResource, int bubbleBackgroundColorResource,
+			boolean useLightProgressBar) {
 		this.nameResource = nameResource;
 		this.backgroundColorResource = backgroundColorResource;
 		this.foregroundColorResource = foregroundColorResource;
 		this.tagColorsResource = tagColorsResource;
 		this.spinnerColorResource = spinnerColorResource;
 		this.bubbleBackgroundColorResource = bubbleBackgroundColorResource;
+		this.useLightProgressBar = useLightProgressBar;
 	}
 
 	public int getNameResource() {
@@ -97,6 +100,10 @@ public enum ColorScheme {
 		return bubbleBackgroundColor;
 	}
 	
+	public boolean isUseLightProgressBar() {
+		return useLightProgressBar;
+	}
+
 	public static ColorScheme findByPreferenceName(String name, Context context) {
 		if (preferenceNameToColorScheme.isEmpty()) {
 			// initialize map
