@@ -330,7 +330,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		int oldFirstVisibleItem = firstVisibleItem;
 		
 		for (LogLine logLine : adapter.getTrueValues()) {
-			logLine.setExpanded(expanded);
+			if (logLine != null) {
+				logLine.setExpanded(expanded);
+			}
 		}
 		
 		expandButton.setVisibility(collapsedMode ? View.VISIBLE : View.GONE);
