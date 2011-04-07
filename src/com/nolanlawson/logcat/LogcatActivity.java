@@ -43,6 +43,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filter.FilterListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -326,10 +327,14 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 
 	private void startPartialSelectMode() {
 		
+		ImageView imageView = new ImageView(this);
+		imageView.setImageResource(R.drawable.partial_select_image_cropped);
+		
 		new AlertDialog.Builder(this)
 			.setTitle(R.string.menu_title_partial_select)
 			.setMessage(R.string.dialog_partial_select_explanation)
 			.setCancelable(true)
+			.setView(imageView)
 			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 				
 				@Override

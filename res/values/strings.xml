@@ -7,7 +7,7 @@
     <string name="dialog_compiling_log">Compiling log...</string>
     <string name="subject_log_report">Log report</string>
     <string name="menu_title_partial_select">Select Partial</string>
-    <string name="dialog_partial_select_explanation">1. Select the first log line.\n2. Select the last log line.</string>
+    <string name="dialog_partial_select_explanation">1. Select the <b>first</b> line.\n2. Then, select the <b>last</b> line.</string>
     <string name="toast_invalid_selection">Invalid selection.  Please try again.</string>
     
     <string name="log_cleared">Logs cleared. Long-press to reload.</string>
