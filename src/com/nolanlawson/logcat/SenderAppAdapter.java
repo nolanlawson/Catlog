@@ -45,11 +45,11 @@ public class SenderAppAdapter extends ArrayAdapter<ResolveInfo> {
 	
 	private Context mContext;
 	
-	public SenderAppAdapter(Context context) {
+	public SenderAppAdapter(Context context, boolean addClipboard) {
 		super(context, R.layout.chooser_row, new ArrayList<ResolveInfo>());
 		
 		mContext = getContext();		
-		List<ResolveInfo> items = createItems();
+		List<ResolveInfo> items = createItems(addClipboard);
 		for (ResolveInfo item : items) {
 			add(item);
 		}
@@ -76,7 +76,7 @@ public class SenderAppAdapter extends ArrayAdapter<ResolveInfo> {
 		}
 	}
 	
-	private List<ResolveInfo> createItems() {
+	private List<ResolveInfo> createItems(boolean addClipboard) {
 		
 		List<ResolveInfo> items = mContext.getPackageManager().queryIntentActivities(createSendIntent("", "", null), 0);
 		
@@ -84,7 +84,9 @@ public class SenderAppAdapter extends ArrayAdapter<ResolveInfo> {
 		
 		filter(items);
 		Collections.sort(items, new ResolveInfo.DisplayNameComparator(mContext.getPackageManager())); 
-		items.add(new DummyClipboardLaunchable());
+		if (addClipboard) {
+			items.add(new DummyClipboardLaunchable());
+		}
 		
 		Log.d("TAG", "items are: " + items);
 		

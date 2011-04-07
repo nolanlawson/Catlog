@@ -556,7 +556,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			String title = getString(asText ? R.string.send_as_text : R.string.send_as_attachment);
 			final File attachment = asText ? null : SaveLogHelper.getFile(currentlyOpenLog);
 			final String subject = getString(R.string.subject_log_report);
-			final SenderAppAdapter adapter = new SenderAppAdapter(LogcatActivity.this);
+			final SenderAppAdapter adapter = new SenderAppAdapter(LogcatActivity.this, asText);
 
 			new AlertDialog.Builder(LogcatActivity.this).setTitle(title).setCancelable(true)
 					.setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener() {
