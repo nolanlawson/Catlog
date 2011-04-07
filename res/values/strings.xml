@@ -121,13 +121,12 @@
     <string name="first_run_pref_summary">Show introductory message again.</string>
     <string name="first_run_title">Welcome to CatLog!</string>
     <string name="first_run_message">\
+<b>Home → Long press → Widgets</b>\n\
+&#160;&#160;&#160;&#160;to add a widget.\n\n\
+<b>I can has donation?</b> \n\
+&#160;&#160;&#160;&#160;<a href='market://details?id=com.nolanlawson.logcat.donate'>Donate</a> to get extra color schemes.\n\n\
 <b>New in 1.1.5!</b>\n\
-&#160;&#160;&#160;- Added \"Select Partial\" mode.\n\n\
-Do <b>Long press → Widgets</b>\n\
-&#160;&#160;&#160;from the homescreen to add a widget.\n\n\
-<b>I can has donation?</b>  If you like CatLog,\n\
-show your support by buying\n\
-him some catnip. <a href='market://details?id=com.nolanlawson.logcat.donate'>Click here</a> to donate.\n\n\
+&#160;&#160;&#160;&#160;- Added \"Select Partial\" mode.\
 </string> 
     
 </resources>
