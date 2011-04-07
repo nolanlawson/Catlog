@@ -26,6 +26,7 @@ import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,10 +41,10 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filter.FilterListener;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -327,25 +328,42 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 
 	private void startPartialSelectMode() {
 		
-		ImageView imageView = new ImageView(this);
-		imageView.setImageResource(R.drawable.partial_select_image_cropped);
+		boolean hideHelp = PreferenceHelper.getHidePartialSelectHelpPreference(this);
 		
-		new AlertDialog.Builder(this)
-			.setTitle(R.string.menu_title_partial_select)
-			.setMessage(R.string.dialog_partial_select_explanation)
-			.setCancelable(true)
-			.setView(imageView)
-			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					partialSelectMode = true;
-					partiallySelectedLogLines.clear();
+		if (hideHelp) {
+			partialSelectMode = true;
+			partiallySelectedLogLines.clear();
+		} else {
+		
+			LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View helpView = inflater.inflate(R.layout.partial_select_help, null);
+			// don't show the scroll bar
+			helpView.setVerticalScrollBarEnabled(false);
+			helpView.setHorizontalScrollBarEnabled(false);
+			final CheckBox checkBox = (CheckBox) helpView.findViewById(android.R.id.checkbox);
+			
+			new AlertDialog.Builder(this)
+				.setTitle(R.string.menu_title_partial_select)
+				.setMessage(R.string.dialog_partial_select_explanation)
+				.setCancelable(true)
+				.setView(helpView)
+				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 					
-					dialog.dismiss();
-				}
-			})
-			.show();
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						partialSelectMode = true;
+						partiallySelectedLogLines.clear();
+						
+						if (checkBox.isChecked()) {
+							// hide this help dialog in the future
+							PreferenceHelper.setHidePartialSelectHelpPreference(LogcatActivity.this, true);
+						}
+						
+						dialog.dismiss();
+					}
+				})
+				.show();
+		}
 	}
 	
 	private void startSettingsActivity() {
