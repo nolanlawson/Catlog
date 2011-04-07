@@ -62,7 +62,7 @@ public class DialogHelper {
 			}
 		};		
 		
-		DialogHelper.showFilenameSuggestingDialog(context, editText, onClickListener, R.string.record_log);
+		DialogHelper.showFilenameSuggestingDialog(context, editText, onClickListener, null, R.string.record_log);
 		
 	}
 	
@@ -107,13 +107,14 @@ public class DialogHelper {
 	
 	
 	
-	public static void showFilenameSuggestingDialog(Context context, EditText editText, OnClickListener onClickListener, int titleResId) {
+	public static void showFilenameSuggestingDialog(Context context, EditText editText, 
+			OnClickListener onClickListener, OnClickListener onCancelListener, int titleResId) {
 		
 		Builder builder = new Builder(context);
 		
 		builder.setTitle(titleResId)
 			.setCancelable(true)
-			.setNegativeButton(android.R.string.cancel, null)
+			.setNegativeButton(android.R.string.cancel, onCancelListener)
 			.setPositiveButton(android.R.string.ok, onClickListener)
 			.setMessage(R.string.enter_filename)
 			.setView(editText);

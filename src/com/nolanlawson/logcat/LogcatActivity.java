@@ -87,6 +87,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	private int firstVisibleItem = -1;
 	private boolean autoscrollToBottom = true;
 	private boolean collapsedMode;
+	private boolean partialSelectMode;
+	private List<LogLine> partiallySelectedLogLines = new ArrayList<LogLine>(2);
 	
 	private String currentlyOpenLog = null;
 	
@@ -214,7 +216,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     public void onPause() {
     	
     	super.onPause();
-
+    	
+    	cancelPartialSelect();
     }
     
     @Override
@@ -273,7 +276,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	    case R.id.menu_crazy_logger_service:
 	    	ServiceHelper.startOrStopCrazyLogger(this);
 	    	return true;
-	    	
+	    case R.id.menu_partial_select:
+	    	startPartialSelectMode();
+	    	return true;
 	    }
 	    return false;
 	}
@@ -312,11 +317,32 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		crazyLoggerMenuItem.setEnabled(UtilLogger.DEBUG_MODE);
 		crazyLoggerMenuItem.setVisible(UtilLogger.DEBUG_MODE);
 		
+		MenuItem partialSelectMenuItem = menu.findItem(R.id.menu_partial_select);
+		partialSelectMenuItem.setEnabled(!partialSelectMode);
+		partialSelectMenuItem.setVisible(!partialSelectMode);
 		
 		return super.onPrepareOptionsMenu(menu);
 	}
 
-
+	private void startPartialSelectMode() {
+		
+		new AlertDialog.Builder(this)
+			.setTitle(R.string.menu_title_partial_select)
+			.setMessage(R.string.dialog_partial_select_explanation)
+			.setCancelable(true)
+			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					partialSelectMode = true;
+					partiallySelectedLogLines.clear();
+					
+					dialog.dismiss();
+				}
+			})
+			.show();
+	}
+	
 	private void startSettingsActivity() {
 		
 		Intent intent = new Intent(this, SettingsActivity.class);
@@ -594,10 +620,66 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			}
 		};
 		
-		DialogHelper.showFilenameSuggestingDialog(this, editText, onClickListener, R.string.save_log);
+		DialogHelper.showFilenameSuggestingDialog(this, editText, onClickListener, null, R.string.save_log);
 	}
 	
+	private void savePartialLog(final String filename, LogLine first, LogLine last) {
+		
+		final List<CharSequence> logLines = new ArrayList<CharSequence>(adapter.getCount());
+		
+		// filter based on first and last
+		boolean started = false;
+		boolean foundLast = false;
+		for (int i = 0; i < adapter.getCount(); i ++) {
+			LogLine logLine = adapter.getItem(i);
+			if (logLine == first) {
+				started = true;
+			}
+			if (started) {
+				logLines.add(logLine.getOriginalLine());
+			}
+			if (logLine == last) {
+				foundLast = true;
+				break;
+			}
+		}
+		
+		if (!foundLast || logLines.isEmpty()) {
+			Toast.makeText(this, R.string.toast_invalid_selection, Toast.LENGTH_LONG).show();
+			cancelPartialSelect();
+			return;
+		}
+		
+		AsyncTask<Void,Void,Boolean> saveTask = new AsyncTask<Void, Void, Boolean>(){
 
+			@Override
+			protected Boolean doInBackground(Void... params) {
+				SaveLogHelper.deleteLogIfExists(filename);
+				return SaveLogHelper.saveLog(logLines, filename);
+				
+			}
+
+			@Override
+			protected void onPostExecute(Boolean successfullySavedLog) {
+				
+				super.onPostExecute(successfullySavedLog);
+				
+				if (successfullySavedLog) {
+					Toast.makeText(getApplicationContext(), R.string.log_saved, Toast.LENGTH_SHORT).show();
+					openLog(filename);
+				} else {
+					Toast.makeText(getApplicationContext(), R.string.unable_to_save_log, Toast.LENGTH_LONG).show();
+				}
+				
+				cancelPartialSelect();
+			}
+			
+			
+		};
+		
+		saveTask.execute((Void)null);
+		
+	}
 
 	private void saveLog(final String filename) {
 		
@@ -926,11 +1008,107 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		LogLine logLine = adapter.getItem(position);
 		
-		logLine.setExpanded(!logLine.isExpanded());
-		adapter.notifyDataSetChanged();
+		if (partialSelectMode) {
+
+			logLine.setHighlighted(true);
+			
+			partiallySelectedLogLines.add(logLine);
+
+			handler.post(new Runnable() {
+
+				@Override
+				public void run() {
+	
+					adapter.notifyDataSetChanged();
+				}
+			});
+			
+
+			if (partiallySelectedLogLines.size() == 2) {
+				// last line
+				handler.post(new Runnable() {
+
+					@Override
+					public void run() {
+		
+						completePartialSelect();
+					}
+				});
+			}
+			
+		
+		} else {
+			
+			logLine.setExpanded(!logLine.isExpanded());
+			adapter.notifyDataSetChanged();			
+		}
+		
+	}
+
+	private void completePartialSelect() {
+
+		if (!SaveLogHelper.checkSdCard(this)) {
+			cancelPartialSelect();
+			return;
+		}
+		
+		final EditText editText = DialogHelper.createEditTextForFilenameSuggestingDialog(this);
+		
+		DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+
+				
+				if (DialogHelper.isInvalidFilename(editText.getText())) {
+					cancelPartialSelect();
+					Toast.makeText(LogcatActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
+					
+				} else {
+					String filename = editText.getText().toString();
+					savePartialLog(filename, partiallySelectedLogLines.get(0), partiallySelectedLogLines.get(1));
+				}
+				
+				dialog.dismiss();
+				
+			}
+		};
+		
+		
+		DialogInterface.OnClickListener onCancelListener = new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+				cancelPartialSelect();
+			}
+		};
+		
+		DialogHelper.showFilenameSuggestingDialog(this, editText, onClickListener, onCancelListener, R.string.save_log);
 		
 	}
 	
+	private void cancelPartialSelect() {
+		partialSelectMode = false;
+		
+		boolean changed = false;
+		for (LogLine logLine : partiallySelectedLogLines) {
+			if (logLine.isHighlighted()) {
+				logLine.setHighlighted(false);
+				changed = true;
+			}
+		}
+		partiallySelectedLogLines.clear();
+		if (changed) {
+			handler.post(new Runnable() {
+				
+				@Override
+				public void run() {
+					adapter.notifyDataSetChanged();
+				}
+			});
+		}
+	}
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {

@@ -34,6 +34,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nolanlawson.logcat.R;
@@ -403,6 +404,16 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 
 		tagTextView.setTextColor(LogLineAdapterUtil.getOrCreateTagColor(context, logLine.getTag()));
 		
+		// if this is a "partially selected" log, change the color to orange or whatever
+		LinearLayout mainLinearLayout = wrapper.getMainLinearLayout();
+		int selectedBackground = logLine.isHighlighted() 
+				? PreferenceHelper.getColorScheme(context).getSelectedColor(context) 
+				: context.getResources().getColor(android.R.color.transparent);
+		mainLinearLayout.setBackgroundColor(selectedBackground);
+		extraInfoLayout.setBackgroundColor(selectedBackground);
+		
+		
+		
 		return view;
     }
 
@@ -443,6 +454,10 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
         return mFilter;
     }
 
+    public List<LogLine> getObjects() {
+    	return mObjects;
+    }
+    
     /**
      * <p>An array filter constrains the content of the array adapter with
      * a prefix. Each item that does not start with the supplied prefix

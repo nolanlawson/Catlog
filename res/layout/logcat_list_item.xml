@@ -23,7 +23,8 @@
 	</LinearLayout>	
 <LinearLayout 
 	android:layout_width="fill_parent" android:layout_height="wrap_content"
-	android:orientation="horizontal" android:paddingTop="1dp">
+	android:orientation="horizontal" android:paddingTop="1dp"
+	android:id="@+id/log_line_main_layout">
 
 
 

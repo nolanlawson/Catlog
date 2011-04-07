@@ -22,6 +22,7 @@ public class LogLine {
 	private int processId = -1;
 	private String timestamp;
 	private boolean expanded = false;
+	private boolean highlighted = false;
 	
 	public CharSequence getOriginalLine() {
 		
@@ -87,6 +88,15 @@ public class LogLine {
 	public void setExpanded(boolean expanded) {
 		this.expanded = expanded;
 	}
+	
+	public boolean isHighlighted() {
+		return highlighted;
+	}
+
+	public void setHighlighted(boolean highlighted) {
+		this.highlighted = highlighted;
+	}
+
 	public static LogLine newLogLine(String originalLine, boolean expanded) {
 		
 		LogLine logLine = new LogLine();

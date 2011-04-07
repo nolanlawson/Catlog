@@ -6,6 +6,9 @@
     <string name="dialog_please_wait">Please wait</string>
     <string name="dialog_compiling_log">Compiling log...</string>
     <string name="subject_log_report">Log report</string>
+    <string name="menu_title_partial_select">Select Partial</string>
+    <string name="dialog_partial_select_explanation">1. Select the first log line.\n2. Select the last log line.</string>
+    <string name="toast_invalid_selection">Invalid selection.  Please try again.</string>
     
     <string name="log_cleared">Logs cleared. Long-press to reload.</string>
     <string name="filter_choice">Search by</string>
@@ -117,7 +120,7 @@
     <string name="first_run_title">Welcome to CatLog!</string>
     <string name="first_run_message">\
 <b>New in 1.1.5!</b>\n\
-&#160;&#160;&#160;- Added \"Partial Select\" mode.\n\n\
+&#160;&#160;&#160;- Added \"Select Partial\" mode.\n\n\
 Do <b>Long press → Widgets</b>\n\
 &#160;&#160;&#160;from the homescreen to add a widget.\n\n\
 <b>I can has donation?</b>  If you like CatLog,\n\

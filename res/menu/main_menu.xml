@@ -28,6 +28,9 @@
 	
 	<item android:id="@+id/menu_delete_saved_log" android:title="@string/manage_saved_logs"
 		android:alphabeticShortcut="@string/manage_saved_logs" android:icon="@drawable/ic_menu_delete" />
+		
+	<item android:id="@+id/menu_partial_select" android:title="@string/menu_title_partial_select"
+		android:alphabeticShortcut="@string/menu_title_partial_select" android:icon="@drawable/ic_menu_agenda" />
 	
 	<item android:id="@+id/menu_settings" android:title="@string/settings"
 		android:alphabeticShortcut="@string/settings" android:icon="@drawable/ic_menu_preferences" />
