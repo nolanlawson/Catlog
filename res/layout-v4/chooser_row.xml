@@ -24,6 +24,7 @@
 		android:layout_height="wrap_content"
 		android:layout_toRightOf="@android:id/icon"
 		android:textColor="@android:color/primary_text_light_nodisable"
+		android:layout_centerVertical = "true"
 		android:textSize="11pt"
 		android:paddingTop="2dp"
 		android:paddingBottom="2dp"

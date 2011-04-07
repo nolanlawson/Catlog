@@ -11,10 +11,6 @@
 			</intent-filter>
 		</activity>
 
-		<activity android:name=".SendActionChooser" android:theme="@android:style/Theme.Light"
-			android:configChanges="keyboard|keyboardHidden|orientation">
-		</activity>
-
 		<activity android:name=".AboutActivity" android:theme="@android:style/Theme.Dialog" />
 	
 		

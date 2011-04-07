@@ -3,6 +3,10 @@
     <string name="app_name">CatLog</string>
     <string name="main_edit_text_hint">Search logs</string>
     
+    <string name="dialog_please_wait">Please wait</string>
+    <string name="dialog_compiling_log">Compiling log...</string>
+    <string name="subject_log_report">Log report</string>
+    
     <string name="log_cleared">Logs cleared. Long-press to reload.</string>
     <string name="filter_choice">Search by</string>
     <string name="filter_choice_tag">Tag</string>
@@ -38,7 +42,7 @@
 	<string name="recording_in_progress">Recording already in progress.</string>
 	<string name="enter_good_filename">Please enter a valid filename.</string>
 	<string name="log_saved">Log saved.</string>
-	<string name="copy_to_clipboard">Copy to clipboard</string>
+    <string name="copy_to_clipboard">Copy to clipboard</string>
 	<string name="copied_to_clipboard">Copied to clipboard.</string>
 	<string name="enter_filename">Enter a filename to save to the SD card:</string>
 	<string name="select_logs_to_delete">Select which logs to delete.</string>
@@ -107,13 +111,13 @@
     <string name="choose_format">Choose Format</string>
     
     <string name="widget_recording_in_progress">Recording...</string>
-    <string name="first_run">first_run</string>
+    <string name="first_run">first_run2</string>
     <string name="first_run_pref_title">Reset Introduction</string>
     <string name="first_run_pref_summary">Show introductory message again.</string>
     <string name="first_run_title">Welcome to CatLog!</string>
     <string name="first_run_message">\
 <b>New in 1.1.5!</b>\n\
-&#160;&#160;&#160;- Added "Partial Select" mode.\n\n\
+&#160;&#160;&#160;- Added \"Partial Select\" mode.\n\n\
 Do <b>Long press → Widgets</b>\n\
 &#160;&#160;&#160;from the homescreen to add a widget.\n\n\
 <b>I can has donation?</b>  If you like CatLog,\n\

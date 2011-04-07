@@ -9,13 +9,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.app.AlertDialog.Builder;
+import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,25 +30,25 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
+import android.widget.Filter.FilterListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.Filter.FilterListener;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.nolanlawson.logcat.data.ColorScheme;
 import com.nolanlawson.logcat.data.LogFileAdapter;
@@ -498,60 +498,62 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 	}
 	
-	private void sendLog(final boolean asBody) {
-		
-		// do in the background to avoid jank
-		AsyncTask<Void,Void,String> task = new AsyncTask<Void, Void, String>(){
+	private void sendLog(final boolean asText) {
 
-			@Override
-			protected String doInBackground(Void... params) {
-				
-				if (asBody) {
-					String text = TextUtils.join("\n", getCurrentLogAsListOfStrings());
-					return text;
-				} else {
-					return currentlyOpenLog;
-				}
-			}
+		if (!asText && currentlyOpenLog == null) { // no filename
+			Toast.makeText(LogcatActivity.this, R.string.save_file_first, Toast.LENGTH_LONG).show();
+		} else {
 
-			@Override
-			protected void onPostExecute(String textOrFilename) {
-				
-				super.onPostExecute(textOrFilename);
+			String title = getString(asText ? R.string.send_as_text : R.string.send_as_attachment);
+			final File attachment = asText ? null : SaveLogHelper.getFile(currentlyOpenLog);
+			final String subject = getString(R.string.subject_log_report);
+			final SenderAppAdapter adapter = new SenderAppAdapter(LogcatActivity.this);
 
-				if (!asBody && textOrFilename == null) { // no filename
-					Toast.makeText(LogcatActivity.this, R.string.save_file_first, Toast.LENGTH_LONG).show();
-				} else {
-					
-					Bundle extras = new Bundle();
-					
-					if (asBody) {
-						extras.putString(Intent.EXTRA_TEXT, textOrFilename);
-						extras.putString("title", getText(R.string.send_as_text).toString());
-					} else { // as attachment
-						extras.putString("title", getText(R.string.send_as_attachment).toString());
-						
-						File file = SaveLogHelper.getFile(textOrFilename);
-						Uri uri = Uri.fromFile(file);
-						extras.putParcelable(Intent.EXTRA_STREAM, uri);
-						
-						log.d("uri is %s", uri);
-						log.d("file is %s", file);
-						
-					}
-					
-					Intent sendActionChooserIntent = new Intent(LogcatActivity.this, SendActionChooser.class);
-					
-					sendActionChooserIntent.putExtras(extras);
-					startActivity(sendActionChooserIntent);
-				
-				}
-			}
-			
-		};
-		
-		task.execute((Void)null);
-			
+			new AlertDialog.Builder(LogcatActivity.this).setTitle(title).setCancelable(true)
+					.setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener() {
+
+						public void onClick(final DialogInterface dialog, final int which) {
+							
+							final ProgressDialog getBodyProgressDialog = new ProgressDialog(LogcatActivity.this);
+							
+							// do in the background to avoid jank
+							AsyncTask<Void, Void, String> getBodyTask = new AsyncTask<Void, Void, String>() {
+								
+								@Override
+								protected void onPreExecute() {
+									super.onPreExecute();
+									
+									dialog.dismiss();
+									
+									if (asText) {
+									
+										getBodyProgressDialog.setTitle(R.string.dialog_please_wait);
+										getBodyProgressDialog.setMessage(getString(R.string.dialog_compiling_log));
+										getBodyProgressDialog.show();
+									}
+								}
+
+								@Override
+								protected String doInBackground(Void... params) {
+
+									return asText ? TextUtils.join("\n", getCurrentLogAsListOfStrings()) : null;
+								}
+
+								@Override
+								protected void onPostExecute(String body) {
+									super.onPostExecute(body);
+
+									adapter.respondToClick(which, subject, body, attachment);
+									if (getBodyProgressDialog != null && getBodyProgressDialog.isShowing()) {
+										getBodyProgressDialog.dismiss();
+									}
+								}
+							};
+							getBodyTask.execute((Void) null);
+						}
+					}).show();
+
+		}
 	}
 	
 	private List<CharSequence> getCurrentLogAsListOfStrings() {
