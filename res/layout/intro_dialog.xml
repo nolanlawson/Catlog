@@ -24,7 +24,7 @@
 					<View android:layout_height="1dp" android:id="@+id/main_border_view_1"
 						android:layout_width="fill_parent" android:background="@color/imageBorder" />
 					<ImageView android:layout_width="wrap_content"
-						android:layout_height="wrap_content" android:src="@drawable/icon" 
+						android:layout_height="wrap_content" android:src="@drawable/widget_explanation" 
 						android:id="@android:id/icon1"/>
 					<View android:layout_height="1dp" android:id="@+id/main_border_view_1"
 						android:layout_width="fill_parent" android:background="@color/imageBorder" />
@@ -58,7 +58,7 @@
 					<View android:layout_height="1dp" android:id="@+id/main_border_view_1"
 						android:layout_width="fill_parent" android:background="@color/imageBorder" />
 					<ImageView android:layout_width="wrap_content"
-						android:layout_height="wrap_content" android:src="@drawable/icon" 
+						android:layout_height="wrap_content" android:src="@drawable/donate_explanation" 
 						android:id="@android:id/icon2"/>
 					<View android:layout_height="1dp" android:id="@+id/main_border_view_1"
 						android:layout_width="fill_parent" android:background="@color/imageBorder" />

@@ -133,9 +133,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		if (isFirstRun) {
 			
 			View view = View.inflate(this, R.layout.intro_dialog, null);
-			TextView textView = (TextView) view.findViewById(R.id.first_run_text_view);
+			TextView textView = (TextView) view.findViewById(R.id.first_run_text_view_2);
 			textView.setMovementMethod(LinkMovementMethod.getInstance());
-			textView.setText(R.string.first_run_message);
 			textView.setLinkTextColor(ColorStateList.valueOf(getResources().getColor(R.color.linkColorBlue)));
 			new AlertDialog.Builder(this)
 					.setTitle(R.string.first_run_title)

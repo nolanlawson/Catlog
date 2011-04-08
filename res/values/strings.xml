@@ -3,8 +3,8 @@
     <string name="app_name">CatLog</string>
     <string name="main_edit_text_hint">Search logs</string>
     
-    <string name="dialog_for_widget">Dialog for Widget</string>
-    <string name="dialog_for_donate">Dialog for Donate</string>
+    <string name="dialog_for_widget">For a <b>widget</b>,\ndo Home → Long\npress → Widgets</string>
+    <string name="dialog_for_donate">For <b>bonus color\nschemes</b>, download\n<a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog Donate</a></string>
     
     <string name="dialog_please_wait">Please wait</string>
     <string name="dialog_compiling_log">Compiling log...</string>
@@ -124,12 +124,9 @@
     <string name="first_run_pref_summary">Show introductory message again.</string>
     <string name="first_run_title">Welcome to CatLog!</string>
     <string name="first_run_message">\
-<b>Home → Long press → Widgets</b>\n\
-&#160;&#160;&#160;&#160;to add a widget.\n\n\
-<b>I can has donation?</b> \n\
-&#160;&#160;&#160;&#160;<a href='market://details?id=com.nolanlawson.logcat.donate'>Donate</a> to get extra color schemes.\n\n\
 <b>New in 1.1.5!</b>\n\
-&#160;&#160;&#160;&#160;- Added \"Select Partial\" mode.\
+&#160;&#160;&#160;&#160;- Added \"Select Partial\" mode.\n\
+&#160;&#160;&#160;&#160;- UI tweaks.\
 </string> 
     
 </resources>
