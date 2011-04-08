@@ -6,6 +6,15 @@
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:gravity="center_horizontal">
 
+		<LinearLayout android:orientation="horizontal"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:gravity="left">
+			<TextView android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:text="@string/dialog_partial_select_explanation"
+				android:textSize="18sp"/>
+		</LinearLayout>
+
 		<ImageView android:src="@drawable/partial_select_image_cropped"
 			android:layout_height="wrap_content" android:layout_width="wrap_content" />
 		<LinearLayout android:orientation="horizontal"

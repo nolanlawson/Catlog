@@ -332,6 +332,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		if (hideHelp) {
 			partialSelectMode = true;
 			partiallySelectedLogLines.clear();
+			Toast.makeText(this, R.string.toast_started_select_partial, Toast.LENGTH_SHORT).show();
 		} else {
 		
 			LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -343,7 +344,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			
 			new AlertDialog.Builder(this)
 				.setTitle(R.string.menu_title_partial_select)
-				.setMessage(R.string.dialog_partial_select_explanation)
 				.setCancelable(true)
 				.setView(helpView)
 				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
