@@ -3,6 +3,9 @@
     <string name="app_name">CatLog</string>
     <string name="main_edit_text_hint">Search logs</string>
     
+    <string name="dialog_for_widget">Dialog for Widget</string>
+    <string name="dialog_for_donate">Dialog for Donate</string>
+    
     <string name="dialog_please_wait">Please wait</string>
     <string name="dialog_compiling_log">Compiling log...</string>
     <string name="subject_log_report">Log report</string>
