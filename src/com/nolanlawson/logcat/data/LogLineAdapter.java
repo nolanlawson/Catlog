@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import android.content.Context;
 import android.text.TextPaint;
@@ -368,11 +369,27 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 		
 		int foregroundColor = PreferenceHelper.getColorScheme(context).getForegroundColor(context);
 		
-		CharSequence output = logLine.isExpanded() ? logLine.getLogOutput() : ellipsizeString(logLine.getLogOutput(), outputTextView);
+		/*int outputWidth = view.getWidth() - levelTextView.getWidth() - tagTextView.getWidth()
+				- outputTextView.getCompoundPaddingLeft() - outputTextView.getCompoundPaddingRight()
+				- view.getPaddingLeft() - view.getPaddingRight()
+				- levelTextView.getCompoundPaddingLeft() - levelTextView.getCompoundPaddingRight()
+				- tagTextView.getCompoundPaddingLeft() - tagTextView.getCompoundPaddingRight();
+		
+		int desiredWidth = outputTextView.getWidth() - outputTextView.getCompoundPaddingLeft() - outputTextView.getCompoundPaddingRight();
+		if (outputWidth != desiredWidth) {
+			if (new Random().nextInt(10) == 0) {
+				log.e("outputWidth is %s and width should be %s", outputWidth, desiredWidth);
+			}
+		}*/
+		
+		CharSequence output = logLine.getLogOutput();//logLine.isExpanded() 
+				//? logLine.getLogOutput() 
+				//: ellipsizeString(logLine.getLogOutput(), outputWidth, outputTextView.getPaint());
 		
 		outputTextView.setText(output);
 		outputTextView.setSingleLine(!logLine.isExpanded());
 		outputTextView.setTextColor(foregroundColor);
+		outputTextView.setEllipsize(logLine.isExpanded() ? null : TruncateAt.END);
 		
 		CharSequence tag = logLine.isExpanded() ? logLine.getTag() : ellipsizeString(logLine.getTag(), tagTextView);
 		
@@ -380,13 +397,14 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 		tagTextView.setSingleLine(!logLine.isExpanded());
 		tagTextView.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
 		
-		View extraInfoLayout = wrapper.getExtraInfoLayout();
+		/*View extraInfoLayout = wrapper.getExtraInfoLayout();
 		boolean extraInfoIsVisible = logLine.isExpanded() 
 				&& PreferenceHelper.getShowTimestampAndPidPreference(context)
 				&& logLine.getProcessId() != -1; // -1 marks lines like 'beginning of /dev/log...' 
 		
 		extraInfoLayout.setVisibility(extraInfoIsVisible ? View.VISIBLE : View.GONE);
-
+		*/
+		
 		// set the text size based on the preferences
 		
 		float textSize = PreferenceHelper.getTextSizePreference(context);
@@ -394,7 +412,7 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 		tagTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
 		outputTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
 		levelTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
-		
+		/*
 		if (extraInfoIsVisible) {
 			
 			TextView pidTextView = wrapper.getPidTextView();
@@ -408,19 +426,16 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 			
 			pidTextView.setText(logLine.getProcessId() != -1 ? Integer.toString(logLine.getProcessId()) : null);
 			timestampTextView.setText(logLine.getTimestamp());
-		}
+		}*/
 
 		tagTextView.setTextColor(LogLineAdapterUtil.getOrCreateTagColor(context, logLine.getTag()));
 		
 		// if this is a "partially selected" log, change the color to orange or whatever
-		LinearLayout mainLinearLayout = wrapper.getMainLinearLayout();
+		
 		int selectedBackground = logLine.isHighlighted() 
 				? PreferenceHelper.getColorScheme(context).getSelectedColor(context) 
 				: context.getResources().getColor(android.R.color.transparent);
-		mainLinearLayout.setBackgroundColor(selectedBackground);
-		extraInfoLayout.setBackgroundColor(selectedBackground);
-		
-		
+		view.setBackgroundColor(selectedBackground);
 		
 		return view;
     }
@@ -433,15 +448,22 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
      * @return
      */
     private CharSequence ellipsizeString(String str, TextView textView) {
+    	
+    	int width = textView.getWidth() - textView.getCompoundPaddingLeft() - textView.getCompoundPaddingRight();
+    	
+		return ellipsizeString(str, width, textView.getPaint());
+	}
 
+    private CharSequence ellipsizeString(String str, int width, TextPaint textPaint) {
+    	
 		if (TextUtils.isEmpty(str)) {
 			return str;
 		}
 		
-		int width = textView.getWidth() - textView.getCompoundPaddingLeft() - textView.getCompoundPaddingRight();
-		return ellipsizeFromCache(str, width, textView.getPaint());
-	}
-
+		return ellipsizeFromCache(str, width, textPaint);
+	}    
+    
+    
 
 	private CharSequence ellipsizeFromCache(String str, int width, TextPaint paint) {
 		// the TextUtils.ellipsize method is really expensive, so we can exploit the fact that we're using monospace-style text

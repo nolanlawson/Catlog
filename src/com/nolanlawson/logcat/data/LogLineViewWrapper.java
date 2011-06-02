@@ -1,7 +1,6 @@
 package com.nolanlawson.logcat.data;
 
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nolanlawson.logcat.R;
@@ -17,42 +16,11 @@ public class LogLineViewWrapper {
 	private TextView levelTextView;
 	private TextView outputTextView;
 	private TextView tagTextView;
-	private View extraInfoLayout;
-	private TextView pidTextView;
-	private TextView timestampTextView;
-	private LinearLayout mainLinearLayout;
 	
 	public LogLineViewWrapper(View view) {
 		this.view = view;
 	}
-	
-	public LinearLayout getMainLinearLayout() {
-		if (mainLinearLayout == null) {
-			mainLinearLayout = (LinearLayout) view.findViewById(R.id.log_line_main_layout);
-		}
-		return mainLinearLayout;
-	}
-	
-	public TextView getTimestampTextView() {
-		if (timestampTextView == null) {
-			timestampTextView = (TextView) view.findViewById(R.id.timestamp_text);
-		}
-		return timestampTextView;
-	}		
-	
-	public TextView getPidTextView() {
-		if (pidTextView == null) {
-			pidTextView = (TextView) view.findViewById(R.id.pid_text);
-		}
-		return pidTextView;
-	}	
-	
-	public View getExtraInfoLayout() {
-		if (extraInfoLayout == null) {
-			extraInfoLayout = view.findViewById(R.id.extra_info_layout);
-		}
-		return extraInfoLayout;
-	}	
+
 	
 	public TextView getTagTextView() {
 		if (tagTextView == null) {

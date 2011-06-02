@@ -1,48 +1,26 @@
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="wrap_content"
-	android:orientation="vertical" android:paddingLeft="3dp"
+	android:orientation="horizontal" android:paddingLeft="3dp"
 	android:paddingRight="3dp" android:paddingBottom="1dp"
-	android:paddingTop="1dp">
-	<LinearLayout android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:orientation="horizontal"
-		android:paddingTop="1dp" android:id="@+id/extra_info_layout">
-
-		<TextView android:layout_width="0px" android:layout_weight="0.3"
-			android:layout_height="wrap_content" android:paddingRight="2dp"
-			android:textSize="12sp" android:text="165" android:id="@+id/pid_text"
-			android:typeface="monospace" />
-
-		<TextView android:layout_width="0px" android:layout_weight="0.7"
-			android:layout_height="wrap_content" android:textSize="12sp"
-			android:text="November 11, 2010" android:id="@+id/timestamp_text"
-			android:typeface="monospace" />
+	android:paddingTop="2dp">
 
 
-	</LinearLayout>
-	<LinearLayout android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:orientation="horizontal"
-		android:paddingTop="1dp" android:id="@+id/log_line_main_layout">
-
-
-
-
-		<TextView android:layout_width="0px" android:layout_height="wrap_content"
+		<TextView android:layout_width="70dp" android:layout_height="wrap_content"
 			android:paddingRight="2dp" android:textSize="12sp" android:text="SomeActivity"
-			android:layout_weight="0.25" android:id="@+id/tag_text"
-			android:typeface="monospace" />
+			android:id="@+id/tag_text"
+			android:typeface="monospace" android:layout_alignParentLeft="true"/>
 
-		<TextView android:layout_width="0px" android:layout_weight="0.05"
+		<TextView android:layout_width="15dp"
 			android:layout_height="wrap_content" android:textSize="12sp"
 			android:text="D" android:id="@+id/log_level_text" android:gravity="center_horizontal"
-			android:typeface="monospace" />
+			android:typeface="monospace" android:layout_toRightOf="@+id/tag_text"/>
 
-		<TextView android:layout_width="0px" android:layout_weight="0.7"
+		<TextView android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:textSize="12sp"
 			android:paddingLeft="2dp" android:text="Blah blah blah a bunch of output"
 			android:paddingRight="2dp" android:id="@+id/log_output_text"
-			android:typeface="monospace" />
+			android:typeface="monospace" android:layout_toRightOf="@+id/log_level_text"/>
 
 
-	</LinearLayout>
-</LinearLayout>
+</RelativeLayout>
