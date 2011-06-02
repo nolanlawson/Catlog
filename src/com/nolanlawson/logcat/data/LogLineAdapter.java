@@ -303,7 +303,9 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
      * {@inheritDoc}
      */
     public int getCount() {
-        return mObjects.size();
+    	synchronized (mLock) {
+    		return mObjects.size();
+    	}
     }
 
     /**
@@ -336,7 +338,7 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        return createViewFromResource(position, convertView, parent, mResource);
+    	return createViewFromResource(position, convertView, parent, mResource);
     }
 
 

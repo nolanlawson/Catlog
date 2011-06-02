@@ -12,7 +12,7 @@ import com.nolanlawson.logcat.util.UtilLogger;
 
 public class LogLine {
 
-	private static Pattern logPattern = Pattern.compile("(\\w)/([^(]+)\\(\\s*(\\d+)\\): (.*)");
+	private static Pattern logPattern = Pattern.compile("^(\\w)/([^(]+)\\(\\s*(\\d+)\\): ");
 	
 	private static UtilLogger log = new UtilLogger(LogLine.class);
 	
@@ -116,13 +116,17 @@ public class LogLine {
 		
 		Matcher matcher = logPattern.matcher(originalLine);
 		
-		if (matcher.matches()) {
+		if (matcher.find()) {
 			char logLevelChar = matcher.group(1).charAt(0);
 			
 			logLine.setLogLevel(convertCharToLogLevel(logLevelChar));
 			logLine.setTag(matcher.group(2));
 			logLine.setProcessId(Integer.parseInt(matcher.group(3)));
-			logLine.setLogOutput(matcher.group(4));
+			
+			int end = matcher.end(0);
+			
+			String output = (end < originalLine.length()) ? originalLine.substring(end) : "";
+			logLine.setLogOutput(output);
 			
 			
 		} else {
