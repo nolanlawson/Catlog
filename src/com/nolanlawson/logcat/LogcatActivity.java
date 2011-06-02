@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
@@ -157,6 +158,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	@Override
     public void onResume() {
     	super.onResume();
+    	if (UtilLogger.DEBUG_MODE) {
+    		Debug.startMethodTracing();
+    	}
     	
     }
     
@@ -219,6 +223,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     	super.onPause();
     	
     	cancelPartialSelect();
+    	if (UtilLogger.DEBUG_MODE) {
+    		Debug.stopMethodTracing();
+    	}
     }
     
     @Override

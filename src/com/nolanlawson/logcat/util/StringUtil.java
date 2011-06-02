@@ -3,6 +3,10 @@ package com.nolanlawson.logcat.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.text.TextPaint;
+import android.text.TextUtils;
+import android.widget.TextView;
+
 /**
  *
  * @author nolan
@@ -200,6 +204,5 @@ public class StringUtil {
 			hash = str.charAt(len - i - 1) + ((hash << 5) - hash);
 		}
 		return hash;
-    }
-    
+    }    
 }

@@ -22,9 +22,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextUtils.TruncateAt;
 import android.util.TypedValue;
@@ -61,6 +64,8 @@ import com.nolanlawson.logcat.util.UtilLogger;
 public class LogLineAdapter extends BaseAdapter implements Filterable {
 	
 	private static UtilLogger log = new UtilLogger(LogLineAdapter.class);
+	
+	private static Map<Integer, Integer> ellipsisLengthsCache = new HashMap<Integer,Integer>();
 	
 	private Comparator<? super LogLine> mComparator;
 	
@@ -361,15 +366,16 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 		
 		int foregroundColor = PreferenceHelper.getColorScheme(context).getForegroundColor(context);
 		
+		CharSequence output = logLine.isExpanded() ? logLine.getLogOutput() : ellipsizeString(logLine.getLogOutput(), outputTextView);
 		
-		outputTextView.setText(logLine.getLogOutput());
+		outputTextView.setText(output);
 		outputTextView.setSingleLine(!logLine.isExpanded());
-		outputTextView.setEllipsize(logLine.isExpanded() ? null : TruncateAt.END);		
 		outputTextView.setTextColor(foregroundColor);
 		
-		tagTextView.setText(logLine.getTag());
+		CharSequence tag = logLine.isExpanded() ? logLine.getTag() : ellipsizeString(logLine.getTag(), tagTextView);
+		
+		tagTextView.setText(tag);
 		tagTextView.setSingleLine(!logLine.isExpanded());
-		tagTextView.setEllipsize(logLine.isExpanded() ? null : TruncateAt.END);
 		tagTextView.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
 		
 		View extraInfoLayout = wrapper.getExtraInfoLayout();
@@ -418,6 +424,55 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
     }
 
     /**
+     * Optimization for when you have TextViews that truncate, per
+     * http://www.martinadamek.com/2011/01/05/performance-of-android-listview-containing-textviews/
+     * @param str
+     * @param textView
+     * @return
+     */
+    private CharSequence ellipsizeString(String str, TextView textView) {
+
+		if (TextUtils.isEmpty(str)) {
+			return str;
+		}
+		
+		int width = textView.getWidth() - textView.getCompoundPaddingLeft() - textView.getCompoundPaddingRight();
+		return ellipsizeFromCache(str, width, textView.getPaint());
+	}
+
+
+	private CharSequence ellipsizeFromCache(String str, int width, TextPaint paint) {
+		// the TextUtils.ellipsize method is really expensive, so we can exploit the fact that we're using monospace-style text
+		// to just cache the correct number of characters given the width
+		
+		Integer maxLength = ellipsisLengthsCache.get(width);
+		
+		if (maxLength != null) { // cached
+			
+			if (str.length() < maxLength) {
+				return str;
+			}
+			
+			// truncate and add ellipsis
+			StringBuilder stringBuilder = new StringBuilder(str);
+			if (stringBuilder.length() > maxLength) {
+				stringBuilder.delete(maxLength, stringBuilder.length());
+			}
+			if (stringBuilder.length() > 0) {
+				stringBuilder.setCharAt(stringBuilder.length() - 1, (char) 8230); // add ellipsis character
+			}
+		}
+		
+		CharSequence result = TextUtils.ellipsize(str, paint, width, TruncateAt.END);
+		if (result.length() < str.length()) { // was ellipsized
+			ellipsisLengthsCache.put(width, result.length());
+		}
+		return result;
+		
+	}
+
+
+	/**
      * <p>Sets the layout resource to create the drop down views.</p>
      *
      * @param resource the layout resource defining the drop down views
