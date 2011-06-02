@@ -461,6 +461,7 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 			if (stringBuilder.length() > 0) {
 				stringBuilder.setCharAt(stringBuilder.length() - 1, (char) 8230); // add ellipsis character
 			}
+			return stringBuilder;
 		}
 		
 		CharSequence result = TextUtils.ellipsize(str, paint, width, TruncateAt.END);
