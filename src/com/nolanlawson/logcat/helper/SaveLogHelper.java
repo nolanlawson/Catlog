@@ -124,7 +124,7 @@ public class SaveLogHelper {
 		
 		try {
 			
-			bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(logFile)));
+			bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(logFile)), 8192);
 			
 			while (bufferedReader.ready()) {
 				result.add(bufferedReader.readLine());

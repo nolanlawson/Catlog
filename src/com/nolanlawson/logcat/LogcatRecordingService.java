@@ -219,7 +219,7 @@ public class LogcatRecordingService extends IntentService {
 	
 	private void handleIntent(Intent intent) {
 		
-		log.d("Starting up AppTrackerService now with intent: %s", intent);
+		log.d("Starting up %s now with intent: %s", LogcatRecordingService.class.getSimpleName(), intent);
 
 		makeToast(R.string.log_recording_started, Toast.LENGTH_SHORT);
 		
@@ -239,9 +239,12 @@ public class LogcatRecordingService extends IntentService {
 					new String[] { "logcat", "-v", "time" });
 
 			reader = new BufferedReader(new InputStreamReader(logcatProcess
-					.getInputStream()));
+					.getInputStream()), 8192);
 		
 			Date currentDate = new Date(System.currentTimeMillis());
+			
+			log.d("currentDate is %s", currentDate);
+			
 			SimpleDateFormat dateFormat = new SimpleDateFormat(LOGCAT_DATE_FORMAT);
 			
 			String line;
@@ -280,8 +283,10 @@ public class LogcatRecordingService extends IntentService {
 					lineDate.setYear(currentDate.getYear());
 					
 					if (lineDate.before(currentDate)) {
+						log.d("lineDate %s is before currentDate %s; skipping", lineDate, currentDate);
 						continue;
 					} else {
+						log.d("lineDate %s is after currentDate %s; done skipping", lineDate, currentDate);
 						pastCurrentTime = true;
 					}
 				}

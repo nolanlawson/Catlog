@@ -942,7 +942,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 						new String[] { "logcat", "-v", "time" });
 
 				reader = new BufferedReader(new InputStreamReader(logcatProcess
-						.getInputStream()));
+						.getInputStream()), 8192);
 				
 				String line;
 				
