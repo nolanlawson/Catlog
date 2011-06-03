@@ -370,7 +370,7 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 		
 		int foregroundColor = PreferenceHelper.getColorScheme(context).getForegroundColor(context);
 		
-		CharSequence output = logLine.isExpanded()
+		CharSequence output = (logLine.isExpanded() || TextUtils.isEmpty(logLine.getTag())) // empty tag indicates this is the line like "beginning of dev/log..."
 				? logLine.getLogOutput() 
 				: ellipsizeString(logLine.getLogOutput(), outputTextView);
 		
@@ -445,6 +445,10 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
     private CharSequence ellipsizeString(CharSequence str, int width, TextPaint textPaint) {
     	
 		if (TextUtils.isEmpty(str)) {
+			return str;
+		}
+		
+		if (width <= 0) { // view probably hasn't been drawn yet; just return the whole string to avoid blank textviews
 			return str;
 		}
 		
