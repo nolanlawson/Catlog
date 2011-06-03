@@ -361,7 +361,14 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 		TextView timestampTextView = wrapper.getTimestampTextView();
 		
 		
-		LogLine logLine = getItem(position);
+		LogLine logLine;
+		try {
+			logLine = getItem(position);
+		} catch (IndexOutOfBoundsException ignore) {
+			// XXX hack - I sometimes get array index out of bounds exceptions here
+			// no idea how to solve it, so this is the best I can do
+			logLine = mObjects.get(mObjects.size() - 1);
+		}
 		
 		levelTextView.setText(Character.toString(LogLine.convertLogLevelToChar(logLine.getLogLevel())));
 		levelTextView.setBackgroundColor(LogLineAdapterUtil.getBackgroundColorForLogLevel(context, logLine.getLogLevel()));
