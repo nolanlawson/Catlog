@@ -1,5 +1,9 @@
 package com.nolanlawson.logcat.helper;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -10,6 +14,9 @@ import com.nolanlawson.logcat.data.ColorScheme;
 import com.nolanlawson.logcat.util.UtilLogger;
 
 public class PreferenceHelper {
+	
+	public static Map<Integer, Integer> ellipsisLengthsCache = 
+		Collections.synchronizedMap(new HashMap<Integer,Integer>());
 	
 	private static float textSize = -1;
 	private static Boolean showTimestampAndPid = null;
@@ -97,6 +104,7 @@ public class PreferenceHelper {
 		textSize = -1;
 		showTimestampAndPid = null;
 		colorScheme = null;
+		ellipsisLengthsCache.clear();
 	}
 	
 	private static void cacheTextsize(Context context, int dimenId) {

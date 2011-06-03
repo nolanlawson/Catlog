@@ -65,8 +65,6 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 	
 	private static UtilLogger log = new UtilLogger(LogLineAdapter.class);
 	
-	private static Map<Integer, Integer> ellipsisLengthsCache = new HashMap<Integer,Integer>();
-	
 	private Comparator<? super LogLine> mComparator;
 	
     /**
@@ -467,7 +465,7 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 		// the TextUtils.ellipsize method is really expensive, so we can exploit the fact that we're using monospace-style text
 		// to just cache the correct number of characters given the width
 		
-		Integer maxLength = ellipsisLengthsCache.get(width);
+		Integer maxLength = PreferenceHelper.ellipsisLengthsCache.get(width);
 		
 		if (maxLength != null) { // cached
 			
@@ -488,7 +486,7 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 		
 		CharSequence result = TextUtils.ellipsize(str, paint, width, TruncateAt.END);
 		if (result.length() < str.length()) { // was ellipsized
-			ellipsisLengthsCache.put(width, result.length());
+			PreferenceHelper.ellipsisLengthsCache.put(width, result.length());
 		}
 		return result;
 		
