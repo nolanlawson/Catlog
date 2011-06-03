@@ -370,16 +370,20 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 		
 		int foregroundColor = PreferenceHelper.getColorScheme(context).getForegroundColor(context);
 		
-		CharSequence output = logLine.getLogOutput();
+		CharSequence output = logLine.isExpanded()
+				? logLine.getLogOutput() 
+				: ellipsizeString(logLine.getLogOutput(), outputTextView);
 		
-		outputTextView.setEllipsize(logLine.isExpanded() ? null : TruncateAt.END);
+		//outputTextView.setEllipsize(logLine.isExpanded() ? null : TruncateAt.END);
 		outputTextView.setText(output);
 		outputTextView.setSingleLine(!logLine.isExpanded());
 		outputTextView.setTextColor(foregroundColor);
 		
-		CharSequence tag = logLine.getTag(); 
+		CharSequence tag = logLine.isExpanded()
+				? logLine.getTag()
+				: ellipsizeString(logLine.getTag(), tagTextView);
 
-		tagTextView.setEllipsize(logLine.isExpanded() ? null : TruncateAt.END);
+		//tagTextView.setEllipsize(logLine.isExpanded() ? null : TruncateAt.END);
 		tagTextView.setText(tag);
 		tagTextView.setSingleLine(!logLine.isExpanded());
 		tagTextView.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
@@ -431,14 +435,14 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
      * @param textView
      * @return
      */
-    private CharSequence ellipsizeString(String str, TextView textView) {
+    private CharSequence ellipsizeString(CharSequence str, TextView textView) {
     	
     	int width = textView.getWidth() - textView.getCompoundPaddingLeft() - textView.getCompoundPaddingRight();
     	
 		return ellipsizeString(str, width, textView.getPaint());
 	}
 
-    private CharSequence ellipsizeString(String str, int width, TextPaint textPaint) {
+    private CharSequence ellipsizeString(CharSequence str, int width, TextPaint textPaint) {
     	
 		if (TextUtils.isEmpty(str)) {
 			return str;
