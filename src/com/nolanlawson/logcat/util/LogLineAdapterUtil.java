@@ -1,8 +1,5 @@
 package com.nolanlawson.logcat.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.content.Context;
 import android.util.Log;
 
@@ -15,11 +12,6 @@ public class LogLineAdapterUtil {
 	public static final int LOG_WTF = 100; // arbitrary int to signify 'wtf' log level
 	
 	private static final int NUM_COLORS = 17;
-	
-	// used to cycle through colors for each tag to make the UI more visually appealing
-	private static Map<Integer, Integer> tagsToColors = new HashMap<Integer, Integer>();
-	
-	private static int colorIndex = 0;
 	
 	public static int getBackgroundColorForLogLevel(Context context, int logLevel) {
 		int result = android.R.color.black;
@@ -74,41 +66,14 @@ public class LogLineAdapterUtil {
 	
 	public static synchronized int getOrCreateTagColor(Context context, String tag) {
 		
-		if (tag == null) {
-			tag = "";
-		}
+		int hashCode = (tag == null) ? 0 : tag.hashCode();
 		
-		int hashedTag = hashStringToInt(tag);
+		int smear = Math.abs(hashCode) % NUM_COLORS;
 		
-		Integer result = tagsToColors.get(hashedTag);
-		
-		if (result == null) {
-			
-			result = getNewColor(context);
-			
-			tagsToColors.put(hashedTag, result);
-		}
-		
-		return result;
-		
-		
+		return getColorAt(smear, context);
+				
 	}
 	
-	private static Integer getNewColor(Context context) {
-	
-		// cycle through
-		Integer result = getColorAt(colorIndex, context);
-		
-		if (colorIndex == NUM_COLORS - 1) {
-			colorIndex = 0;
-		} else {
-			colorIndex++;
-		}
-		
-		return result;
-
-	}
-
 	private static Integer getColorAt(int i, Context context) {
 		
 		ColorScheme colorScheme = PreferenceHelper.getColorScheme(context);
@@ -149,18 +114,4 @@ public class LogLineAdapterUtil {
 		return minVal >= logLevelLimit;
 
 	}
-	
-	/*
-	 * This avoids using up additional memory in the hash map when we don't have to.
-	 * Appending the string to the reverse of itself makes the hash codes less likely to collide.
-	 */
-	private static int hashStringToInt(String str) {
-		return StringUtil.strongHashCode(str);
-	}
-	
-	public static void clearTagColorCache() {
-		colorIndex = 0;
-		tagsToColors.clear();
-	}
-
 }

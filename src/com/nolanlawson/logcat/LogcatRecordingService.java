@@ -263,6 +263,7 @@ public class LogcatRecordingService extends IntentService {
 				if (!pastCurrentTime) {
 					
 					if (line.length() < 19) { // length of date format at beginning of log line
+						log.d("log line too short: %s", line);
 						continue;
 					}
 					
@@ -272,10 +273,12 @@ public class LogcatRecordingService extends IntentService {
 					try {
 						lineDate = dateFormat.parse(line);
 					} catch (ParseException e) {
+						log.d(e, "datetime parseException");
 						continue;
 					}
 					
 					if (lineDate == null) {
+						log.d("lineDate is null");
 						continue;
 					}
 					

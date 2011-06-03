@@ -182,7 +182,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		// preferences may have changed
 		PreferenceHelper.clearCache();
-		LogLineAdapterUtil.clearTagColorCache();
 		
 		collapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(getApplicationContext());
 		

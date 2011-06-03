@@ -187,22 +187,4 @@ public class StringUtil {
     	
     	return sb.toString();	
     }
-    
-    /**
-     * Same as String.hashCode(), but acts as if the string were appended to a reversed
-     * copy of itself.
-     * @param str
-     * @return
-     */
-    public static int strongHashCode(String str) {
-		int hash = 0;
-		int len = str.length();
-		for (int i = 0; i < len; i++) {
-			hash = str.charAt(i) + ((hash << 5) - hash);
-		}
-		for (int i = 0; i < len; i++) {
-			hash = str.charAt(len - i - 1) + ((hash << 5) - hash);
-		}
-		return hash;
-    }    
 }
