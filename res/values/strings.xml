@@ -120,14 +120,14 @@
     <string name="choose_format">Choose Format</string>
     
     <string name="widget_recording_in_progress">Recording...</string>
-    <string name="first_run">first_run2</string>
+    <string name="first_run">first_run3</string>
     <string name="first_run_pref_title">Reset Introduction</string>
     <string name="first_run_pref_summary">Show introductory message again.</string>
     <string name="first_run_title">Welcome to CatLog!</string>
-    <string name="first_run_message">\
-<b>New in 1.1.5!</b>\n\
-&#160;&#160;&#160;&#160;- Added \"Select Partial\" mode.\n\
-&#160;&#160;&#160;&#160;- UI tweaks.\
+    <string name="first_run_message">\  
+<b>New in 1.1.6!</b>\n\
+&#160;&#160;&#160;&#160;- UI is now speedier.\n\
+&#160;&#160;&#160;&#160;- Bugfixes.\
 </string> 
     
 </resources>
