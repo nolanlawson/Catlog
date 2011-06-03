@@ -10,7 +10,7 @@ import android.util.Log;
  */
 public class UtilLogger {
 
-	public static final boolean DEBUG_MODE = true;
+	public static final boolean DEBUG_MODE = false;
 	
 	private String tag;
 	
