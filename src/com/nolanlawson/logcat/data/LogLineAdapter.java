@@ -370,34 +370,20 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 		
 		int foregroundColor = PreferenceHelper.getColorScheme(context).getForegroundColor(context);
 		
-		/*int outputWidth = view.getWidth() - levelTextView.getWidth() - tagTextView.getWidth()
-				- outputTextView.getCompoundPaddingLeft() - outputTextView.getCompoundPaddingRight()
-				- view.getPaddingLeft() - view.getPaddingRight()
-				- levelTextView.getCompoundPaddingLeft() - levelTextView.getCompoundPaddingRight()
-				- tagTextView.getCompoundPaddingLeft() - tagTextView.getCompoundPaddingRight();
+		CharSequence output = logLine.getLogOutput();
 		
-		int desiredWidth = outputTextView.getWidth() - outputTextView.getCompoundPaddingLeft() - outputTextView.getCompoundPaddingRight();
-		if (outputWidth != desiredWidth) {
-			if (new Random().nextInt(10) == 0) {
-				log.e("outputWidth is %s and width should be %s", outputWidth, desiredWidth);
-			}
-		}*/
-		
-		CharSequence output = logLine.getLogOutput();//logLine.isExpanded() 
-				//? logLine.getLogOutput() 
-				//: ellipsizeString(logLine.getLogOutput(), outputWidth, outputTextView.getPaint());
-		
+		outputTextView.setEllipsize(logLine.isExpanded() ? null : TruncateAt.END);
 		outputTextView.setText(output);
 		outputTextView.setSingleLine(!logLine.isExpanded());
 		outputTextView.setTextColor(foregroundColor);
-		outputTextView.setEllipsize(logLine.isExpanded() ? null : TruncateAt.END);
 		
-		CharSequence tag = logLine.getTag(); //logLine.isExpanded() ? logLine.getTag() : ellipsizeString(logLine.getTag(), tagTextView);
-		
+		CharSequence tag = logLine.getTag(); 
+
+		tagTextView.setEllipsize(logLine.isExpanded() ? null : TruncateAt.END);
 		tagTextView.setText(tag);
 		tagTextView.setSingleLine(!logLine.isExpanded());
 		tagTextView.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
-		tagTextView.setEllipsize(logLine.isExpanded() ? null : TruncateAt.END);
+
 		
 		// set the text size based on the preferences
 		
@@ -463,7 +449,7 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
     
     
 
-	private CharSequence ellipsizeFromCache(String str, int width, TextPaint paint) {
+	private CharSequence ellipsizeFromCache(CharSequence str, int width, TextPaint paint) {
 		// the TextUtils.ellipsize method is really expensive, so we can exploit the fact that we're using monospace-style text
 		// to just cache the correct number of characters given the width
 		
