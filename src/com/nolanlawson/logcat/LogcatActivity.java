@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Debug;
@@ -1328,6 +1329,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		});
 		
 		getListView().setCacheColorHint(color);
+		getListView().setDivider(new ColorDrawable(color));
 		
 	}
 
