@@ -367,7 +367,7 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 		} catch (IndexOutOfBoundsException ignore) {
 			// XXX hack - I sometimes get array index out of bounds exceptions here
 			// no idea how to solve it, so this is the best I can do
-			logLine = mObjects.get(mObjects.size() - 1);
+			logLine = LogLine.newLogLine("", PreferenceHelper.getExpandedByDefaultPreference(context));
 		}
 		
 		levelTextView.setText(Character.toString(LogLine.convertLogLevelToChar(logLine.getLogLevel())));
