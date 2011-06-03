@@ -1327,6 +1327,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			}
 		});
 		
+		getListView().setCacheColorHint(color);
+		
 	}
 
 }

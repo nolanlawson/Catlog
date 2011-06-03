@@ -25,7 +25,7 @@
 	<color name="main_bubble_background_verizon">#FFEEEEEE</color>
 
 	<color name="main_background_dark">#FF000000</color>
-	<color name="main_background_light">#FFFFFFF0</color>
+	<color name="main_background_light">#FFFFFFEE</color>
 	<color name="main_background_android">#FFA4C639</color>
 	<color name="main_background_verizon">#FF000000</color>
 	<color name="main_background_att">#FFFFFFFF</color>

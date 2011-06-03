@@ -75,8 +75,7 @@
 	<ListView android:layout_width="fill_parent"
 		android:layout_height="0px" android:layout_weight="1.0" android:id="@android:id/list"
 		android:paddingBottom="2dp" android:paddingTop="1dp"
-		android:cacheColorHint="#00000000" android:divider="#00000000"
-
+		android:divider="#00000000"
 		android:dividerHeight="0px" />
 
 </LinearLayout>
