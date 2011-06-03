@@ -74,7 +74,7 @@ public class LogLineAdapterUtil {
 				
 	}
 	
-	private static Integer getColorAt(int i, Context context) {
+	private static int getColorAt(int i, Context context) {
 		
 		ColorScheme colorScheme = PreferenceHelper.getColorScheme(context);
 		
