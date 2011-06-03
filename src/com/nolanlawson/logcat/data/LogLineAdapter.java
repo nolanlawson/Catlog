@@ -391,11 +391,12 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 		outputTextView.setTextColor(foregroundColor);
 		outputTextView.setEllipsize(logLine.isExpanded() ? null : TruncateAt.END);
 		
-		CharSequence tag = logLine.isExpanded() ? logLine.getTag() : ellipsizeString(logLine.getTag(), tagTextView);
+		CharSequence tag = logLine.getTag(); //logLine.isExpanded() ? logLine.getTag() : ellipsizeString(logLine.getTag(), tagTextView);
 		
 		tagTextView.setText(tag);
 		tagTextView.setSingleLine(!logLine.isExpanded());
 		tagTextView.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
+		tagTextView.setEllipsize(logLine.isExpanded() ? null : TruncateAt.END);
 		
 		/*View extraInfoLayout = wrapper.getExtraInfoLayout();
 		boolean extraInfoIsVisible = logLine.isExpanded() 
