@@ -34,6 +34,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -381,18 +382,16 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 				? logLine.getLogOutput() 
 				: ellipsizeString(logLine.getLogOutput(), outputTextView);
 		
-		//outputTextView.setEllipsize(logLine.isExpanded() ? null : TruncateAt.END);
-		outputTextView.setText(output);
 		outputTextView.setSingleLine(!logLine.isExpanded());
+		outputTextView.setText(output);
 		outputTextView.setTextColor(foregroundColor);
 		
 		CharSequence tag = logLine.isExpanded()
 				? logLine.getTag()
 				: ellipsizeString(logLine.getTag(), tagTextView);
 
-		//tagTextView.setEllipsize(logLine.isExpanded() ? null : TruncateAt.END);
-		tagTextView.setText(tag);
 		tagTextView.setSingleLine(!logLine.isExpanded());
+		tagTextView.setText(tag);
 		tagTextView.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
 
 		
@@ -403,7 +402,7 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 		tagTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
 		outputTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
 		levelTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
-
+		
 		boolean extraInfoIsVisible = logLine.isExpanded() 
 				&& PreferenceHelper.getShowTimestampAndPidPreference(context)
 				&& logLine.getProcessId() != -1; // -1 marks lines like 'beginning of /dev/log...' 

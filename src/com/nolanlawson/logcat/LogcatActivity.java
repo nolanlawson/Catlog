@@ -787,6 +787,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		if (task != null && !task.isCancelled()) {
 			task.cancel(true);
+			task = null;
 		}
 		
 		// do in background to avoid jank
