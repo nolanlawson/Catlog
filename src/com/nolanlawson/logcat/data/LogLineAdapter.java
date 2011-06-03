@@ -25,7 +25,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import android.content.Context;
 import android.text.TextPaint;
@@ -38,7 +37,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nolanlawson.logcat.R;
@@ -359,6 +357,9 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 		TextView levelTextView = wrapper.getLevelTextView();
 		TextView outputTextView = wrapper.getOutputTextView();
 		TextView tagTextView = wrapper.getTagTextView();
+		TextView pidTextView = wrapper.getPidTextView();
+		TextView timestampTextView = wrapper.getTimestampTextView();
+		
 		
 		LogLine logLine = getItem(position);
 		
@@ -398,14 +399,6 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 		tagTextView.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
 		tagTextView.setEllipsize(logLine.isExpanded() ? null : TruncateAt.END);
 		
-		/*View extraInfoLayout = wrapper.getExtraInfoLayout();
-		boolean extraInfoIsVisible = logLine.isExpanded() 
-				&& PreferenceHelper.getShowTimestampAndPidPreference(context)
-				&& logLine.getProcessId() != -1; // -1 marks lines like 'beginning of /dev/log...' 
-		
-		extraInfoLayout.setVisibility(extraInfoIsVisible ? View.VISIBLE : View.GONE);
-		*/
-		
 		// set the text size based on the preferences
 		
 		float textSize = PreferenceHelper.getTextSizePreference(context);
@@ -413,11 +406,15 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 		tagTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
 		outputTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
 		levelTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
-		/*
+
+		boolean extraInfoIsVisible = logLine.isExpanded() 
+				&& PreferenceHelper.getShowTimestampAndPidPreference(context)
+				&& logLine.getProcessId() != -1; // -1 marks lines like 'beginning of /dev/log...' 
+		
+		pidTextView.setVisibility(extraInfoIsVisible ? View.VISIBLE : View.GONE);
+		timestampTextView.setVisibility(extraInfoIsVisible ? View.VISIBLE : View.GONE);
+		
 		if (extraInfoIsVisible) {
-			
-			TextView pidTextView = wrapper.getPidTextView();
-			TextView timestampTextView = wrapper.getTimestampTextView();
 			
 			pidTextView.setTextColor(foregroundColor);
 			timestampTextView.setTextColor(foregroundColor);
@@ -427,7 +424,7 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 			
 			pidTextView.setText(logLine.getProcessId() != -1 ? Integer.toString(logLine.getProcessId()) : null);
 			timestampTextView.setText(logLine.getTimestamp());
-		}*/
+		}
 
 		tagTextView.setTextColor(LogLineAdapterUtil.getOrCreateTagColor(context, logLine.getTag()));
 		

@@ -16,10 +16,26 @@ public class LogLineViewWrapper {
 	private TextView levelTextView;
 	private TextView outputTextView;
 	private TextView tagTextView;
+	private TextView pidTextView;
+	private TextView timestampTextView;
 	
 	public LogLineViewWrapper(View view) {
 		this.view = view;
 	}
+	
+	public TextView getPidTextView() {
+		if (pidTextView == null) {
+			pidTextView = (TextView) view.findViewById(R.id.pid_text);
+		}
+		return pidTextView;
+	}
+	
+	public TextView getTimestampTextView() {
+		if (timestampTextView == null) {
+			timestampTextView = (TextView) view.findViewById(R.id.timestamp_text);
+		}
+		return timestampTextView;
+	}	
 
 	
 	public TextView getTagTextView() {
