@@ -1,0 +1,7 @@
+<resources>
+	
+	<dimen name="tag_width">170dp</dimen>
+	<dimen name="pid_width">190dp</dimen>
+	
+	<dimen name="log_level_width">20dp</dimen>
+</resources>
