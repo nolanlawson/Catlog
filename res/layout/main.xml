@@ -14,7 +14,8 @@
 			android:inputType="textFilter" 
 			android:drawableLeft="@drawable/ic_btn_search"
 			android:drawablePadding="4dp"
-			android:layout_width="0px"	android:layout_weight="1" />
+			android:layout_width="0px"	android:layout_weight="1"
+			android:hint="@string/edit_text_hint" />
 		
 		<Button android:drawableLeft="@drawable/ic_menu_more_32"
 			android:layout_height="wrap_content" android:layout_width="wrap_content"
