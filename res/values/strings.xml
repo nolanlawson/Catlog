@@ -127,6 +127,8 @@
     <string name="first_run_pref_summary">Show introductory message again.</string>
     <string name="first_run_title">Welcome to CatLog!</string>
     <string name="first_run_message">\  
+<b>New in 1.1.7!</b>\n\
+&#160;&#160;&#160;&#160;- Better support for different screen sizes.\n\n\
 <b>New in 1.1.6!</b>\n\
 &#160;&#160;&#160;&#160;- UI is now speedier.\n\
 &#160;&#160;&#160;&#160;- Bugfixes.\
