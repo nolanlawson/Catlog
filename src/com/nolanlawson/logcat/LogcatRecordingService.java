@@ -227,6 +227,11 @@ public class LogcatRecordingService extends IntentService {
 		
 		SaveLogHelper.deleteLogIfExists(filename);
 		
+		// get the current last log line, so we can know what needs to be skipped
+		String currentLastLine = getCurentLastLogLine();
+		
+		log.d("current last line is %s", currentLastLine);
+		
 		logcatProcess = null;
 		BufferedReader reader = null;
 		
@@ -251,8 +256,9 @@ public class LogcatRecordingService extends IntentService {
 			int lineCount = 0;
 			int logLinePeriod = PreferenceHelper.getLogLinePeriodPreference(getApplicationContext());
 			
-			// keep skipping lines until we find one that is past the current time.
-			// unfortunately, Android logcat does not print out the year, so if
+			// keep skipping lines until we find one that is past the current last log line,
+			// or the timestamp is later than the current time.
+			// Unfortunately, Android logcat does not print out the year, so if
 			// somebody starts this process at January 1st at 12:01am he/she
 			// will get the entire log buffer.  But that's not the end of the world.
 			
@@ -261,6 +267,12 @@ public class LogcatRecordingService extends IntentService {
 			while ((line = reader.readLine()) != null) {
 				
 				if (!pastCurrentTime) {
+					
+					if (line.equals(currentLastLine)) {
+						log.d("line matches dumped last line '%s', done skipping", currentLastLine);
+						pastCurrentTime = true;
+						continue;
+					}
 					
 					if (line.length() < 19) { // length of date format at beginning of log line
 						log.d("log line too short: %s", line);
@@ -336,6 +348,41 @@ public class LogcatRecordingService extends IntentService {
 
 		}
 	}
+
+	private String getCurentLastLogLine() {
+		Process dumpLogcatProcess = null;
+		BufferedReader reader = null;
+		String result = null;
+		try {
+			dumpLogcatProcess = Runtime.getRuntime().exec(
+					new String[] { "logcat", "-d", "-v", "time" }); // -d just dumps the whole thing
+
+			reader = new BufferedReader(new InputStreamReader(dumpLogcatProcess
+					.getInputStream()), 8192);
+			
+			String line;
+			while ((line = reader.readLine()) != null) {
+				result = line;
+			}
+		} catch (IOException e) {
+			log.e(e, "unexpected exception");
+		} finally {		
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					log.e(e, "unexpected exception");
+				}
+			}
+			
+			if (dumpLogcatProcess != null) {
+				dumpLogcatProcess.destroy();
+			}
+		}
+		
+		return result;
+	}
+
 
 	private void startLogcatActivityToViewSavedFile(String filename) {
 		

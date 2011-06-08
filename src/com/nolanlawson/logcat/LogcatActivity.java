@@ -9,9 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,7 +19,6 @@ import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
@@ -33,26 +32,26 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Filter;
-import android.widget.Filter.FilterListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Filter.FilterListener;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.nolanlawson.logcat.data.ColorScheme;
 import com.nolanlawson.logcat.data.LogFileAdapter;
@@ -159,10 +158,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	@Override
     public void onResume() {
     	super.onResume();
-    	if (UtilLogger.DEBUG_MODE) {
-    		Debug.startMethodTracing();
-    	}
-    	
     }
     
 	@Override
@@ -223,9 +218,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     	super.onPause();
     	
     	cancelPartialSelect();
-    	if (UtilLogger.DEBUG_MODE) {
-    		Debug.stopMethodTracing();
-    	}
     }
     
     @Override
