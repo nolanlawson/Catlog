@@ -18,7 +18,7 @@
 		
 				
 	<item android:id="@+id/menu_record_log" android:title="@string/start_recording_log"
-		android:alphabeticShortcut="@string/start_recording_log" android:icon="@drawable/ic_menu_record2" />
+		android:alphabeticShortcut="@string/start_recording_log" android:icon="@drawable/ic_menu_record" />
 	
 	<item android:id="@+id/menu_stop_recording_log" android:title="@string/stop_recording_log"
 		android:alphabeticShortcut="@string/stop_recording_log" android:icon="@drawable/ic_menu_stop" />
