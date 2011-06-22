@@ -69,6 +69,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		FilterListener, OnEditorActionListener, OnItemLongClickListener, OnClickListener, OnLongClickListener {
 	
 	public static boolean bufferHasChanged;
+	private boolean onCreateWasCalled;
 	
 	private static final int REQUEST_CODE_SETTINGS = 1;
 	
@@ -102,6 +103,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        onCreateWasCalled = true;
         
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         
@@ -161,13 +163,19 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     public void onResume() {
     	super.onResume();
     	
-    	if (currentlyOpenLog == null && bufferHasChanged && !(getIntent() != null && getIntent().hasExtra("filename"))) {
+    	// have to check to see that onCreateWasCalled was NOT called, because otherwise
+    	// we could start up two mainLog background tasks at the same time
+    	
+    	if (currentlyOpenLog == null && bufferHasChanged 
+    			&& !onCreateWasCalled
+    			&& !(getIntent() != null && getIntent().hasExtra("filename"))) {
         	bufferHasChanged = false;
     		restartMainLog();    			
 		} else if (getListView().getCount() > 0){
 			// scroll to bottom, since for some reason it always scrolls to the top, which is annoying
 			getListView().setSelection(getListView().getCount() - 1);
 		}
+    	onCreateWasCalled = false; // reset onCreateWasCalled
     }
     
 	private void restartMainLog() {
