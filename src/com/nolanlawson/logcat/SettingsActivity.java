@@ -20,8 +20,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	private static final int MIN_LOG_LINE_PERIOD = 1;
 	
 	private EditTextPreference logLinePeriodPreference;
-	private ListPreference textSizePreference;
-	private ListPreference themePreference;
+	private ListPreference textSizePreference, themePreference, bufferPreference;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,32 +33,35 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	
 	private void setUpPreferences() {
 		
-		logLinePeriodPreference = (EditTextPreference) findPreference(getText(R.string.pref_log_line_period));
+		logLinePeriodPreference = (EditTextPreference) findPreference(getString(R.string.pref_log_line_period));
 		
 		int logLinePrefValue = PreferenceHelper.getLogLinePeriodPreference(this);
 		
-		logLinePeriodPreference.setSummary(String.format(getText(R.string.pref_log_line_period_summary).toString(),
-				logLinePrefValue, getPluralSuffix(logLinePrefValue), getText(R.string.pref_log_line_period_default)));
+		logLinePeriodPreference.setSummary(String.format(getString(R.string.pref_log_line_period_summary).toString(),
+				logLinePrefValue, getPluralSuffix(logLinePrefValue), getString(R.string.pref_log_line_period_default)));
 		
 		logLinePeriodPreference.setOnPreferenceChangeListener(this);
 		
-		textSizePreference = (ListPreference) findPreference(getText(R.string.pref_text_size));
-		
+		textSizePreference = (ListPreference) findPreference(getString(R.string.pref_text_size));
 		textSizePreference.setSummary(textSizePreference.getEntry());
-		
 		textSizePreference.setOnPreferenceChangeListener(this);
 		
-		themePreference = (ListPreference) findPreference(getText(R.string.pref_theme));
-		
+		themePreference = (ListPreference) findPreference(getString(R.string.pref_theme));
 		themePreference.setOnPreferenceChangeListener(this);
+		
+		bufferPreference = (ListPreference) findPreference(getString(R.string.pref_buffer));
+		bufferPreference.setOnPreferenceChangeListener(this);
+		int bufferIdx = Arrays.asList(bufferPreference.getEntryValues()).indexOf(bufferPreference.getValue());
+		CharSequence bufferEntry = bufferPreference.getEntries()[bufferIdx];
+		bufferPreference.setSummary(bufferEntry);
 		
 		boolean donateInstalled = DonateHelper.isDonateVersionInstalled(this) ;
 		
-		String themeSummary = getText(donateInstalled 
+		String themeSummary = getString(donateInstalled 
 				? PreferenceHelper.getColorScheme(this).getNameResource()
 				: R.string.pref_theme_summary_free).toString();
 		
-		themeSummary = String.format(themeSummary, getText(PreferenceHelper.getColorScheme(this).getNameResource()));
+		themeSummary = String.format(themeSummary, getString(PreferenceHelper.getColorScheme(this).getNameResource()));
 		
 		themePreference.setSummary(themeSummary);
 		
@@ -69,7 +71,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
 		
-		if (preference.getKey().equals(getText(R.string.pref_log_line_period))) {
+		if (preference.getKey().equals(getString(R.string.pref_log_line_period))) {
 			
 			String input = ((String)newValue).trim();
 
@@ -78,8 +80,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 				int value = Integer.parseInt(input);
 				if (value >= MIN_LOG_LINE_PERIOD && value <= MAX_LOG_LINE_PERIOD) {
 					PreferenceHelper.setLogLinePeriodPreference(this, value);
-					logLinePeriodPreference.setSummary(String.format(getText(R.string.pref_log_line_period_summary).toString(),
-							value, getPluralSuffix(value), getText(R.string.pref_log_line_period_default)));
+					logLinePeriodPreference.setSummary(String.format(getString(R.string.pref_log_line_period_summary).toString(),
+							value, getPluralSuffix(value), getString(R.string.pref_log_line_period_default)));
 					return true;
 				}
 				
@@ -89,10 +91,20 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 			Toast.makeText(this, R.string.pref_log_line_period_error, Toast.LENGTH_LONG).show();
 			return false;
 			
-		} else if (preference.getKey().equals(getText(R.string.pref_theme))) {
+		} else if (preference.getKey().equals(getString(R.string.pref_theme))) {
+			// update summary
 			themePreference.setSummary(newValue.toString());
 			return true;
-			
+		} else if (preference.getKey().equals(getString(R.string.pref_buffer))) {
+			// update summary
+			int index = Arrays.asList(bufferPreference.getEntryValues()).indexOf(newValue.toString());
+			CharSequence newEntry = bufferPreference.getEntries()[index];
+			bufferPreference.setSummary(newEntry);
+			// notify the LogcatActivity that the buffer has changed
+			if (!newValue.toString().equals(bufferPreference.getValue())) {
+				LogcatActivity.bufferHasChanged = true;
+			}
+			return true;			
 		} else { // text size pref
 			
 			int index = Arrays.asList(textSizePreference.getEntryValues()).indexOf(newValue);

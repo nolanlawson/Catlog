@@ -1,5 +1,6 @@
 package com.nolanlawson.logcat.helper;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -200,4 +201,32 @@ public class PreferenceHelper {
 		
 	}
 	
+	public static String getBuffer(Context context) {
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+		
+		String defaultValue = context.getString(R.string.pref_buffer_choice_main_value);
+		String key = context.getString(R.string.pref_buffer);
+		
+		return sharedPrefs.getString(key, defaultValue);
+	}
+	
+	public static String getBufferName(Context context) {
+		String buffer = getBuffer(context);
+		int idx = Arrays.asList(context.getResources().getStringArray(
+				R.array.pref_buffer_choice_values)).indexOf(buffer);
+		return context.getResources().getStringArray(R.array.pref_buffer_choices)[idx];
+	}
+	
+	public static void setBuffer(Context context, int stringResId) {
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+		
+		String key = context.getString(R.string.pref_buffer);
+		String value = context.getString(stringResId);
+		
+		Editor editor = sharedPrefs.edit();
+		
+		editor.putString(key, value);
+		
+		editor.commit();
+	}
 }

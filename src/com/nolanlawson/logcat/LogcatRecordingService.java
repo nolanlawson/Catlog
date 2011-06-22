@@ -239,9 +239,11 @@ public class LogcatRecordingService extends IntentService {
 		
 		try {
 			
+			String buffer = PreferenceHelper.getBuffer(getApplicationContext());
+			
 			// use the "time" log so we can see what time the logs were logged at
 			logcatProcess = Runtime.getRuntime().exec(
-					new String[] { "logcat", "-v", "time" });
+					new String[] { "logcat", "-b", buffer, "-v", "time" });
 
 			reader = new BufferedReader(new InputStreamReader(logcatProcess
 					.getInputStream()), 8192);

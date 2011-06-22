@@ -34,7 +34,7 @@
 	<string name="start_recording_log">Record</string>
 	<string name="clear">Clear All</string>
 	<string name="send_log">Send</string>
-	<string name="main_log">Play Main Log</string>
+	<string name="main_log">Play %s Log</string>
 	<string name="stop_recording_log">Stop Recording</string>
 	<string name="about">About</string>
 	<string name="delete_saved_log">Delete Saved Logs</string>
@@ -87,6 +87,15 @@
 	<string name="pref_log_line_period_summary" formatted="false">When recording, write to SD card every %d line%s (default: %s).</string>
 	<string name="pref_log_line_period_error"><![CDATA[Please enter an integer >=1 and <=1000.]]></string>
 
+	<string name="pref_buffer">buffer</string>
+	<string name="pref_buffer_title">Log Buffer</string>
+	<string name="pref_buffer_choice_main">Main</string>
+	<string name="pref_buffer_choice_events">Events</string>
+	<string name="pref_buffer_choice_radio">Radio</string>
+	<string name="pref_buffer_choice_main_value">main</string>
+	<string name="pref_buffer_choice_events_value">events</string>
+	<string name="pref_buffer_choice_radio_value">radio</string>
+
 	<string name="pref_theme">theme</string>
 	<string name="pref_theme_title">Color Scheme</string>
 	<string name="pref_theme_summary_free">Requires donate version.</string>
@@ -122,16 +131,13 @@
     <string name="choose_format">Choose Format</string>
     
     <string name="widget_recording_in_progress">Recording...</string>
-    <string name="first_run">first_run4</string>
+    <string name="first_run">first_run5</string>
     <string name="first_run_pref_title">Reset Introduction</string>
     <string name="first_run_pref_summary">Show introductory message again.</string>
     <string name="first_run_title">Welcome to CatLog!</string>
     <string name="first_run_message">\  
-<b>New in 1.1.7!</b>\n\
-&#160;&#160;&#160;&#160;- Support for different screen sizes.\n\n\
-<b>New in 1.1.6!</b>\n\
-&#160;&#160;&#160;&#160;- UI is now speedier.\n\
-&#160;&#160;&#160;&#160;- Bugfixes.\
+<b>New in 1.1.8!</b>\n\
+&#160;&#160;&#160;&#160;- Added log buffer option.\
 </string> 
     
 </resources>

@@ -68,6 +68,8 @@ import com.nolanlawson.logcat.util.UtilLogger;
 public class LogcatActivity extends ListActivity implements TextWatcher, OnScrollListener, 
 		FilterListener, OnEditorActionListener, OnItemLongClickListener, OnClickListener, OnLongClickListener {
 	
+	public static boolean bufferHasChanged;
+	
 	private static final int REQUEST_CODE_SETTINGS = 1;
 	
 	// maximum number of log lines to display bofore truncating.
@@ -158,8 +160,26 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	@Override
     public void onResume() {
     	super.onResume();
+    	
+    	if (currentlyOpenLog == null && bufferHasChanged && !(getIntent() != null && getIntent().hasExtra("filename"))) {
+        	bufferHasChanged = false;
+    		restartMainLog();    			
+		} else if (getListView().getCount() > 0){
+			// scroll to bottom, since for some reason it always scrolls to the top, which is annoying
+			getListView().setSelection(getListView().getCount() - 1);
+		}
     }
     
+	private void restartMainLog() {
+		ColorScheme colorScheme = PreferenceHelper.getColorScheme(this);
+		darkProgressBar.setVisibility(colorScheme.isUseLightProgressBar() ? View.GONE : View.VISIBLE);
+		lightProgressBar.setVisibility(colorScheme.isUseLightProgressBar() ? View.VISIBLE : View.GONE);
+    	adapter.clear();
+    	
+    	startUpMainLog();
+		
+	}
+
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
@@ -295,6 +315,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		mainLogMenuItem.setEnabled(!showingMainLog);
 		mainLogMenuItem.setVisible(!showingMainLog);
+		String mainLogTitle = String.format(getString(R.string.main_log), 
+				PreferenceHelper.getBufferName(this));
+		mainLogMenuItem.setTitle(mainLogTitle);
 		
 		saveLogMenuItem.setEnabled(showingMainLog);
 		saveLogMenuItem.setVisible(showingMainLog);
@@ -391,7 +414,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		if (autoscrollToBottom) {
 			
-			getListView().setSelection(getListView().getCount());
+			getListView().setSelection(getListView().getCount() - 1);
 			
 		// ... or that whatever was the previous first visible item is still the current first 
 		// visible item after expanding/collapsing
@@ -805,9 +828,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				}
 				
 				// scroll to bottom
-				getListView().setSelection(getListView().getCount());
-				
-				
+				getListView().setSelection(getListView().getCount() - 1);
 			}
 		};
 		
@@ -938,8 +959,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			
 			try {
 
+				String buffer = PreferenceHelper.getBuffer(LogcatActivity.this);
+				
 				logcatProcess = Runtime.getRuntime().exec(
-						new String[] { "logcat", "-v", "time" });
+						new String[] { "logcat", "-b", buffer, "-v", "time" });
 
 				reader = new BufferedReader(new InputStreamReader(logcatProcess
 						.getInputStream()), 8192);
