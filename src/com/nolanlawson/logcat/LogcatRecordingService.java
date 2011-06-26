@@ -27,6 +27,8 @@ import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
 import com.nolanlawson.logcat.helper.WidgetHelper;
+import com.nolanlawson.logcat.reader.LogcatReader;
+import com.nolanlawson.logcat.reader.SingleLogcatReader;
 import com.nolanlawson.logcat.util.UtilLogger;
 
 /**
@@ -49,7 +51,7 @@ public class LogcatRecordingService extends IntentService {
 	
 	private static UtilLogger log = new UtilLogger(LogcatRecordingService.class);
 
-	private Process logcatProcess;
+	private LogcatReader logcatReader;
 
 	private NotificationManager mNM;
 	private Method mStartForeground;
@@ -232,8 +234,7 @@ public class LogcatRecordingService extends IntentService {
 		
 		log.d("current last line is %s", currentLastLine);
 		
-		logcatProcess = null;
-		BufferedReader reader = null;
+		logcatReader = null;
 		
 		StringBuilder stringBuilder = new StringBuilder();
 		
@@ -242,11 +243,7 @@ public class LogcatRecordingService extends IntentService {
 			String buffer = PreferenceHelper.getBuffer(getApplicationContext());
 			
 			// use the "time" log so we can see what time the logs were logged at
-			logcatProcess = Runtime.getRuntime().exec(
-					new String[] { "logcat", "-b", buffer, "-v", "time" });
-
-			reader = new BufferedReader(new InputStreamReader(logcatProcess
-					.getInputStream()), 8192);
+			logcatReader = new SingleLogcatReader(buffer);
 		
 			Date currentDate = new Date(System.currentTimeMillis());
 			
@@ -266,7 +263,7 @@ public class LogcatRecordingService extends IntentService {
 			
 			boolean pastCurrentTime = false;
 			
-			while ((line = reader.readLine()) != null) {
+			while ((line = logcatReader.readLine()) != null) {
 				
 				if (!pastCurrentTime) {
 					
@@ -324,16 +321,8 @@ public class LogcatRecordingService extends IntentService {
 		}
 
 		finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					log.e(e, "unexpected exception");
-				}
-			}
-			
-			if (logcatProcess != null) {
-				logcatProcess.destroy();
+			if (logcatReader != null) {
+				logcatReader.closeQuietly();
 			}
 
 			log.d("CatlogService ended");
@@ -415,8 +404,8 @@ public class LogcatRecordingService extends IntentService {
 	
 	private void killProcess() {
 		// kill the logcat process
-		if (logcatProcess != null) {
-			logcatProcess.destroy();
+		if (logcatReader != null) {
+			logcatReader.kill();
 		}
 	}
 	
