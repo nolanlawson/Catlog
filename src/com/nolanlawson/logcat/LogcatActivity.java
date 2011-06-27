@@ -128,6 +128,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         
     }
     
+    
+    
+    
     private void showInitialMessage() {
 
 		boolean isFirstRun = PreferenceHelper.getFirstRunPreference(getApplicationContext());
@@ -167,8 +170,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     
 	private void restartMainLog() {
 		ColorScheme colorScheme = PreferenceHelper.getColorScheme(this);
-		darkProgressBar.setVisibility(colorScheme.isUseLightProgressBar() ? View.GONE : View.VISIBLE);
-		lightProgressBar.setVisibility(colorScheme.isUseLightProgressBar() ? View.VISIBLE : View.GONE);
     	adapter.clear();
     	
     	startUpMainLog();
@@ -909,11 +910,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		darkProgressBar = (ProgressBar) findViewById(R.id.main_dark_progress_bar);
 		lightProgressBar = (ProgressBar) findViewById(R.id.main_light_progress_bar);
 		
-		ColorScheme colorScheme = PreferenceHelper.getColorScheme(this);
-		
-		darkProgressBar.setVisibility(colorScheme.isUseLightProgressBar() ? View.GONE : View.VISIBLE);
-		lightProgressBar.setVisibility(colorScheme.isUseLightProgressBar() ? View.VISIBLE : View.GONE);
-		
 		backgroundLinearLayout = (LinearLayout) findViewById(R.id.main_background);
 		
 		clearButton = (Button) findViewById(R.id.main_clear_button);
@@ -1008,7 +1004,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			log.d("onPreExecute()");
 			
 			resetDisplayedLog(null);
-
+			
+			ColorScheme colorScheme = PreferenceHelper.getColorScheme(LogcatActivity.this);
+			darkProgressBar.setVisibility(colorScheme.isUseLightProgressBar() ? View.GONE : View.VISIBLE);
+			lightProgressBar.setVisibility(colorScheme.isUseLightProgressBar() ? View.VISIBLE : View.GONE);
 		}
 
 		@Override
@@ -1040,11 +1039,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		protected void onCancelled() {
 			super.onCancelled();
 			log.d("onCancelled()");
-			
 
-			
+			darkProgressBar.setVisibility(View.GONE);
+			lightProgressBar.setVisibility(View.GONE);
 		}
-		
 	}
 	
 	@Override
