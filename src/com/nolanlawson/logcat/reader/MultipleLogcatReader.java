@@ -1,11 +1,16 @@
 package com.nolanlawson.logcat.reader;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 
+import android.text.TextUtils;
+
+import com.nolanlawson.logcat.data.LogLine;
 import com.nolanlawson.logcat.helper.LogHelper;
 import com.nolanlawson.logcat.util.UtilLogger;
 
@@ -16,12 +21,12 @@ import com.nolanlawson.logcat.util.UtilLogger;
  */
 public class MultipleLogcatReader implements LogcatReader {
 
-	private static final String DUMMY_NULL = new String("");
+	private static final DatedLogLine DUMMY_NULL = new DatedLogLine("");
 	
 	private static UtilLogger log = new UtilLogger(MultipleLogcatReader.class);
 	
 	private List<SingleLogcatReader> readers = new LinkedList<SingleLogcatReader>();
-	private BlockingQueue<String> queue = new ArrayBlockingQueue<String>(1);
+	private PriorityBlockingQueue<DatedLogLine> queue = new PriorityBlockingQueue<DatedLogLine>();
 	
 	public MultipleLogcatReader() throws IOException {
 		
@@ -38,8 +43,8 @@ public class MultipleLogcatReader implements LogcatReader {
 	
 	public String readLine() throws IOException {
 		try {
-			String result = queue.take();
-			return result == DUMMY_NULL ? null : result;
+			DatedLogLine result = queue.take();
+			return result == DUMMY_NULL ? null : result.getLine();
 		} catch (InterruptedException e) {
 			throw new IOException("reader exception", e);
 		}
@@ -62,11 +67,7 @@ public class MultipleLogcatReader implements LogcatReader {
 			public void run() {
 
 				// queue does not accept null values, so have to use a dummy value
-				try {
-					queue.put(DUMMY_NULL);
-				} catch (InterruptedException e) {
-					log.d(e, "exception");
-				}
+				queue.put(DUMMY_NULL);
 
 			}
 		};
@@ -92,16 +93,64 @@ public class MultipleLogcatReader implements LogcatReader {
 			
 			try {
 				while ((line = reader.readLine()) != null) {
-					try {
-						queue.put(line);
-					} catch (InterruptedException e) {
-						log.d(e, "exception");
-					}
+					DatedLogLine datedLogLine = new DatedLogLine(line);
+					queue.put(datedLogLine);
 				}
 			} catch (IOException e) {
 				log.d(e, "exception");
 			}
 			log.d("thread died");
+		}
+	}
+	
+	/**
+	 * Need to sort log lines by earliest first, so that when we first read in all the buffers we can
+	 * interleave them correctly
+	 * @author nolan
+	 *
+	 */
+	private static class DatedLogLine implements Comparable<DatedLogLine>{
+		
+		private static final SimpleDateFormat dateFormat = new SimpleDateFormat(LogLine.LOGCAT_DATE_FORMAT);
+		
+		private Date date;
+		private String line;
+		
+		public DatedLogLine(String line) {
+			this.line = line;
+			LogLine logLine = LogLine.newLogLine(line, false);
+			if (!TextUtils.isEmpty(logLine.getTimestamp())) {
+				synchronized (dateFormat) {
+					// DateFormats are not threadsafe
+					try {
+						date = dateFormat.parse(logLine.getTimestamp());
+					} catch (ParseException e) {
+						log.d(e, "exception");
+					}
+				}
+			}
+		}
+
+		public String getLine() {
+			return line;
+		}
+
+		@Override
+		public int compareTo(DatedLogLine another) {
+			
+			if (this == DUMMY_NULL) {
+				return 1;
+			} else if (another == DUMMY_NULL) {
+				return -1;
+			} else if (date == null && another.date == null) {
+				return 0;
+			} else if (another.date == null) {
+				return 1;
+			} else if (date == null) {
+				return -1;
+			} else {
+				return date.compareTo(another.date);
+			}
 		}
 	}
 }
