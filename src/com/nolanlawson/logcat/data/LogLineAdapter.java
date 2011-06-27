@@ -19,7 +19,6 @@
 package com.nolanlawson.logcat.data;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -140,29 +139,8 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
             if (mNotifyOnChange) notifyDataSetChanged();
         }
     }
-    
-    /**
-     * Adds the specified object at the end of the array.
-     *
-     * @param object The object to add at the end of the array.
-     */
-    public void addSorted(LogLine object, Comparator<LogLine> comparator) {
-        if (mOriginalValues != null) {
-            synchronized (mLock) {
-                int idx = CollectionUtil.binarySearch(mOriginalValues, comparator, object);
-                mOriginalValues.add(idx, object);
-                
-                if (mNotifyOnChange) notifyDataSetChanged();
-            }
-        } else {
-            int idx = CollectionUtil.binarySearch(mObjects, comparator, object);
-            mObjects.add(idx, object);
-            if (mNotifyOnChange) notifyDataSetChanged();
-        }
-    }
-    
 
-	public void addWithFilter(LogLine object, CharSequence text) {
+	public void addWithFilter(LogLine object, CharSequence text, Comparator<LogLine> comparator) {
 		
         if (mOriginalValues != null) {
             synchronized (mLock) {
@@ -172,22 +150,31 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
                 	mFilter = new ArrayFilter();
                 }
                 
-                List<LogLine> inputList = Arrays.asList(object);
+                List<LogLine> filteredInputList = 
+                	mFilter.performFilteringOnList(Collections.singletonList(object), text);
                 
-                mObjects.addAll(mFilter.performFilteringOnList(inputList, text));
-                
+                if (!filteredInputList.isEmpty()) {
+                	addWithComparator(mObjects, object, comparator);
+                }
                 
                 if (mNotifyOnChange) notifyDataSetChanged();
             }
         } else {
         	synchronized (mLock) {
-        		mObjects.add(object);
+        		addWithComparator(mObjects, object, comparator);
         	}
             if (mNotifyOnChange) notifyDataSetChanged();
         }
-        
-		
 	}    
+	
+	private void addWithComparator(List<LogLine> list, LogLine object, Comparator<LogLine> comparator) {
+    	if (comparator == null) {
+    		list.add(object);
+    	} else {
+        	int idx = CollectionUtil.binarySearch(list, comparator, object);
+        	list.add(idx, object);
+    	}		
+	}
 
     /**
      * Inserts the specified object at the specified index in the array.

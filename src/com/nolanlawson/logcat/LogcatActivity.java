@@ -3,12 +3,13 @@ package com.nolanlawson.logcat;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,26 +30,26 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Filter;
+import android.widget.Filter.FilterListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.Filter.FilterListener;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.nolanlawson.logcat.data.ColorScheme;
 import com.nolanlawson.logcat.data.LogFileAdapter;
@@ -1032,7 +1033,11 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			
 			hideProgressBar();
 			
-			adapter.addWithFilter(LogLine.newLogLine(line, !collapsedMode), searchEditText.getText());
+			Comparator<LogLine> comparator = logcatReader instanceof MultipleLogcatReader 
+					? LogLine.sortByDate()
+					: null;
+			
+			adapter.addWithFilter(LogLine.newLogLine(line, !collapsedMode), searchEditText.getText(), comparator);
 			
 			// check to see if the list needs to be truncated to avoid out of memory errors
 			if (++counter % UPDATE_CHECK_INTERVAL == 0 

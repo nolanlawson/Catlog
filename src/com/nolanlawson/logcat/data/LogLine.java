@@ -1,5 +1,6 @@
 package com.nolanlawson.logcat.data;
 
+import java.util.Comparator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -172,5 +173,25 @@ public class LogLine {
 				return 'F';
 		}
 		return ' ';
+	}
+	
+	private static Comparator<LogLine> sortByDate = new Comparator<LogLine>(){
+
+		@Override
+		public int compare(LogLine left, LogLine right) {
+			if (TextUtils.isEmpty(left.getTimestamp()) && TextUtils.isEmpty(right.getTimestamp())) {
+				return 0;
+			} else if (TextUtils.isEmpty(left.getTimestamp())) {
+				return -1;
+			} else if (TextUtils.isEmpty(right.getTimestamp())) {
+				return 1;
+			} else {
+				// string comparison works for dates when the format is always the same
+				return left.getTimestamp().compareTo(right.getTimestamp());
+			}
+		}};
+
+	public static Comparator<LogLine> sortByDate() {
+		return sortByDate;
 	}
 }
