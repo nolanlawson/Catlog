@@ -39,6 +39,7 @@ import android.widget.TextView;
 
 import com.nolanlawson.logcat.R;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
+import com.nolanlawson.logcat.util.CollectionUtil;
 import com.nolanlawson.logcat.util.LogLineAdapterUtil;
 import com.nolanlawson.logcat.util.StopWatch;
 import com.nolanlawson.logcat.util.UtilLogger;
@@ -136,6 +137,26 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
             }
         } else {
             mObjects.add(object);
+            if (mNotifyOnChange) notifyDataSetChanged();
+        }
+    }
+    
+    /**
+     * Adds the specified object at the end of the array.
+     *
+     * @param object The object to add at the end of the array.
+     */
+    public void addSorted(LogLine object, Comparator<LogLine> comparator) {
+        if (mOriginalValues != null) {
+            synchronized (mLock) {
+                int idx = CollectionUtil.binarySearch(mOriginalValues, comparator, object);
+                mOriginalValues.add(idx, object);
+                
+                if (mNotifyOnChange) notifyDataSetChanged();
+            }
+        } else {
+            int idx = CollectionUtil.binarySearch(mObjects, comparator, object);
+            mObjects.add(idx, object);
             if (mNotifyOnChange) notifyDataSetChanged();
         }
     }
