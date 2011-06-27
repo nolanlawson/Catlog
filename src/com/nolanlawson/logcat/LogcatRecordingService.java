@@ -220,8 +220,6 @@ public class LogcatRecordingService extends IntentService {
 	private void handleIntent(Intent intent) {
 		
 		log.d("Starting up %s now with intent: %s", LogcatRecordingService.class.getSimpleName(), intent);
-
-		makeToast(R.string.log_recording_started, Toast.LENGTH_SHORT);
 		
 		String filename = intent.getStringExtra("filename");
 		
@@ -236,6 +234,8 @@ public class LogcatRecordingService extends IntentService {
 		BufferedReader reader = null;
 		
 		StringBuilder stringBuilder = new StringBuilder();
+		
+		makeToast(R.string.log_recording_started, Toast.LENGTH_SHORT);
 		
 		try {
 			
