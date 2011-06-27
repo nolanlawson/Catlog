@@ -23,6 +23,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
+import com.nolanlawson.logcat.data.LogLine;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
@@ -39,8 +40,6 @@ import com.nolanlawson.logcat.util.UtilLogger;
  * 
  */
 public class LogcatRecordingService extends IntentService {
-
-	private static final String LOGCAT_DATE_FORMAT = "MM-dd HH:mm:ss.SSS";
 
 	private static final Class<?>[] mStartForegroundSignature = new Class[] {
 	    int.class, Notification.class};
@@ -231,7 +230,7 @@ public class LogcatRecordingService extends IntentService {
 		String buffer = PreferenceHelper.getBuffer(getApplicationContext());
 		
 		// get the current last log line, so we can know what needs to be skipped
-		String currentLastLine = getCurentLastLogLine(buffer);
+		String currentLastLine = getCurrentLastLogLine(buffer);
 		
 		log.d("current last line is %s", currentLastLine);
 		
@@ -251,7 +250,7 @@ public class LogcatRecordingService extends IntentService {
 			
 			log.d("currentDate is %s", currentDate);
 			
-			SimpleDateFormat dateFormat = new SimpleDateFormat(LOGCAT_DATE_FORMAT);
+			SimpleDateFormat dateFormat = new SimpleDateFormat(LogLine.LOGCAT_DATE_FORMAT);
 			
 			String line;
 			int lineCount = 0;
@@ -344,7 +343,7 @@ public class LogcatRecordingService extends IntentService {
 		}
 	}
 
-	private String getCurentLastLogLine(String buffer) {
+	private String getCurrentLastLogLine(String buffer) {
 		Process dumpLogcatProcess = null;
 		BufferedReader reader = null;
 		String result = null;
@@ -352,6 +351,7 @@ public class LogcatRecordingService extends IntentService {
 			
 			if (buffer.equals(getApplicationContext().getString(R.string.pref_buffer_choice_combined_value))) {
 				// since we're reading from all the logs at once, the main log is as good as any
+				// TODO: draw from all of them instead of just one
 				buffer = getApplicationContext().getString(R.string.pref_buffer_choice_main_value);
 			}
 			
