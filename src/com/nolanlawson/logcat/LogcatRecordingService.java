@@ -365,7 +365,7 @@ public class LogcatRecordingService extends IntentService {
 				if (!TextUtils.isEmpty(logLine.getTimestamp())) {
 					try {
 						Date logDate = new SimpleDateFormat(LogLine.LOGCAT_DATE_FORMAT).parse(logLine.getTimestamp());
-						if (lastLogDate == null || lastLogDate.after(logDate)) {
+						if (lastLogDate == null || lastLogDate.before(logDate)) {
 							lastLogDate = logDate;
 							lastLogLine = line;
 						}
