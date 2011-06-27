@@ -973,7 +973,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	private class LogReaderAsyncTask extends AsyncTask<Void,String,Void> {
 		
 		private int counter = 0;
-		LogcatReader logcatReader = null;
+		private LogcatReader logcatReader = null;
+		private boolean needToSort;
 		
 		@Override
 		protected void onPreExecute() {
@@ -995,6 +996,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				
 				if (bufferPref.equals(getString(R.string.pref_buffer_choice_combined_value))) {
 					logcatReader = new MultipleLogcatReader();
+					needToSort = true; // multiple log reader is not naturally sorted
 				} else {
 					logcatReader = new SingleLogcatReader(bufferPref);
 				}
@@ -1033,9 +1035,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			
 			hideProgressBar();
 			
-			Comparator<LogLine> comparator = logcatReader instanceof MultipleLogcatReader 
-					? LogLine.sortByDate()
-					: null;
+			Comparator<LogLine> comparator = needToSort ? LogLine.sortByDate() : null;
 			
 			adapter.addWithFilter(LogLine.newLogLine(line, !collapsedMode), searchEditText.getText(), comparator);
 			
