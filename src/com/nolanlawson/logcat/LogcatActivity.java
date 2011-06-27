@@ -82,7 +82,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	private EditText searchEditText;
 	private ProgressBar darkProgressBar, lightProgressBar;
 	private LogLineAdapter adapter;
-	private LogReaderAsyncTask task;
+	private static LogReaderAsyncTask task;
 	private Button clearButton, expandButton, collapseButton;
 	private TextView filenameTextView;
 	private View borderView1, borderView2, borderView3, borderView4;
@@ -118,7 +118,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         Intent intent = getIntent();
         
         if (intent == null || !intent.hasExtra("filename")) {
-        	startUpMainLog();
+        	startOrRestartMainLog();
         } else {
         	String filename = intent.getStringExtra("filename");
         	openLog(filename);
@@ -167,13 +167,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			getListView().setSelection(getListView().getCount() - 1);
 		}
     }
-    
-	private void restartMainLog() {
-    	adapter.clear();
-    	
-    	startUpMainLog();
-		
-	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
@@ -195,7 +188,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		PreferenceHelper.clearCache();
 		
 		collapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(getApplicationContext());
-		
 
 		if (requestCode == REQUEST_CODE_SETTINGS && resultCode == RESULT_OK) {
 			handler.post(new Runnable(){
@@ -206,7 +198,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 					if (data.hasExtra("bufferChanged") && data.getBooleanExtra("bufferChanged", false)
 							&& currentlyOpenLog == null) {
 						// log buffer changed, so update list
-						restartMainLog();
+				    	startOrRestartMainLog();
 					} else {
 						// settings activity returned - text size might have changed, so update list
 						expandOrCollapseAll(!collapsedMode);
@@ -215,21 +207,20 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				}
 			});
 		}
-		adapter.notifyDataSetChanged();
-		updateBackgroundColor();
-		updateDisplayedFilename();
 	}
 
-	private void startUpMainLog() {
+	private void startOrRestartMainLog() {
     	
+		log.d("startOrRestarMainLog()");
+		
     	if (task != null && !task.isCancelled()) {
+    		log.d("cancel task from startOrRestartMainLog()");
     		task.cancel(true);
     	}
     	
     	task = new LogReaderAsyncTask();
     	
     	task.execute((Void)null);
-		
 	}
 
 	@Override
@@ -243,8 +234,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     @Override
     public void onDestroy() {
     	super.onDestroy();
+    	log.d("onDestroy()");
     	
     	if (task != null && !task.isCancelled()) {
+    		log.d("cancel task from onDestroy()");
     		task.cancel(true);
     	}
     }
@@ -282,7 +275,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	    	sendLog();
 	    	return true;
 	    case R.id.menu_main_log:
-	    	startUpMainLog();
+	    	startOrRestartMainLog();
 	    	return true;
 	    case R.id.menu_about:
 	    	startAboutActivity();
@@ -814,7 +807,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	}	
 	private void openLog(final String filename) {
 		
+		log.d("openLog()");
+		
 		if (task != null && !task.isCancelled()) {
+			log.d("cancel task from openLog()");
 			task.cancel(true);
 			task = null;
 		}
@@ -826,12 +822,13 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
-				
+				log.d("onPreExecute() openLog()");
+				showProgressBar();
 			}
 
 			@Override
 			protected List<String> doInBackground(Void... params) {
-
+				log.d("doInBackground() openLog()");
 				List<String> logLines = SaveLogHelper.openLog(filename);
 				return logLines;
 			}
@@ -839,6 +836,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			@Override
 			protected void onPostExecute(List<String> logLines) {
 				super.onPostExecute(logLines);
+				log.d("onPostExecute() openLog()");
 				resetDisplayedLog(filename);
 				hideProgressBar();
 				
@@ -979,7 +977,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			log.d("onPreExecute()");
+			log.d("onPreExecute() LogReaderAsyncTask");
 			
 			resetDisplayedLog(null);
 			showProgressBar();
@@ -988,13 +986,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		@Override
 		protected Void doInBackground(Void... params) {
-			log.d("doInBackground()");
-			
-			try {
-				Thread.sleep(5000);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
+			log.d("doInBackground() LogReaderAsyncTask");
 			
 			try {
 
@@ -1029,7 +1021,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-			log.d("onPostExecute()");
+			log.d("onPostExecute() LogReaderAsyncTask");
 		}
 
 		@Override
@@ -1059,9 +1051,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
-			log.d("onCancelled()");
-
-			hideProgressBar();
+			log.d("onCancelled() LogReaderAsyncTask");
 			if (logcatReader != null) {
 				logcatReader.kill();
 			}
@@ -1274,7 +1264,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	@Override
 	public boolean onLongClick(View v) {
 		// clear button long-pressed, undo clear
-		startUpMainLog();
+		startOrRestartMainLog();
 		return true;
 		
 	}
