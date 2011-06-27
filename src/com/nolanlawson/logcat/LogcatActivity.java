@@ -1037,7 +1037,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			
 			Comparator<LogLine> comparator = needToSort ? LogLine.sortByDate() : null;
 			
-			adapter.addWithFilter(LogLine.newLogLine(line, !collapsedMode), searchEditText.getText(), comparator);
+			adapter.addSpecial(LogLine.newLogLine(line, !collapsedMode), searchEditText.getText(), comparator);
 			
 			// check to see if the list needs to be truncated to avoid out of memory errors
 			if (++counter % UPDATE_CHECK_INTERVAL == 0 

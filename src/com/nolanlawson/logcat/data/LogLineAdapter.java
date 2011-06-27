@@ -140,7 +140,7 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
         }
     }
 
-	public void addWithFilter(LogLine object, CharSequence text, Comparator<LogLine> comparator) {
+	public void addSpecial(LogLine object, CharSequence text, Comparator<LogLine> comparator) {
 		
         if (mOriginalValues != null) {
             synchronized (mLock) {
