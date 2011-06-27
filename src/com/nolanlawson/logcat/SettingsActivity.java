@@ -2,6 +2,7 @@ package com.nolanlawson.logcat;
 
 import java.util.Arrays;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -21,6 +22,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	
 	private EditTextPreference logLinePeriodPreference;
 	private ListPreference textSizePreference, themePreference, bufferPreference;
+	
+	private boolean bufferChanged = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +105,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 			bufferPreference.setSummary(newEntry);
 			// notify the LogcatActivity that the buffer has changed
 			if (!newValue.toString().equals(bufferPreference.getValue())) {
-				LogcatActivity.bufferHasChanged = true;
+				bufferChanged = true;
 			}
 			return true;			
 		} else { // text size pref
@@ -126,7 +129,9 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	    if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0 ) {
 	    	
 	    	// set result and finish
-	    	setResult(RESULT_OK);
+	    	Intent data = new Intent();
+	    	data.putExtra("bufferChanged", bufferChanged);
+	    	setResult(RESULT_OK, data);
 	    	finish();
 	    	return true;
 	    }

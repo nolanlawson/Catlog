@@ -68,9 +68,6 @@ import com.nolanlawson.logcat.util.UtilLogger;
 public class LogcatActivity extends ListActivity implements TextWatcher, OnScrollListener, 
 		FilterListener, OnEditorActionListener, OnItemLongClickListener, OnClickListener, OnLongClickListener {
 	
-	public static boolean bufferHasChanged;
-	private boolean onCreateWasCalled;
-	
 	private static final int REQUEST_CODE_SETTINGS = 1;
 	
 	// maximum number of log lines to display bofore truncating.
@@ -103,7 +100,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        onCreateWasCalled = true;
         
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         
@@ -163,19 +159,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     public void onResume() {
     	super.onResume();
     	
-    	// have to check to see that onCreateWasCalled was NOT called, because otherwise
-    	// we could start up two mainLog background tasks at the same time
-    	
-    	if (currentlyOpenLog == null && bufferHasChanged 
-    			&& !onCreateWasCalled
-    			&& !(getIntent() != null && getIntent().hasExtra("filename"))) {
-        	bufferHasChanged = false;
-    		restartMainLog();    			
-		} else if (getListView().getCount() > 0){
+    	if (getListView().getCount() > 0){
 			// scroll to bottom, since for some reason it always scrolls to the top, which is annoying
 			getListView().setSelection(getListView().getCount() - 1);
 		}
-    	onCreateWasCalled = false; // reset onCreateWasCalled
     }
     
 	private void restartMainLog() {
@@ -200,7 +187,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		log.d("onActivityResult()");
 		
@@ -209,17 +196,22 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		collapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(getApplicationContext());
 		
-		// settings activity returned - text size might have changed, so update list
+
 		if (requestCode == REQUEST_CODE_SETTINGS && resultCode == RESULT_OK) {
 			handler.post(new Runnable(){
 
 				@Override
 				public void run() {
 					
-					expandOrCollapseAll(!collapsedMode);
-					
-					adapter.notifyDataSetChanged();
-					
+					if (data.hasExtra("bufferChanged") && data.getBooleanExtra("bufferChanged", false)
+							&& currentlyOpenLog == null) {
+						// log buffer changed, so update list
+						restartMainLog();
+					} else {
+						// settings activity returned - text size might have changed, so update list
+						expandOrCollapseAll(!collapsedMode);
+						adapter.notifyDataSetChanged();
+					}
 				}
 			});
 		}
