@@ -1,13 +1,12 @@
 package com.nolanlawson.logcat;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import android.app.IntentService;
@@ -21,9 +20,11 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.nolanlawson.logcat.data.LogLine;
+import com.nolanlawson.logcat.helper.LogHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
@@ -227,10 +228,10 @@ public class LogcatRecordingService extends IntentService {
 		
 		SaveLogHelper.deleteLogIfExists(filename);
 		
-		String buffer = PreferenceHelper.getBuffer(getApplicationContext());
+		String bufferPref = PreferenceHelper.getBuffer(getApplicationContext());
 		
 		// get the current last log line, so we can know what needs to be skipped
-		String currentLastLine = getCurrentLastLogLine(buffer);
+		String currentLastLine = getCurrentLastLogLine(bufferPref);
 		
 		log.d("current last line is %s", currentLastLine);
 		
@@ -240,10 +241,10 @@ public class LogcatRecordingService extends IntentService {
 		
 		try {
 			
-			if (buffer.equals(getString(R.string.pref_buffer_choice_combined_value))) {
+			if (bufferPref.equals(getString(R.string.pref_buffer_choice_combined_value))) {
 				logcatReader = new MultipleLogcatReader();
 			} else {
-				logcatReader = new SingleLogcatReader(buffer);
+				logcatReader = new SingleLogcatReader(bufferPref);
 			}
 		
 			Date currentDate = new Date(System.currentTimeMillis());
@@ -343,45 +344,40 @@ public class LogcatRecordingService extends IntentService {
 		}
 	}
 
-	private String getCurrentLastLogLine(String buffer) {
-		Process dumpLogcatProcess = null;
-		BufferedReader reader = null;
-		String result = null;
-		try {
+	private String getCurrentLastLogLine(String bufferPref) {
 			
-			if (buffer.equals(getApplicationContext().getString(R.string.pref_buffer_choice_combined_value))) {
-				// since we're reading from all the logs at once, the main log is as good as any
-				// TODO: draw from all of them instead of just one
-				buffer = getApplicationContext().getString(R.string.pref_buffer_choice_main_value);
-			}
-			
-			dumpLogcatProcess = Runtime.getRuntime().exec(
-					new String[] { "logcat", "-d", "-b", buffer, "-v", "time" }); // -d just dumps the whole thing
-
-			reader = new BufferedReader(new InputStreamReader(dumpLogcatProcess
-					.getInputStream()), 8192);
-			
-			String line;
-			while ((line = reader.readLine()) != null) {
-				result = line;
-			}
-		} catch (IOException e) {
-			log.e(e, "unexpected exception");
-		} finally {		
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					log.e(e, "unexpected exception");
+		if (!bufferPref.equals(getApplicationContext().getString(R.string.pref_buffer_choice_combined_value))) {
+			List<String> dumpedLogs = LogHelper.dumpLog(bufferPref);
+			return dumpedLogs.isEmpty() ? null : dumpedLogs.get(dumpedLogs.size() - 1);
+		}
+		
+		// draw from all of the logs instead of just one, and find
+		// the one with the most recent timestamp
+		
+		String lastLogLine = null;
+		Date lastLogDate = null;
+		
+		for (String buffer : LogHelper.LOG_BUFFERS) {
+			List<String> dumpedLogs = LogHelper.dumpLog(buffer);
+			if (!dumpedLogs.isEmpty()) {
+				String line = dumpedLogs.get(dumpedLogs.size() - 1);
+				LogLine logLine = LogLine.newLogLine(line, false);
+				if (!TextUtils.isEmpty(logLine.getTimestamp())) {
+					try {
+						Date logDate = new SimpleDateFormat(LogLine.LOGCAT_DATE_FORMAT).parse(logLine.getTimestamp());
+						if (lastLogDate == null || lastLogDate.after(logDate)) {
+							lastLogDate = logDate;
+							lastLogLine = line;
+						}
+					} catch (ParseException e) {
+						log.d(e, "parse exception");
+					}
 				}
-			}
-			
-			if (dumpLogcatProcess != null) {
-				dumpLogcatProcess.destroy();
 			}
 		}
 		
-		return result;
+		return lastLogLine;
+		
 	}
 
 

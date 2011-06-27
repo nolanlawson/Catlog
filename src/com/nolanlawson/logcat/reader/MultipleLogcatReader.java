@@ -6,12 +6,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 
 import android.text.TextUtils;
 
 import com.nolanlawson.logcat.data.LogLine;
+import com.nolanlawson.logcat.helper.LogHelper;
 import com.nolanlawson.logcat.util.UtilLogger;
 
 /**
@@ -21,20 +21,17 @@ import com.nolanlawson.logcat.util.UtilLogger;
  */
 public class MultipleLogcatReader implements LogcatReader {
 
-	private static final String[] LOG_BUFFERS = {"main", "radio", "events"};
 	private static final DatedLogLine DUMMY_NULL = new DatedLogLine("");
-	private static final int QUEUE_SIZE = 500;
-	
 	
 	private static UtilLogger log = new UtilLogger(MultipleLogcatReader.class);
 	
 	private List<SingleLogcatReader> readers = new LinkedList<SingleLogcatReader>();
-	private BlockingQueue<DatedLogLine> queue = new PriorityBlockingQueue<DatedLogLine>(QUEUE_SIZE);
+	private PriorityBlockingQueue<DatedLogLine> queue = new PriorityBlockingQueue<DatedLogLine>();
 	
 	public MultipleLogcatReader() throws IOException {
 		
 		// read from all three buffers at once
-		for (String logBuffer : LOG_BUFFERS) {
+		for (String logBuffer : LogHelper.LOG_BUFFERS) {
 			readers.add(new SingleLogcatReader(logBuffer));
 		}
 		
@@ -68,14 +65,11 @@ public class MultipleLogcatReader implements LogcatReader {
 
 			@Override
 			public void run() {
-				try {
-					// queue does not accept null values, so have to use a dummy value
-					queue.put(DUMMY_NULL);
-				} catch (InterruptedException e) {
-					log.d(e, "exception");
-				}
+
+				// queue does not accept null values, so have to use a dummy value
+				queue.put(DUMMY_NULL);
+
 			}
-			
 		};
 		new Thread(runnable).start();
 	}
@@ -85,11 +79,31 @@ public class MultipleLogcatReader implements LogcatReader {
 	private class ReaderThread extends Thread {
 
 		private SingleLogcatReader reader;
+		private DatedLogLine skipPastLogLine;
+		private boolean doneSkipping;
 		
 		public ReaderThread(SingleLogcatReader reader) {
 			this.reader = reader;
+			init();
 		}
 		
+		private void init() {
+			
+			// when initializing, need to dump the entire log so that we can properly
+			// interleave logs that have already been written
+			
+			List<String> dumpedLogLines = LogHelper.dumpLog(reader.getLogBuffer());
+			
+			for (String line : dumpedLogLines) {
+				queue.put(new DatedLogLine(line));
+
+			}
+			
+			if (!dumpedLogLines.isEmpty()) {
+				skipPastLogLine = new DatedLogLine(dumpedLogLines.get(dumpedLogLines.size() - 1));
+			}
+		}
+
 		@Override
 		public void run() {
 			super.run();
@@ -98,11 +112,14 @@ public class MultipleLogcatReader implements LogcatReader {
 			
 			try {
 				while ((line = reader.readLine()) != null) {
-					queue.put(new DatedLogLine(line));
+					DatedLogLine datedLogLine = new DatedLogLine(line);
+					
+					if (doneSkipping || skipPastLogLine == null || datedLogLine.compareTo(skipPastLogLine) > 0) {
+						doneSkipping = true;
+						queue.put(datedLogLine);
+					}
 				}
 			} catch (IOException e) {
-				log.d(e, "exception");
-			} catch (InterruptedException e) {
 				log.d(e, "exception");
 			}
 			log.d("thread died");
@@ -155,7 +172,7 @@ public class MultipleLogcatReader implements LogcatReader {
 			} else if (date == null) {
 				return -1;
 			} else {
-				return date.compareTo(date);
+				return date.compareTo(another.date);
 			}
 		}
 	}

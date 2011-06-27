@@ -29,6 +29,11 @@ public class SingleLogcatReader implements LogcatReader {
 		bufferedReader = new BufferedReader(new InputStreamReader(logcatProcess
 				.getInputStream()), 8192);
 	}
+	
+
+	public String getLogBuffer() {
+		return logBuffer;
+	}
 
 
 	@Override

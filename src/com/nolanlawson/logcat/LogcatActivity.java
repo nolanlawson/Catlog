@@ -346,12 +346,12 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	}
 
 	private CharSequence getMainLogMenuTitle() {
-		String buffer = PreferenceHelper.getBuffer(this);
-		if (buffer.equals(getString(R.string.pref_buffer_choice_main_value))) {
+		String bufferPref = PreferenceHelper.getBuffer(this);
+		if (bufferPref.equals(getString(R.string.pref_buffer_choice_main_value))) {
 			return getString(R.string.play_main_log);
-		} else if (buffer.equals(getString(R.string.pref_buffer_choice_radio_value))) {
+		} else if (bufferPref.equals(getString(R.string.pref_buffer_choice_radio_value))) {
 			return getString(R.string.play_radio_log);
-		} else if (buffer.equals(getString(R.string.pref_buffer_choice_events_value))) {
+		} else if (bufferPref.equals(getString(R.string.pref_buffer_choice_events_value))) {
 			return getString(R.string.play_events_log);
 		} else {
 			return getString(R.string.play_combined_log);
@@ -822,6 +822,12 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		// do in background to avoid jank
 		
 		AsyncTask<Void, Void, List<String>> openFileTask = new AsyncTask<Void, Void, List<String>>(){
+			
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+				
+			}
 
 			@Override
 			protected List<String> doInBackground(Void... params) {
@@ -834,8 +840,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			protected void onPostExecute(List<String> logLines) {
 				super.onPostExecute(logLines);
 				resetDisplayedLog(filename);
-				darkProgressBar.setVisibility(View.GONE);
-				lightProgressBar.setVisibility(View.GONE);
+				hideProgressBar();
 				
 				for (String line : logLines) {
 					adapter.add(LogLine.newLogLine(line, !collapsedMode));
@@ -850,6 +855,17 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 	}
 	
+	private void hideProgressBar() {
+		darkProgressBar.setVisibility(View.GONE);
+		lightProgressBar.setVisibility(View.GONE);
+	}
+	
+	private void showProgressBar() {
+		ColorScheme colorScheme = PreferenceHelper.getColorScheme(LogcatActivity.this);
+		darkProgressBar.setVisibility(colorScheme.isUseLightProgressBar() ? View.GONE : View.VISIBLE);
+		lightProgressBar.setVisibility(colorScheme.isUseLightProgressBar() ? View.VISIBLE : View.GONE);
+	}
+
 	private void resetDisplayedLog(String filename) {
 		
 		adapter.clear();
@@ -961,17 +977,33 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		LogcatReader logcatReader = null;
 		
 		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			log.d("onPreExecute()");
+			
+			resetDisplayedLog(null);
+			showProgressBar();
+
+		}
+		
+		@Override
 		protected Void doInBackground(Void... params) {
 			log.d("doInBackground()");
 			
 			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+			
+			try {
 
-				String buffer = PreferenceHelper.getBuffer(LogcatActivity.this);
+				String bufferPref = PreferenceHelper.getBuffer(LogcatActivity.this);
 				
-				if (buffer.equals(getString(R.string.pref_buffer_choice_combined_value))) {
+				if (bufferPref.equals(getString(R.string.pref_buffer_choice_combined_value))) {
 					logcatReader = new MultipleLogcatReader();
 				} else {
-					logcatReader = new SingleLogcatReader(buffer);
+					logcatReader = new SingleLogcatReader(bufferPref);
 				}
 				
 				String line;
@@ -1001,25 +1033,12 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		}
 
 		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			log.d("onPreExecute()");
-			
-			resetDisplayedLog(null);
-			
-			ColorScheme colorScheme = PreferenceHelper.getColorScheme(LogcatActivity.this);
-			darkProgressBar.setVisibility(colorScheme.isUseLightProgressBar() ? View.GONE : View.VISIBLE);
-			lightProgressBar.setVisibility(colorScheme.isUseLightProgressBar() ? View.VISIBLE : View.GONE);
-		}
-
-		@Override
 		protected void onProgressUpdate(String... values) {
 			super.onProgressUpdate(values);
 
 			String line = values[0];
 			
-			darkProgressBar.setVisibility(View.GONE);
-			lightProgressBar.setVisibility(View.GONE);
+			hideProgressBar();
 			
 			adapter.addWithFilter(LogLine.newLogLine(line, !collapsedMode), searchEditText.getText());
 			
@@ -1042,13 +1061,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			super.onCancelled();
 			log.d("onCancelled()");
 
-			darkProgressBar.setVisibility(View.GONE);
-			lightProgressBar.setVisibility(View.GONE);
-			
+			hideProgressBar();
 			if (logcatReader != null) {
 				logcatReader.kill();
 			}
-			
 		}
 	}
 	
