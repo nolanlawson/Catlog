@@ -28,6 +28,7 @@ import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
 import com.nolanlawson.logcat.helper.WidgetHelper;
 import com.nolanlawson.logcat.reader.LogcatReader;
+import com.nolanlawson.logcat.reader.MultipleLogcatReader;
 import com.nolanlawson.logcat.reader.SingleLogcatReader;
 import com.nolanlawson.logcat.util.UtilLogger;
 
@@ -227,8 +228,10 @@ public class LogcatRecordingService extends IntentService {
 		
 		SaveLogHelper.deleteLogIfExists(filename);
 		
+		String buffer = PreferenceHelper.getBuffer(getApplicationContext());
+		
 		// get the current last log line, so we can know what needs to be skipped
-		String currentLastLine = getCurentLastLogLine();
+		String currentLastLine = getCurentLastLogLine(buffer);
 		
 		log.d("current last line is %s", currentLastLine);
 		
@@ -236,14 +239,13 @@ public class LogcatRecordingService extends IntentService {
 		
 		StringBuilder stringBuilder = new StringBuilder();
 		
-		makeToast(R.string.log_recording_started, Toast.LENGTH_SHORT);
-		
 		try {
 			
-			String buffer = PreferenceHelper.getBuffer(getApplicationContext());
-			
-			// use the "time" log so we can see what time the logs were logged at
-			logcatReader = new SingleLogcatReader(buffer);
+			if (buffer.equals(getString(R.string.pref_buffer_choice_combined_value))) {
+				logcatReader = new MultipleLogcatReader();
+			} else {
+				logcatReader = new SingleLogcatReader(buffer);
+			}
 		
 			Date currentDate = new Date(System.currentTimeMillis());
 			
@@ -270,6 +272,7 @@ public class LogcatRecordingService extends IntentService {
 					if (line.equals(currentLastLine)) {
 						log.d("line matches dumped last line '%s', done skipping", currentLastLine);
 						pastCurrentTime = true;
+						makeToast(R.string.log_recording_started, Toast.LENGTH_SHORT);
 						continue;
 					}
 					
@@ -302,6 +305,7 @@ public class LogcatRecordingService extends IntentService {
 					} else {
 						log.d("lineDate %s is after currentDate %s; done skipping", lineDate, currentDate);
 						pastCurrentTime = true;
+						makeToast(R.string.log_recording_started, Toast.LENGTH_SHORT);
 					}
 				}
 				
@@ -340,13 +344,19 @@ public class LogcatRecordingService extends IntentService {
 		}
 	}
 
-	private String getCurentLastLogLine() {
+	private String getCurentLastLogLine(String buffer) {
 		Process dumpLogcatProcess = null;
 		BufferedReader reader = null;
 		String result = null;
 		try {
+			
+			if (buffer.equals(getApplicationContext().getString(R.string.pref_buffer_choice_combined_value))) {
+				// since we're reading from all the logs at once, the main log is as good as any
+				buffer = getApplicationContext().getString(R.string.pref_buffer_choice_main_value);
+			}
+			
 			dumpLogcatProcess = Runtime.getRuntime().exec(
-					new String[] { "logcat", "-d", "-v", "time" }); // -d just dumps the whole thing
+					new String[] { "logcat", "-d", "-b", buffer, "-v", "time" }); // -d just dumps the whole thing
 
 			reader = new BufferedReader(new InputStreamReader(dumpLogcatProcess
 					.getInputStream()), 8192);

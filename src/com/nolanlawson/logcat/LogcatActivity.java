@@ -60,6 +60,7 @@ import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
 import com.nolanlawson.logcat.reader.LogcatReader;
+import com.nolanlawson.logcat.reader.MultipleLogcatReader;
 import com.nolanlawson.logcat.reader.SingleLogcatReader;
 import com.nolanlawson.logcat.util.LogLineAdapterUtil;
 import com.nolanlawson.logcat.util.UtilLogger;
@@ -168,7 +169,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     }
     
 	private void restartMainLog() {
-		ColorScheme colorScheme = PreferenceHelper.getColorScheme(this);
     	adapter.clear();
     	
     	startUpMainLog();
@@ -315,9 +315,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		mainLogMenuItem.setEnabled(!showingMainLog);
 		mainLogMenuItem.setVisible(!showingMainLog);
-		String mainLogTitle = String.format(getString(R.string.main_log), 
-				PreferenceHelper.getBufferName(this));
-		mainLogMenuItem.setTitle(mainLogTitle);
+		mainLogMenuItem.setTitle(getMainLogMenuTitle());
 		
 		saveLogMenuItem.setEnabled(showingMainLog);
 		saveLogMenuItem.setVisible(showingMainLog);
@@ -346,6 +344,22 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		return super.onPrepareOptionsMenu(menu);
 	}
+
+	private CharSequence getMainLogMenuTitle() {
+		String buffer = PreferenceHelper.getBuffer(this);
+		if (buffer.equals(getString(R.string.pref_buffer_choice_main_value))) {
+			return getString(R.string.play_main_log);
+		} else if (buffer.equals(getString(R.string.pref_buffer_choice_radio_value))) {
+			return getString(R.string.play_radio_log);
+		} else if (buffer.equals(getString(R.string.pref_buffer_choice_events_value))) {
+			return getString(R.string.play_events_log);
+		} else {
+			return getString(R.string.play_combined_log);
+		}
+	}
+
+
+
 
 	private void startPartialSelectMode() {
 		
@@ -944,18 +958,21 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	private class LogReaderAsyncTask extends AsyncTask<Void,String,Void> {
 		
 		private int counter = 0;
+		LogcatReader logcatReader = null;
 		
 		@Override
 		protected Void doInBackground(Void... params) {
 			log.d("doInBackground()");
 			
-			LogcatReader logcatReader = null;
-			
 			try {
 
 				String buffer = PreferenceHelper.getBuffer(LogcatActivity.this);
 				
-				logcatReader = new SingleLogcatReader(buffer);
+				if (buffer.equals(getString(R.string.pref_buffer_choice_combined_value))) {
+					logcatReader = new MultipleLogcatReader();
+				} else {
+					logcatReader = new SingleLogcatReader(buffer);
+				}
 				
 				String line;
 				
@@ -963,7 +980,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 					publishProgress(line);
 				} 
 			} catch (Exception e) {
-				log.e(e, "unexpected error");
+				log.d(e, "unexpected error");
 				
 			} finally {
 				if (logcatReader != null) {
@@ -1027,6 +1044,11 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 
 			darkProgressBar.setVisibility(View.GONE);
 			lightProgressBar.setVisibility(View.GONE);
+			
+			if (logcatReader != null) {
+				logcatReader.kill();
+			}
+			
 		}
 	}
 	

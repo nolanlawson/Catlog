@@ -15,14 +15,19 @@ import com.nolanlawson.logcat.util.UtilLogger;
  */
 public class MultipleLogcatReader implements LogcatReader {
 
+	private static final String[] LOG_BUFFERS = {"main", "radio", "events"};
+	
+	private static final String DUMMY_NULL = new String("");
+	
 	private static UtilLogger log = new UtilLogger(MultipleLogcatReader.class);
 	
 	private List<SingleLogcatReader> readers = new LinkedList<SingleLogcatReader>();
 	private BlockingQueue<String> queue = new ArrayBlockingQueue<String>(1);
 	
-	
-	public MultipleLogcatReader(List<String> logBuffers) throws IOException {
-		for (String logBuffer : logBuffers) {
+	public MultipleLogcatReader() throws IOException {
+		
+		// read from all three buffers at once
+		for (String logBuffer : LOG_BUFFERS) {
 			readers.add(new SingleLogcatReader(logBuffer));
 		}
 		
@@ -34,7 +39,8 @@ public class MultipleLogcatReader implements LogcatReader {
 	
 	public String readLine() throws IOException {
 		try {
-			return queue.take();
+			String result = queue.take();
+			return result == DUMMY_NULL ? null : result;
 		} catch (InterruptedException e) {
 			throw new IOException("reader exception", e);
 		}
@@ -50,6 +56,21 @@ public class MultipleLogcatReader implements LogcatReader {
 		for (SingleLogcatReader reader : readers) {
 			reader.kill();
 		}
+		
+		Runnable runnable = new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					// queue does not accept null values, so have to use a dummy value
+					queue.put(DUMMY_NULL);
+				} catch (InterruptedException e) {
+					log.d(e, "exception");
+				}
+			}
+			
+		};
+		new Thread(runnable).start();
 	}
 	
 	
@@ -80,6 +101,5 @@ public class MultipleLogcatReader implements LogcatReader {
 			log.d("thread died");
 		}
 		
-	}
-	
+	}	
 }

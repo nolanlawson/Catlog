@@ -4,8 +4,8 @@
 	<item android:id="@+id/menu_log_level" android:title="@string/log_level"
 		android:alphabeticShortcut="@string/log_level" android:icon="@drawable/ic_menu_sort_by_size" />
 		
-	<item android:id="@+id/menu_main_log" android:title="@string/main_log"
-		android:alphabeticShortcut="@string/main_log" android:icon="@drawable/ic_menu_play_clip" />
+	<item android:id="@+id/menu_main_log" android:title="@string/play_main_log"
+		android:alphabeticShortcut="@string/play_main_log" android:icon="@drawable/ic_menu_play_clip" />
 						
 	<item android:id="@+id/menu_save_log" android:title="@string/save"
 		android:alphabeticShortcut="@string/save" android:icon="@drawable/ic_menu_save" />

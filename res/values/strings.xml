@@ -34,7 +34,6 @@
 	<string name="start_recording_log">Record</string>
 	<string name="clear">Clear All</string>
 	<string name="send_log">Send</string>
-	<string name="main_log">Play %s Log</string>
 	<string name="stop_recording_log">Stop Recording</string>
 	<string name="about">About</string>
 	<string name="delete_saved_log">Delete Saved Logs</string>
@@ -92,9 +91,16 @@
 	<string name="pref_buffer_choice_main">Main</string>
 	<string name="pref_buffer_choice_events">Events</string>
 	<string name="pref_buffer_choice_radio">Radio</string>
+	<string name="pref_buffer_choice_combined">All Combined</string>
 	<string name="pref_buffer_choice_main_value">main</string>
 	<string name="pref_buffer_choice_events_value">events</string>
 	<string name="pref_buffer_choice_radio_value">radio</string>
+	<string name="pref_buffer_choice_combined_value">combined</string>
+
+	<string name="play_main_log">Play Main Log</string>
+	<string name="play_events_log">Play Events Log</string>
+	<string name="play_radio_log">Play Radio Log</string>
+	<string name="play_combined_log">Play All Logs</string>
 
 	<string name="pref_theme">theme</string>
 	<string name="pref_theme_title">Color Scheme</string>

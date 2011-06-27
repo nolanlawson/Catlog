@@ -21,6 +21,7 @@ public class SingleLogcatReader implements LogcatReader {
 	
 	
 	private void init() throws IOException {
+		// use the "time" log so we can see what time the logs were logged at
 		logcatProcess = Runtime.getRuntime().exec(
 				new String[] { "logcat", "-b", logBuffer, "-v", "time" });
 		
