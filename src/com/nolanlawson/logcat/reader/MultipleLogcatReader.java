@@ -79,29 +79,10 @@ public class MultipleLogcatReader implements LogcatReader {
 	private class ReaderThread extends Thread {
 
 		private SingleLogcatReader reader;
-		private DatedLogLine skipPastLogLine;
-		private boolean doneSkipping;
+
 		
 		public ReaderThread(SingleLogcatReader reader) {
 			this.reader = reader;
-			init();
-		}
-		
-		private void init() {
-			
-			// when initializing, need to dump the entire log so that we can properly
-			// interleave logs that have already been written
-			
-			List<String> dumpedLogLines = LogHelper.dumpLog(reader.getLogBuffer());
-			
-			for (String line : dumpedLogLines) {
-				queue.put(new DatedLogLine(line));
-
-			}
-			
-			if (!dumpedLogLines.isEmpty()) {
-				skipPastLogLine = new DatedLogLine(dumpedLogLines.get(dumpedLogLines.size() - 1));
-			}
 		}
 
 		@Override
@@ -113,20 +94,7 @@ public class MultipleLogcatReader implements LogcatReader {
 			try {
 				while ((line = reader.readLine()) != null) {
 					DatedLogLine datedLogLine = new DatedLogLine(line);
-					
-
-					if (!doneSkipping && skipPastLogLine != null 
-							&& datedLogLine.compareTo(skipPastLogLine) == 0
-							&& datedLogLine.getLine() != null
-							&& datedLogLine.getLine().equals(skipPastLogLine.getLine())) {
-						// weird case where I have to do a string equality check on the log line 
-						// to avoid skipping lines with the SAME timestamp as that of the skipPastThisLogLine
-						doneSkipping = true; // doneSkipping, but don't add the current line
-					} else if (doneSkipping || skipPastLogLine == null || datedLogLine.compareTo(skipPastLogLine) > 0) {
-						// done skipping, and add the current line
-						doneSkipping = true;
-						queue.put(datedLogLine);
-					}
+					queue.put(datedLogLine);
 				}
 			} catch (IOException e) {
 				log.d(e, "exception");
