@@ -114,9 +114,16 @@ public class MultipleLogcatReader implements LogcatReader {
 				while ((line = reader.readLine()) != null) {
 					DatedLogLine datedLogLine = new DatedLogLine(line);
 					
-					// TODO: this logic will not work if the skipPastLogLine has the same timestamp as nearby lines
-					// it will skip those lines unnecessarily
-					if (doneSkipping || skipPastLogLine == null || datedLogLine.compareTo(skipPastLogLine) > 0) {
+
+					if (!doneSkipping && skipPastLogLine != null 
+							&& datedLogLine.compareTo(skipPastLogLine) == 0
+							&& datedLogLine.getLine() != null
+							&& datedLogLine.getLine().equals(skipPastLogLine.getLine())) {
+						// weird case where I have to do a string equality check on the log line 
+						// to avoid skipping lines with the SAME timestamp as that of the skipPastThisLogLine
+						doneSkipping = true; // doneSkipping, but don't add the current line
+					} else if (doneSkipping || skipPastLogLine == null || datedLogLine.compareTo(skipPastLogLine) > 0) {
+						// done skipping, and add the current line
 						doneSkipping = true;
 						queue.put(datedLogLine);
 					}
