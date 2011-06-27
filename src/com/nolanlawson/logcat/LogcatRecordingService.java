@@ -264,6 +264,8 @@ public class LogcatRecordingService extends IntentService {
 			
 			boolean pastCurrentTime = false;
 			
+			makeToast(R.string.log_recording_started, Toast.LENGTH_SHORT);
+			
 			while ((line = logcatReader.readLine()) != null) {
 				
 				if (!pastCurrentTime) {
@@ -271,7 +273,6 @@ public class LogcatRecordingService extends IntentService {
 					if (line.equals(currentLastLine)) {
 						log.d("line matches dumped last line '%s', done skipping", currentLastLine);
 						pastCurrentTime = true;
-						makeToast(R.string.log_recording_started, Toast.LENGTH_SHORT);
 						continue;
 					}
 					
@@ -304,7 +305,6 @@ public class LogcatRecordingService extends IntentService {
 					} else {
 						log.d("lineDate %s is after currentDate %s; done skipping", lineDate, currentDate);
 						pastCurrentTime = true;
-						makeToast(R.string.log_recording_started, Toast.LENGTH_SHORT);
 					}
 				}
 				
