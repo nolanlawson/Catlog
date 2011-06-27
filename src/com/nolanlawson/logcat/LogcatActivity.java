@@ -203,6 +203,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				@Override
 				public void run() {
 					
+					updateBackgroundColor();
+					
 					if (data.hasExtra("bufferChanged") && data.getBooleanExtra("bufferChanged", false)
 							&& currentlyOpenLog == null) {
 						// log buffer changed, so update list
