@@ -23,6 +23,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
+import com.nolanlawson.logcat.helper.LogcatHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
@@ -239,11 +240,10 @@ public class LogcatRecordingService extends IntentService {
 		
 		try {
 			
-			String buffer = PreferenceHelper.getBuffer(getApplicationContext());
+			String bufferPref = PreferenceHelper.getBuffer(getApplicationContext());
 			
 			// use the "time" log so we can see what time the logs were logged at
-			logcatProcess = Runtime.getRuntime().exec(
-					new String[] { "logcat", "-b", buffer, "-v", "time" });
+			logcatProcess = LogcatHelper.getLogcatProcess(bufferPref, getApplicationContext());
 
 			reader = new BufferedReader(new InputStreamReader(logcatProcess
 					.getInputStream()), 8192);
