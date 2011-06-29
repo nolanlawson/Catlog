@@ -272,7 +272,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	    	showOpenLogDialog();
 	    	return true;
 	    case R.id.menu_save_log:
-	    case R.id.menu_save_log2:
+	    case R.id.menu_save_as_log:
 	    	showSaveLogDialog();
 	    	return true;
 	    case R.id.menu_record_log:
@@ -314,7 +314,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		MenuItem mainLogMenuItem = menu.findItem(R.id.menu_main_log);
 		MenuItem saveLogMenuItem = menu.findItem(R.id.menu_save_log);
-		MenuItem saveLogMenuItem2 = menu.findItem(R.id.menu_save_log2);
+		MenuItem saveAsLogMenuItem = menu.findItem(R.id.menu_save_as_log);
 		
 		mainLogMenuItem.setEnabled(!showingMainLog);
 		mainLogMenuItem.setVisible(!showingMainLog);
@@ -325,8 +325,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		saveLogMenuItem.setEnabled(showingMainLog);
 		saveLogMenuItem.setVisible(showingMainLog);
 		
-		saveLogMenuItem2.setEnabled(!showingMainLog);
-		saveLogMenuItem2.setVisible(!showingMainLog);
+		saveAsLogMenuItem.setEnabled(!showingMainLog);
+		saveAsLogMenuItem.setVisible(!showingMainLog);
 		
 		boolean recordingInProgress = ServiceHelper.checkIfServiceIsRunning(getApplicationContext(), LogcatRecordingService.class);
 	

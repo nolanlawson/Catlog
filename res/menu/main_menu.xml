@@ -23,8 +23,8 @@
 	<item android:id="@+id/menu_stop_recording_log" android:title="@string/stop_recording_log"
 		android:alphabeticShortcut="@string/stop_recording_log" android:icon="@drawable/ic_menu_stop" />
 
-	<item android:id="@+id/menu_save_log2" android:title="@string/save"
-		android:alphabeticShortcut="@string/save" android:icon="@drawable/ic_menu_save" />
+	<item android:id="@+id/menu_save_as_log" android:title="@string/save_as"
+		android:alphabeticShortcut="@string/save_as" android:icon="@drawable/ic_menu_save" />
 	
 	<item android:id="@+id/menu_delete_saved_log" android:title="@string/manage_saved_logs"
 		android:alphabeticShortcut="@string/manage_saved_logs" android:icon="@android:drawable/ic_menu_delete" />

@@ -26,6 +26,7 @@
     <string name="send_as_text">Send as Text</string>
     <string name="send_as_attachment">Send as Attachment</string>
     <string name="save">Save</string>
+	<string name="save_as">Save As...</string>
 	<string name="save_log">Save Log</string>
 	<string name="log_level">Log Level</string>
 	<string name="open">Open</string>
