@@ -85,7 +85,7 @@
 	<string name="pref_log_line_period_default">200</string>
 	<string name="pref_log_line_period_title">Write Period</string>
 	<string name="pref_log_line_period_summary" formatted="false">When recording, write to SD card every %d line%s (default: %s).</string>
-	<string name="pref_log_line_period_error"><![CDATA[Please enter an integer >=1 and <=1000.]]></string>
+	<string name="pref_log_line_period_error">Please enter an integer between 1 and 1000.</string>
 
 	<string name="pref_buffer">buffer</string>
 	<string name="pref_buffer_title">Log Buffer</string>
@@ -131,15 +131,15 @@
     <string name="choose_format">Choose Format</string>
     
     <string name="widget_recording_in_progress">Recording...</string>
-    <string name="first_run">first_run6</string>
+    <string name="first_run">first_run7</string>
     <string name="first_run_pref_title">Reset Introduction</string>
     <string name="first_run_pref_summary">Show introductory message again.</string>
     <string name="first_run_title">Welcome to CatLog!</string>
     <string name="first_run_message">\  
+<b>New in 1.2!</b>\n\
+&#160;&#160;&#160;&#160;- Minor bugfix.\n\
 <b>New in 1.1.9!</b>\n\
-&#160;&#160;&#160;&#160;- Minor bugfixes and graphical tweaks.\n\n\
-<b>New in 1.1.8!</b>\n\
-&#160;&#160;&#160;&#160;- Added log buffer option.\
+&#160;&#160;&#160;&#160;- Minor bugfixes and graphical tweaks.\
 </string> 
     
 </resources>

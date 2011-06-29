@@ -32,7 +32,8 @@
 		android:entries="@array/pref_buffer_choices" android:entryValues="@array/pref_buffer_choice_values"
 		android:defaultValue="@string/pref_buffer_choice_main_value" />	
 		
-	<EditTextPreference android:key="@string/pref_log_line_period"
+	<com.nolanlawson.logcat.widget.NonnegativeIntegerEditTextPreference 
+		android:key="@string/pref_log_line_period"
 		android:title="@string/pref_log_line_period_title"
 		android:summary="@string/pref_log_line_period_summary"
 		android:persistent="true" android:defaultValue="@string/pref_log_line_period_default"/>
