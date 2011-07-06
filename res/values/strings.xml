@@ -102,13 +102,21 @@
 	<string name="pref_theme">theme</string>
 	<string name="pref_theme_title">Color Scheme</string>
 	<string name="pref_theme_summary_free">Requires donate version.</string>
-	<string name="pref_theme_choice_dark">Dark</string>
-	<string name="pref_theme_choice_light">Light</string>
-	<string name="pref_theme_choice_android">Android</string>
-	<string name="pref_theme_choice_verizon">Big Red</string>
-	<string name="pref_theme_choice_att">Ma Bell</string>
-	<string name="pref_theme_choice_sprint">Big Yellow</string>
-	<string name="pref_theme_choice_tmobile">T-Mo</string>
+	<string name="pref_theme_choice_dark_value">Dark</string>
+	<string name="pref_theme_choice_light_value">Light</string>
+	<string name="pref_theme_choice_android_value">Android</string>
+	<string name="pref_theme_choice_verizon_value">Big Red</string>
+	<string name="pref_theme_choice_att_value">Ma Bell</string>
+	<string name="pref_theme_choice_sprint_value">Big Yellow</string>
+	<string name="pref_theme_choice_tmobile_value">T-Mo</string>
+	
+	<string name="pref_theme_choice_dark_name">Dark</string>
+	<string name="pref_theme_choice_light_name">Light</string>
+	<string name="pref_theme_choice_android_name">Android</string>
+	<string name="pref_theme_choice_verizon_name">Big Red</string>
+	<string name="pref_theme_choice_att_name">Ma Bell</string>
+	<string name="pref_theme_choice_sprint_name">Big Yellow</string>
+	<string name="pref_theme_choice_tmobile_name">T-Mo</string>	
 
 	<string name="pref_cat_appearance">Appearance</string>
 	<string name="pref_cat_configuration">Configuration</string>
@@ -134,15 +142,13 @@
     <string name="choose_format">Choose Format</string>
     
     <string name="widget_recording_in_progress">Recording...</string>
-    <string name="first_run">first_run7</string>
+    <string name="first_run">first_run8</string>
     <string name="first_run_pref_title">Reset Introduction</string>
     <string name="first_run_pref_summary">Show introductory message again.</string>
     <string name="first_run_title">Welcome to CatLog!</string>
     <string name="first_run_message">\  
-<b>New in 1.2!</b>\n\
-&#160;&#160;&#160;&#160;- Minor bugfix.\n\
-<b>New in 1.1.9!</b>\n\
-&#160;&#160;&#160;&#160;- Minor bugfixes and graphical tweaks.\
+<b>New in 1.2.1!</b>\n\
+&#160;&#160;&#160;&#160;- Japanese and French localization added.\
 </string> 
     
 </resources>

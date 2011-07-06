@@ -20,8 +20,8 @@
 		
 	<ListPreference android:key="@string/pref_theme"
 		android:title="@string/pref_theme_title" android:persistent="true"
-		android:entries="@array/pref_theme_choices" android:entryValues="@array/pref_theme_choices"
-		android:defaultValue="@string/pref_theme_choice_dark" />		
+		android:entries="@array/pref_theme_choices_names" android:entryValues="@array/pref_theme_choices_values"
+		android:defaultValue="@string/pref_theme_choice_dark_value" />		
 		
 	</PreferenceCategory>
 	

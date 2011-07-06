@@ -1,5 +1,6 @@
 package com.nolanlawson.logcat.data;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,25 +10,25 @@ import com.nolanlawson.logcat.R;
 
 
 public enum ColorScheme {
-	Dark (R.string.pref_theme_choice_dark, R.color.main_background_dark, 
+	Dark (R.string.pref_theme_choice_dark_value, R.color.main_background_dark, 
 			R.color.main_foreground_dark, R.array.dark_theme_colors, R.color.spinner_droptown_dark,
 			R.color.main_bubble_background_dark_2, false, R.color.yellow1),
-	Light (R.string.pref_theme_choice_light, R.color.main_background_light, 
+	Light (R.string.pref_theme_choice_light_value, R.color.main_background_light, 
 			R.color.main_foreground_light, R.array.light_theme_colors, R.color.spinner_droptown_light,
 			R.color.main_bubble_background_light_2, true, R.color.main_bubble_background_light_2),
-	Android (R.string.pref_theme_choice_android, R.color.main_background_android, 
+	Android (R.string.pref_theme_choice_android_value, R.color.main_background_android, 
 			R.color.main_foreground_android, R.array.android_theme_colors, R.color.spinner_droptown_android,
 			R.color.main_bubble_background_light, true, R.color.yellow1),
-	Verizon (R.string.pref_theme_choice_verizon, R.color.main_background_verizon, 
+	Verizon (R.string.pref_theme_choice_verizon_value, R.color.main_background_verizon, 
 			R.color.main_foreground_verizon, R.array.dark_theme_colors, R.color.spinner_droptown_verizon,
 			R.color.main_bubble_background_verizon, false, R.color.yellow1),
-	Att (R.string.pref_theme_choice_att, R.color.main_background_att, 
+	Att (R.string.pref_theme_choice_att_value, R.color.main_background_att, 
 			R.color.main_foreground_att, R.array.light_theme_colors, R.color.spinner_droptown_att,
 			R.color.main_bubble_background_light, true, R.color.main_bubble_background_light_2),
-	Sprint (R.string.pref_theme_choice_sprint, R.color.main_background_sprint, 
+	Sprint (R.string.pref_theme_choice_sprint_value, R.color.main_background_sprint, 
 			R.color.main_foreground_sprint, R.array.dark_theme_colors, R.color.spinner_droptown_sprint,
 			R.color.main_bubble_background_dark, false, R.color.yellow1),
-	Tmobile (R.string.pref_theme_choice_tmobile, R.color.main_background_tmobile, 
+	Tmobile (R.string.pref_theme_choice_tmobile_value, R.color.main_background_tmobile, 
 			R.color.main_foreground_tmobile, R.array.light_theme_colors, R.color.spinner_droptown_tmobile,
 			R.color.main_bubble_background_tmobile, true, R.color.main_bubble_background_light_2),
 
@@ -64,6 +65,13 @@ public enum ColorScheme {
 		this.selectedColorResource = selectedColorResource;
 	}
 
+	public String getDisplayableName(Context context) {
+		
+		int idx = Arrays.asList(context.getResources().getStringArray(R.array.pref_theme_choices_values)).indexOf(context.getString(nameResource));
+		return context.getResources().getStringArray(R.array.pref_theme_choices_names)[idx];
+		
+	}
+	
 	public int getNameResource() {
 		return nameResource;
 	}	

@@ -60,11 +60,9 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 		
 		boolean donateInstalled = DonateHelper.isDonateVersionInstalled(this) ;
 		
-		String themeSummary = getString(donateInstalled 
-				? PreferenceHelper.getColorScheme(this).getNameResource()
-				: R.string.pref_theme_summary_free).toString();
-		
-		themeSummary = String.format(themeSummary, getString(PreferenceHelper.getColorScheme(this).getNameResource()));
+		String themeSummary = donateInstalled 
+				? PreferenceHelper.getColorScheme(this).getDisplayableName(this)
+				: getString(R.string.pref_theme_summary_free);
 		
 		themePreference.setSummary(themeSummary);
 		
@@ -96,7 +94,9 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 			
 		} else if (preference.getKey().equals(getString(R.string.pref_theme))) {
 			// update summary
-			themePreference.setSummary(newValue.toString());
+			int index = Arrays.asList(themePreference.getEntryValues()).indexOf(newValue.toString());
+			CharSequence newEntry = themePreference.getEntries()[index];
+			themePreference.setSummary(newEntry);
 			return true;
 		} else if (preference.getKey().equals(getString(R.string.pref_buffer))) {
 			// update summary

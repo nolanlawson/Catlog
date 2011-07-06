@@ -12,14 +12,24 @@
 		<item>@string/pref_buffer_choice_radio_value</item>
 	</string-array>	
 
-	<string-array name="pref_theme_choices">
-		<item>@string/pref_theme_choice_dark</item>
-		<item>@string/pref_theme_choice_light</item>
-		<item>@string/pref_theme_choice_android</item>
-		<item>@string/pref_theme_choice_verizon</item>
-		<item>@string/pref_theme_choice_att</item>
-		<item>@string/pref_theme_choice_sprint</item>
-		<item>@string/pref_theme_choice_tmobile</item>
+	<string-array name="pref_theme_choices_values">
+		<item>@string/pref_theme_choice_dark_value</item>
+		<item>@string/pref_theme_choice_light_value</item>
+		<item>@string/pref_theme_choice_android_value</item>
+		<item>@string/pref_theme_choice_verizon_value</item>
+		<item>@string/pref_theme_choice_att_value</item>
+		<item>@string/pref_theme_choice_sprint_value</item>
+		<item>@string/pref_theme_choice_tmobile_value</item>
+	</string-array>
+
+	<string-array name="pref_theme_choices_names">
+		<item>@string/pref_theme_choice_dark_name</item>
+		<item>@string/pref_theme_choice_light_name</item>
+		<item>@string/pref_theme_choice_android_name</item>
+		<item>@string/pref_theme_choice_verizon_name</item>
+		<item>@string/pref_theme_choice_att_name</item>
+		<item>@string/pref_theme_choice_sprint_name</item>
+		<item>@string/pref_theme_choice_tmobile_name</item>
 	</string-array>
 	
 	<string-array name="filter_choices">
