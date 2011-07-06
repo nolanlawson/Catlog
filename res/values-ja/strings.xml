@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">CatLog</string>
     <string name="main_edit_text_hint">検索</string>
+    
+    <string name="plural_suffix"></string>
     
     <string name="dialog_for_widget"><b>ウィジェット</b>のために,\n ホーム → ロング\nプレス → ウィジェット</string>
     <string name="dialog_for_donate"><b>ほかの色</b>　のために\n, <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog Donate</a>\nをダウンロード</string>
@@ -43,63 +44,48 @@
 	<string name="expand_all">大きくする</string>
 	<string name="collapse_all">小さくする</string>
 	
-	<string name="log_level_verbose">Verbose</string>
-	<string name="log_level_debug">Debug</string>
-	<string name="log_level_info">Info</string>
-	<string name="log_level_warn">Warn</string>
-	<string name="log_level_error">Error</string>
-	<string name="log_level_wtf">What a Terrible Failure</string>
+	<string name="no_saved_logs">セーブしたログはない。</string>
+	<string name="recording_in_progress">もう記録中。</string>
+	<string name="enter_good_filename">妥当なファイルの名を入力してくだなさい。</string>
+	<string name="log_saved">セーブ完了.</string>
+    <string name="copy_to_clipboard">クリップボードにこピー</string>
+	<string name="copied_to_clipboard">クリップボードコピー完了。</string>
+	<string name="enter_filename">SDカードにセーブするためのファイルの名：</string>
+	<string name="select_logs_to_delete">どのログを削除する？</string>
+	<string name="files_deleted">ファイルは%dつ削除された。</string>
+	<string name="delete_all">全部削除する</string>
+	<string name="are_you_sure">大丈夫でしょうか? ファイルは%dつ削除される。</string>
+	<string name="log_recording_started">ログ記録開始。</string>
+	<string name="unable_to_save_log">ログのセーブはだめでした。妥当なファイルの名入力しましたか？</string>
+	<string name="sd_card_not_found">SDカード見つからなかった。</string>
 	
-	<string name="no_saved_logs">No saved logs found.</string>
-	<string name="recording_in_progress">Recording already in progress.</string>
-	<string name="enter_good_filename">Please enter a valid filename.</string>
-	<string name="log_saved">Log saved.</string>
-    <string name="copy_to_clipboard">Copy to clipboard</string>
-	<string name="copied_to_clipboard">Copied to clipboard.</string>
-	<string name="enter_filename">Enter a filename to save to the SD card:</string>
-	<string name="select_logs_to_delete">Select which logs to delete.</string>
-	<string name="files_deleted">%d file(s) deleted.</string>
-	<string name="delete_all">Delete All</string>
-	<string name="are_you_sure">Are you sure? %d file(s) will be deleted.</string>
-	<string name="log_recording_started">Log recording started.</string>
-	<string name="unable_to_save_log">Unable to save log. Did you enter a valid filename?</string>
-	<string name="sd_card_not_found">SD card not found.</string>
+	<string name="notification_title">ログ記録中</string>
+	<string name="notification_ticker">ログ記録開始</string>
+	<string name="notification_subtext">記録を阻止するために、ここでクリック。</string>
 	
-	<string name="notification_title">Log recording in progress</string>
-	<string name="notification_ticker">Log recording started</string>
-	<string name="notification_subtext">Select to stop recording.</string>
-	
-	<string name="about_catlog">About CatLog</string>
+	<string name="about_catlog">CatLogについて</string>
 
-	<string name="pref_text_size">text_size</string>
-	<string name="pref_text_size_title">Text Size</string>
+	<string name="pref_text_size_title">文字サイズ</string>
 	
-	<string name="pref_expanded_by_default">expand_default</string>
-	<string name="pref_expanded_by_default_title">Expand by Default</string>
-	<string name="pref_expanded_by_default_summary">Show full log text by default.</string>
+	<string name="pref_expanded_by_default_title">デフォルトで広い</string>
+	<string name="pref_expanded_by_default_summary">デフォルトでログを広くする。</string>
 
-	<string name="pref_show_timestamp">show_timestamp</string>
-	<string name="pref_show_timestamp_title">Show Pid &amp; Timestamp</string>
-	<string name="pref_show_timestamp_summary">Show process id and timestamp when expanded.</string>
+	<string name="pref_show_timestamp_title">プロセスIDと時間を見せる</string>
+	<string name="pref_show_timestamp_summary">広いときに、おまけの情報を見せる。</string>
 
-	<string name="pref_log_line_period">log_line_period</string>
 	<string name="pref_log_line_period_default">200</string>
-	<string name="pref_log_line_period_title">Write Period</string>
-	<string name="pref_log_line_period_summary" formatted="false">When recording, write to SD card every %d line%s (default: %s).</string>
-	<string name="pref_log_line_period_error">Please enter an integer between 1 and 1000.</string>
+	<string name="pref_log_line_period_title">書く期間</string>
+	<string name="pref_log_line_period_summary" formatted="false">記録中は、SDカードに 格 %dつのライン　（デフォルト：　%s）。</string>
+	<string name="pref_log_line_period_error">１から１０００までのインテジャを入力してください。</string>
 
 	<string name="pref_buffer">buffer</string>
-	<string name="pref_buffer_title">Log Buffer</string>
-	<string name="pref_buffer_choice_main">Main</string>
-	<string name="pref_buffer_choice_events">Events</string>
-	<string name="pref_buffer_choice_radio">Radio</string>
-	<string name="pref_buffer_choice_main_value">main</string>
-	<string name="pref_buffer_choice_events_value">events</string>
-	<string name="pref_buffer_choice_radio_value">radio</string>
+	<string name="pref_buffer_title">ログのバッファ</string>
+	<string name="pref_buffer_choice_main">メーン</string>
+	<string name="pref_buffer_choice_events">エベント</string>
+	<string name="pref_buffer_choice_radio">ラジオ</string>
 
-	<string name="pref_theme">theme</string>
-	<string name="pref_theme_title">Color Scheme</string>
-	<string name="pref_theme_summary_free">Requires donate version.</string>
+	<string name="pref_theme_title">配色</string>
+	<string name="pref_theme_summary_free">「Donate」のバージョン必要。</string>
 	<string name="pref_theme_choice_dark">Dark</string>
 	<string name="pref_theme_choice_light">Light</string>
 	<string name="pref_theme_choice_android">Android</string>
@@ -108,39 +94,30 @@
 	<string name="pref_theme_choice_sprint">Big Yellow</string>
 	<string name="pref_theme_choice_tmobile">T-Mo</string>
 
-	<string name="pref_cat_appearance">Appearance</string>
-	<string name="pref_cat_configuration">Configuration</string>
+	<string name="pref_cat_appearance">ルックス</string>
+	<string name="pref_cat_configuration">コンフィグレーション</string>
 
-	<string name="text_size_xsmall_value">XS</string>
-	<string name="text_size_small_value">S</string>
-    <string name="text_size_medium_value">M</string>
-    <string name="text_size_large_value">L</string>
-    <string name="text_size_xlarge_value">XL</string>
-
-	<string name="text_size_xsmall_name">Extra Small (8pt)</string>
-	<string name="text_size_small_name">Small (10pt)</string>
-    <string name="text_size_medium_name">Medium (12pt)</string>
-    <string name="text_size_large_name">Large (14pt)</string>
-    <string name="text_size_xlarge_name">Extra Large (16pt)</string>
+	<string name="text_size_xsmall_name">超短い (8pt)</string>
+	<string name="text_size_small_name">短い (10pt)</string>
+    <string name="text_size_medium_name">波 (12pt)</string>
+    <string name="text_size_large_name">高い (14pt)</string>
+    <string name="text_size_xlarge_name">超高い (16pt)</string>
     
-    <string name="settings">Settings</string>
+    <string name="settings">設定</string>
     
-    <string name="save_file_first">You must save the log to a file first.</string>
+    <string name="save_file_first">ログをセーブするのは必要です。</string>
     
-    <string name="as_attachment">As Attachment</string>
-    <string name="as_text">As Text</string>
-    <string name="choose_format">Choose Format</string>
+    <string name="as_attachment">添付として</string>
+    <string name="as_text">テクストとして</string>
+    <string name="choose_format">形選択</string>
     
-    <string name="widget_recording_in_progress">Recording...</string>
-    <string name="first_run">first_run7</string>
-    <string name="first_run_pref_title">Reset Introduction</string>
-    <string name="first_run_pref_summary">Show introductory message again.</string>
-    <string name="first_run_title">Welcome to CatLog!</string>
+    <string name="widget_recording_in_progress">記録中...</string>
+    <string name="first_run_pref_title">紹介リセット</string>
+    <string name="first_run_pref_summary">また紹介のメッセージを見せる。</string>
+    <string name="first_run_title">CatLogにようこそう！</string>
     <string name="first_run_message">\  
-<b>New in 1.2!</b>\n\
-&#160;&#160;&#160;&#160;- Minor bugfix.\n\
-<b>New in 1.1.9!</b>\n\
-&#160;&#160;&#160;&#160;- Minor bugfixes and graphical tweaks.\
+<b>１．２．１のアップデート！</b>\n\
+&#160;&#160;&#160;&#160;- 日本語とフランス語のローカリゼーション。\
 </string> 
     
 </resources>

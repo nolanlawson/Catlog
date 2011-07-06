@@ -120,7 +120,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	}
 
 	private Object getPluralSuffix(int value) {
-		return value == 1 ? "" : "s";
+		return value == 1 ? "" : getString(R.string.plural_suffix);
 	}
 
 	@Override
