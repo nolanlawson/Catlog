@@ -13,10 +13,10 @@ Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog D
     <string name="menu_title_partial_select">Selection partielle</string>
     <string name="dialog_partial_select_explanation">1. Appuyez sur le <b>premier</b> ligne.\n2. Appuyez sur le <b>dernier</b> ligne.</string>
     <string name="toast_invalid_selection">Selection pas valable. Veuillez essayer de nouveau.</string>
-    <string name="checkbox_never_show_partial_select_help">Ne plus afficher.</string>
+    <string name="checkbox_never_show_partial_select_help">Ne plus affichier.</string>
     <string name="toast_started_select_partial">Commencement du mode "selection partielle."</string>
     
-    <string name="log_cleared">Journaux nettoyés. Pour afficher de nouveau, appuyez et maintenez.</string>
+    <string name="log_cleared">Journaux nettoyés. Pour affichier de nouveau, appuyez et maintenez.</string>
     <string name="filter_choice">Rechercher par...</string>
     <string name="filter_choice_tag">Tag</string>
     <string name="filter_choice_pid">Pid</string>
@@ -44,13 +44,13 @@ Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog D
 	<string name="log_saved">Journal sauvegardé.</string>
     <string name="copy_to_clipboard">Copier au presse-papiers</string>
 	<string name="copied_to_clipboard">Copié au presse-papiers.</string>
-	<string name="enter_filename">Entrez le nom du ficher à sauvegarder à la carte SD：</string>
+	<string name="enter_filename">Entrez le nom du fichier à sauvegarder à la carte SD：</string>
 	<string name="select_logs_to_delete">Selectionnez les journaux à supprimer.</string>
-	<string name="files_deleted">%d fichers supprimés.</string>
+	<string name="files_deleted">%d fichiers supprimés.</string>
 	<string name="delete_all">Tout supprimer</string>
-	<string name="are_you_sure">Etes-vous sûre? %d fichers seront supprimés.</string>
+	<string name="are_you_sure">Etes-vous sûre? %d fichiers seront supprimés.</string>
 	<string name="log_recording_started">Enregistrement en cours.</string>
-	<string name="unable_to_save_log">Impossible de sauvegarder le journal. Avez-vous entré un nom de ficher valable?</string>
+	<string name="unable_to_save_log">Impossible de sauvegarder le journal. Avez-vous entré un nom de fichier valable?</string>
 	<string name="sd_card_not_found">Aucune carte SD trouvée.</string>
 	
 	<string name="notification_title">Enregistrement en cours</string>
@@ -65,10 +65,10 @@ Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog D
 	<string name="pref_expanded_by_default_summary">Par défault, les lignes de journal seront étendus.</string>
 
 	<string name="pref_show_timestamp_title">Pid et estampille</string>
-	<string name="pref_show_timestamp_summary">Quand étendu, afficher le pid et l\'estampille.</string>
+	<string name="pref_show_timestamp_summary">Quand étendu, affichier le pid et l\'estampille.</string>
 
 	<string name="pref_log_line_period_title">Période d\'écriture</string>
-	<string name="pref_log_line_period_summary" formatted="false">Pendant l\'enregistrement, écrire à la carte SD touts les %d lignes. (Default: %s)</string>
+	<string name="pref_log_line_period_summary" formatted="false">Pendant l\'enregistrement, écrire à la carte SD tous les %d lignes. (Défault: %s)</string>
 	<string name="pref_log_line_period_error">Veuillez entrer un nombre entier entre 1 et 1000.</string>
 
 	<string name="pref_buffer_title">Buffer de journal</string>
@@ -106,7 +106,7 @@ Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog D
     <string name="widget_start_recording">Enregistrer</string>
     <string name="widget_recording_in_progress">En cours...</string>
     <string name="first_run_pref_title">Réinitialiser l\'introduction</string>
-    <string name="first_run_pref_summary">Afficher de nouveau le message d\'introduction</string>
+    <string name="first_run_pref_summary">Affichier de nouveau le message d\'introduction</string>
     <string name="first_run_title">Bienvenue à CatLog!</string>
     <string name="first_run_message">\  
 <b>Nouveau en v1.2.1！</b>\n\
