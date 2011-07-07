@@ -12,7 +12,7 @@ Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog D
     <string name="subject_log_report">Envoyer un journal</string>
     <string name="menu_title_partial_select">Selection partielle</string>
     <string name="dialog_partial_select_explanation">1. Appuyez sur le <b>premier</b> ligne.\n2. Appuyez sur le <b>dernier</b> ligne.</string>
-    <string name="toast_invalid_selection">Selection pas valable. Veuillez essayer de nouveau.</string>
+    <string name="toast_invalid_selection">Selection pas valable. Veuillez réessayer.</string>
     <string name="checkbox_never_show_partial_select_help">Ne plus affichier.</string>
     <string name="toast_started_select_partial">Commencement du mode "selection partielle."</string>
     
