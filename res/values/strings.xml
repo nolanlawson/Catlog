@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">CatLog</string>
+    <string name="donate_version_name">Donate</string>
     <string name="main_edit_text_hint">Search logs</string>
     
     <string name="dialog_for_widget">For a <b>widget</b>,\ndo Home → Long\npress → Widgets</string>

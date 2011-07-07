@@ -10,11 +10,11 @@ Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog D
     <string name="dialog_please_wait">Veuillez attendre</string>
     <string name="dialog_compiling_log">Compilation de journaux en cours...</string>
     <string name="subject_log_report">Envoyer un journal</string>
-    <string name="menu_title_partial_select">Selection partielle</string>
+    <string name="menu_title_partial_select">Sélection partielle</string>
     <string name="dialog_partial_select_explanation">1. Appuyez sur le <b>premier</b> ligne.\n2. Appuyez sur le <b>dernier</b> ligne.</string>
-    <string name="toast_invalid_selection">Selection pas valable. Veuillez réessayer.</string>
+    <string name="toast_invalid_selection">Sélection pas valable. Veuillez réessayer.</string>
     <string name="checkbox_never_show_partial_select_help">Ne plus affichier.</string>
-    <string name="toast_started_select_partial">Commencement du mode "selection partielle."</string>
+    <string name="toast_started_select_partial">Commencement du mode "sélection partielle."</string>
     
     <string name="log_cleared">Journaux nettoyés. Pour affichier de nouveau, appuyez et maintenez.</string>
     <string name="filter_choice">Rechercher par...</string>
@@ -45,7 +45,7 @@ Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog D
     <string name="copy_to_clipboard">Copier au presse-papiers</string>
 	<string name="copied_to_clipboard">Copié au presse-papiers.</string>
 	<string name="enter_filename">Entrez le nom du fichier à sauvegarder à la carte SD：</string>
-	<string name="select_logs_to_delete">Selectionnez les journaux à supprimer.</string>
+	<string name="select_logs_to_delete">Sélectionnez les journaux à supprimer.</string>
 	<string name="files_deleted">%d fichiers supprimés.</string>
 	<string name="delete_all">Tout supprimer</string>
 	<string name="are_you_sure">Etes-vous sûre? %d fichiers seront supprimés.</string>

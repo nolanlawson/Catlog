@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -62,19 +63,32 @@ public class AboutActivity extends Activity implements OnClickListener {
 	
 	public void initializeWebView() {
 		
-		String text;
-		if (PackageHelper.isCatlogDonateInstalled(getApplicationContext())) {
-			text = loadTextFile(R.raw.about_body_preamble_donate);
-		} else {
-			text = loadTextFile(R.raw.about_body_preamble_free);
+		String text = loadTextFile(R.raw.about_body);
+		String version = getVersionName();
+		boolean isDonateVersion = PackageHelper.isCatlogDonateInstalled(getApplicationContext());
+		if (isDonateVersion) {
+			version += " (" + getString(R.string.donate_version_name) + ")";
 		}
+		String message = loadTextFile(isDonateVersion ? R.raw.donate_message : R.raw.free_message);
+		String changelog = loadTextFile(R.raw.changelog);
 		
-		text += loadTextFile(R.raw.about_body);
+		text = String.format(text, version, message, changelog);
 		
 		aboutWebView.loadData(text, "text/html", "utf-8");
 	}
 
 
+
+
+	private String getVersionName() {
+		try {
+			return getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+		} catch (NameNotFoundException e) {
+			// should never happen
+			log.d(e, "unexpected exception");
+			return "";
+		}
+	}
 
 
 	private String loadTextFile(int resourceId) {
