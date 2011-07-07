@@ -40,16 +40,16 @@ Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog D
 	<string name="delete_saved_log">Supprimer journal/journaux</string>
 	<string name="manage_saved_logs">Journaux sauvegardés</string>
 	<string name="expand_all">Etendre</string>
-	<string name="collapse_all">Effondrer</string>
+	<string name="collapse_all">Effondre</string>
 	
-	<string name="no_saved_logs">セーブしたログはありません。</string>
-	<string name="recording_in_progress">もう記録中。</string>
-	<string name="enter_good_filename">妥当なファイル名を入力してくだなさい。</string>
-	<string name="log_saved">セーブ完了。</string>
-    <string name="copy_to_clipboard">クリップボードにこピーする</string>
-	<string name="copied_to_clipboard">クリップボードコピー完了。</string>
-	<string name="enter_filename">SDカードにセーブするファイル名：</string>
-	<string name="select_logs_to_delete">どのログを削除します？</string>
+	<string name="no_saved_logs">Aucun journal sauvegardé.</string>
+	<string name="recording_in_progress">Enregistrement en cours.</string>
+	<string name="enter_good_filename">Veuillez entrer un nom de fichier valable.</string>
+	<string name="log_saved">Journal sauvegardé.</string>
+    <string name="copy_to_clipboard">Copier au presse-papiers</string>
+	<string name="copied_to_clipboard">Copié au presse-papiers.</string>
+	<string name="enter_filename">Entrez le nom du ficher à sauvegarder à la carte SD：</string>
+	<string name="select_logs_to_delete">Selectionnez les journaux à supprimer</string>
 	<string name="files_deleted">ファイルは%dつ削除されました。</string>
 	<string name="delete_all">全部削除する</string>
 	<string name="are_you_sure">大丈夫でしょうか? ファイルは%dつ削除されます。</string>
