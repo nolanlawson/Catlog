@@ -2,10 +2,9 @@
 <resources>
     <string name="main_edit_text_hint">Rechercher</string>
     
-    <string name="plural_suffix">s</string>
     
-    <string name="dialog_for_widget">Pour un <b>widget</b>:\nEcran d\'acceuil→\nAppuyez et maintenez→\nChoisissez «Widgets»</string>
-    <string name="dialog_for_donate">Pour autres <b>arrangements\nde couleurs</b>:\n\
+    <string name="dialog_for_widget">Pour un <b>widget</b>: Ecran d\'acceuil→ Appuyez et maintenez→ Choisissez «Widgets»</string>
+    <string name="dialog_for_donate">Pour d\'autres <b>arrangements de couleurs</b>: \
 Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog Donate</a></string>
     
     <string name="dialog_please_wait">Veuillez attendre</string>
@@ -20,12 +19,12 @@ Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog D
     <string name="log_cleared">Journaux nettoyés. Pour afficher de nouveau, appuyez et maintenez.</string>
     <string name="filter_choice">Rechercher par...</string>
     <string name="filter_choice_tag">Tag</string>
-    <string name="filter_choice_pid">ID de processus</string>
+    <string name="filter_choice_pid">Pid</string>
     
     <string name="send_as_text">Envoyer comme texte</string>
     <string name="send_as_attachment">Envoyer comme pièce jointe.</string>
     <string name="save">Sauvegarder</string>
-	<string name="save_as">Sauvegarder comme...</string>
+	<string name="save_as">Sauvegarder...</string>
 	<string name="save_log">Sauvegarder un journal</string>
 	<string name="log_level">Niveau</string>
 	<string name="open">Ouvrir</string>
@@ -34,13 +33,11 @@ Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog D
 	<string name="start_recording_log">Enregistrer</string>
 	<string name="clear">Nettoyer</string>
 	<string name="send_log">Envoyer</string>
-	<string name="main_log">Lire le journal "%s"</string>
-	<string name="stop_recording_log">Arrêter</string>
-	<string name="about">Infos</string>
-	<string name="delete_saved_log">Supprimer journal/journaux</string>
+	<string name="main_log">Lire le journal \"%s\"</string>
+	<string name="stop_recording_log">Terminer</string>
+	<string name="about">A propos de CatLog</string>
+	<string name="delete_saved_log">Supprimer des journaux</string>
 	<string name="manage_saved_logs">Journaux sauvegardés</string>
-	<string name="expand_all">Etendre</string>
-	<string name="collapse_all">Effondre</string>
 	
 	<string name="no_saved_logs">Aucun journal sauvegardé.</string>
 	<string name="recording_in_progress">Enregistrement en cours.</string>
@@ -49,71 +46,71 @@ Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog D
     <string name="copy_to_clipboard">Copier au presse-papiers</string>
 	<string name="copied_to_clipboard">Copié au presse-papiers.</string>
 	<string name="enter_filename">Entrez le nom du ficher à sauvegarder à la carte SD：</string>
-	<string name="select_logs_to_delete">Selectionnez les journaux à supprimer</string>
-	<string name="files_deleted">ファイルは%dつ削除されました。</string>
-	<string name="delete_all">全部削除する</string>
-	<string name="are_you_sure">大丈夫でしょうか? ファイルは%dつ削除されます。</string>
-	<string name="log_recording_started">ログ記録開始。</string>
-	<string name="unable_to_save_log">ログのセーブはだめでした。妥当なファイル名入力しましたか？</string>
-	<string name="sd_card_not_found">SDカードが見つかりませんでした。</string>
+	<string name="select_logs_to_delete">Selectionnez les journaux à supprimer.</string>
+	<string name="files_deleted">%d fichers supprimés.</string>
+	<string name="delete_all">Tout supprimer</string>
+	<string name="are_you_sure">Etes-vous sûre? %d fichers seront supprimés.</string>
+	<string name="log_recording_started">Enregistrement en cours.</string>
+	<string name="unable_to_save_log">Impossible de sauvegarder le journal. Avez-vous entré un nom de ficher valable?</string>
+	<string name="sd_card_not_found">Aucune carte SD trouvée.</string>
 	
-	<string name="notification_title">ログ記録中</string>
-	<string name="notification_ticker">ログ記録開始</string>
-	<string name="notification_subtext">ここでタップしたら、記録を阻止できます。</string>
+	<string name="notification_title">Enregistrement en cours</string>
+	<string name="notification_ticker">Enregistrement en cours</string>
+	<string name="notification_subtext">Pour terminer l\'enregistrement, appuyez ici.</string>
 	
-	<string name="about_catlog">CatLogについて</string>
+	<string name="about_catlog">A propos de CatLog</string>
 
-	<string name="pref_text_size_title">文字サイズ</string>
+	<string name="pref_text_size_title">Taille de police</string>
 	
-	<string name="pref_expanded_by_default_title">デフォルトで広い</string>
-	<string name="pref_expanded_by_default_summary">デフォルトでログを広くする。</string>
+	<string name="pref_expanded_by_default_title">Etendre par defaut</string>
+	<string name="pref_expanded_by_default_summary">Par default, les lignes de journal seront étendus.</string>
 
-	<string name="pref_show_timestamp_title">プロセスIDと時間</string>
-	<string name="pref_show_timestamp_summary">広いときには、おまけの情報を見せる。</string>
+	<string name="pref_show_timestamp_title">Pid et estampille</string>
+	<string name="pref_show_timestamp_summary">Quand étendu, afficher le pid et l\'estampille.</string>
 
-	<string name="pref_log_line_period_title">書く期間</string>
-	<string name="pref_log_line_period_summary" formatted="false">記録中は、SDカードに格%dつのライン%s（デフォルト：%s）。</string>
-	<string name="pref_log_line_period_error">１から１０００までのインテジャを入力してください。</string>
+	<string name="pref_log_line_period_title">Période d\'écriture</string>
+	<string name="pref_log_line_period_summary" formatted="false">Pendant l\'enregistrement, écrire à la carte SD touts les %d lignes. (Default: %s)</string>
+	<string name="pref_log_line_period_error">Veuillez entrer un nombre entier entre 1 et 1000.</string>
 
-	<string name="pref_buffer_title">ログのバッファ</string>
-	<string name="pref_buffer_choice_main">メーン</string>
-	<string name="pref_buffer_choice_events">エベント</string>
-	<string name="pref_buffer_choice_radio">ラジオ</string>
+	<string name="pref_buffer_title">Buffer de journal</string>
+	<string name="pref_buffer_choice_main">Main</string>
+	<string name="pref_buffer_choice_events">Events</string>
+	<string name="pref_buffer_choice_radio">Radio</string>
 
-	<string name="pref_theme_title">配色</string>
-	<string name="pref_theme_summary_free">「Donate」のバージョン必要。</string>
-	<string name="pref_theme_choice_dark_name">暗い</string>
-	<string name="pref_theme_choice_light_name">明るい</string>
-	<string name="pref_theme_choice_android_name">アンドロイド</string>
+	<string name="pref_theme_title">Arrangement de couleurs</string>
+	<string name="pref_theme_summary_free">La version "Donate" est requise.</string>
+	<string name="pref_theme_choice_dark_name">Foncé</string>
+	<string name="pref_theme_choice_light_name">Clair</string>
+	<string name="pref_theme_choice_android_name">Android</string>
 	<string name="pref_theme_choice_verizon_name">Big Red</string>
 	<string name="pref_theme_choice_att_name">Ma Bell</string>
 	<string name="pref_theme_choice_sprint_name">Big Yellow</string>
 	<string name="pref_theme_choice_tmobile_name">T-Mo</string>
 
-	<string name="pref_cat_appearance">表示</string>
-	<string name="pref_cat_configuration">コンフィグレーション</string>
+	<string name="pref_cat_appearance">Affichage</string>
+	<string name="pref_cat_configuration">Configuration</string>
 
-	<string name="text_size_xsmall_name">超短い(8pt)</string>
-	<string name="text_size_small_name">短い(10pt)</string>
-    <string name="text_size_medium_name">並(12pt)</string>
-    <string name="text_size_large_name">高い(14pt)</string>
-    <string name="text_size_xlarge_name">超高い(16pt)</string>
+	<string name="text_size_xsmall_name">Très petit (8pt)</string>
+	<string name="text_size_small_name">Petit (10pt)</string>
+    <string name="text_size_medium_name">Moyen (12pt)</string>
+    <string name="text_size_large_name">Grand (14pt)</string>
+    <string name="text_size_xlarge_name">Très grand (16pt)</string>
     
-    <string name="settings">設定</string>
+    <string name="settings">Paramètres</string>
     
-    <string name="save_file_first">ログをセーブするのは必要です。</string>
+    <string name="save_file_first">Il faut sauvegarder le journal à l\'avance.</string>
     
-    <string name="as_attachment">添付</string>
-    <string name="as_text">テクスト</string>
-    <string name="choose_format">形</string>
+    <string name="as_attachment">Pièce jointe</string>
+    <string name="as_text">Texte</string>
+    <string name="choose_format">Format</string>
     
-    <string name="widget_recording_in_progress">記録中...</string>
-    <string name="first_run_pref_title">紹介リセット</string>
-    <string name="first_run_pref_summary">また紹介のメッセージを見せる。</string>
-    <string name="first_run_title">CatLogにようこそう！</string>
+    <string name="widget_recording_in_progress">Enregistrement en cours...</string>
+    <string name="first_run_pref_title">Réinitialiser l\'introduction</string>
+    <string name="first_run_pref_summary">Afficher de nouveau le message d\'introduction</string>
+    <string name="first_run_title">Bienvenue à CatLog!</string>
     <string name="first_run_message">\  
-<b>1.2.1のアップデート！</b>\n\
-&#160;&#160;&#160;&#160;- 日本語とフランス語のローカリゼーション。\
+<b>Nouveau en v1.2.1！</b>\n\
+&#160;&#160;&#160;&#160;- Localisations en français et japonais.\
 </string> 
     
 </resources>

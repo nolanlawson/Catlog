@@ -2,10 +2,8 @@
 <resources>
     <string name="main_edit_text_hint">検索</string>
     
-    <string name="plural_suffix"></string>
-    
-    <string name="dialog_for_widget"><b>ウィジェット</b>:\nホーム 画面→\n押し続けて→\n「ウィジェット」\nにタッチ</string>
-    <string name="dialog_for_donate"><b>ほかの配色</b>:\n<a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog Donate</a>を\nダウンロード</string>
+    <string name="dialog_for_widget"><u>ウィジェット</u>:\nホーム 画面→\n押し続けて→\n「ウィジェット」を\nタッチ</string>
+    <string name="dialog_for_donate"><u>ほかの配色</u>:\n<a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog Donate</a>を\nダウンロード</string>
     
     <string name="dialog_please_wait">少々お待ちください</string>
     <string name="dialog_compiling_log">ログを集めています。。。</string>
@@ -32,14 +30,12 @@
 	<string name="record_log">ログを記録</string>
 	<string name="start_recording_log">記録</string>
 	<string name="clear">空ける</string>
-	<string name="send_log">送る</string>
+	<string name="send_log">送信</string>
 	<string name="main_log">%sのログを読む</string>
 	<string name="stop_recording_log">記録を阻止</string>
 	<string name="about">情報</string>
 	<string name="delete_saved_log">セーブしたログを削除</string>
 	<string name="manage_saved_logs">セーブしたログ</string>
-	<string name="expand_all">広くする</string>
-	<string name="collapse_all">狭くする</string>
 	
 	<string name="no_saved_logs">セーブしたログはありません。</string>
 	<string name="recording_in_progress">もう記録中。</string>
@@ -71,7 +67,7 @@
 	<string name="pref_show_timestamp_summary">広いときには、おまけの情報を見せる。</string>
 
 	<string name="pref_log_line_period_title">書く期間</string>
-	<string name="pref_log_line_period_summary" formatted="false">記録中は、SDカードに格%dつのライン%s（デフォルト：%s）。</string>
+	<string name="pref_log_line_period_summary" formatted="false">記録中は、SDカードに格%dつのライン（デフォルト：%s）。</string>
 	<string name="pref_log_line_period_error">１から１０００までのインテジャを入力してください。</string>
 
 	<string name="pref_buffer_title">ログのバッファ</string>
@@ -109,7 +105,7 @@
     <string name="widget_recording_in_progress">記録中...</string>
     <string name="first_run_pref_title">紹介リセット</string>
     <string name="first_run_pref_summary">また紹介のメッセージを見せる。</string>
-    <string name="first_run_title">CatLogにようこそう！</string>
+    <string name="first_run_title">CatLogにようこそ！</string>
     <string name="first_run_message">\  
 <b>1.2.1のアップデート！</b>\n\
 &#160;&#160;&#160;&#160;- 日本語とフランス語のローカリゼーション。\

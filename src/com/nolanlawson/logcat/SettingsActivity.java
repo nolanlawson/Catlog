@@ -41,7 +41,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 		int logLinePrefValue = PreferenceHelper.getLogLinePeriodPreference(this);
 		
 		logLinePeriodPreference.setSummary(String.format(getString(R.string.pref_log_line_period_summary).toString(),
-				logLinePrefValue, getPluralSuffix(logLinePrefValue), getString(R.string.pref_log_line_period_default)));
+				logLinePrefValue, getString(R.string.pref_log_line_period_default)));
 		
 		logLinePeriodPreference.setOnPreferenceChangeListener(this);
 		
@@ -82,7 +82,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 				if (value >= MIN_LOG_LINE_PERIOD && value <= MAX_LOG_LINE_PERIOD) {
 					PreferenceHelper.setLogLinePeriodPreference(this, value);
 					logLinePeriodPreference.setSummary(String.format(getString(R.string.pref_log_line_period_summary).toString(),
-							value, getPluralSuffix(value), getString(R.string.pref_log_line_period_default)));
+							value, getString(R.string.pref_log_line_period_default)));
 					return true;
 				}
 				
@@ -117,10 +117,6 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 			return true;
 		}
 		
-	}
-
-	private Object getPluralSuffix(int value) {
-		return value == 1 ? "" : getString(R.string.plural_suffix);
 	}
 
 	@Override

@@ -3,8 +3,6 @@
     <string name="app_name">CatLog</string>
     <string name="main_edit_text_hint">Search logs</string>
     
-    <string name="plural_suffix">s</string>
-    
     <string name="dialog_for_widget">For a <b>widget</b>,\ndo Home → Long\npress → Widgets</string>
     <string name="dialog_for_donate">For <b>bonus color\nschemes</b>, download\n<a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog Donate</a></string>
     
@@ -40,8 +38,6 @@
 	<string name="about">About</string>
 	<string name="delete_saved_log">Delete Saved Logs</string>
 	<string name="manage_saved_logs">Manage Saved Logs</string>
-	<string name="expand_all">Expand All</string>
-	<string name="collapse_all">Collapse All</string>
 	
 	<string name="log_level_verbose">Verbose</string>
 	<string name="log_level_debug">Debug</string>
@@ -85,7 +81,7 @@
 	<string name="pref_log_line_period">log_line_period</string>
 	<string name="pref_log_line_period_default">200</string>
 	<string name="pref_log_line_period_title">Write Period</string>
-	<string name="pref_log_line_period_summary" formatted="false">When recording, write to SD card every %d line%s (default: %s).</string>
+	<string name="pref_log_line_period_summary" formatted="false">When recording, write to SD card every %d line(s) (default: %s).</string>
 	<string name="pref_log_line_period_error">Please enter an integer between 1 and 1000.</string>
 
 	<string name="pref_buffer">buffer</string>
@@ -146,7 +142,7 @@
     <string name="first_run_title">Welcome to CatLog!</string>
     <string name="first_run_message">\  
 <b>New in 1.2.1!</b>\n\
-&#160;&#160;&#160;&#160;- Japanese and French localization added.\
+&#160;&#160;&#160;&#160;- Japanese and French localizations added.\
 </string> 
     
 </resources>
