@@ -1,45 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="main_edit_text_hint">検索</string>
+    <string name="main_edit_text_hint">Rechercher</string>
     
-    <string name="plural_suffix"></string>
+    <string name="plural_suffix">s</string>
     
-    <string name="dialog_for_widget"><b>ウィジェット</b>:\nホーム 画面→\n押し続けて→\n「ウィジェット」\nにタッチ</string>
-    <string name="dialog_for_donate"><b>ほかの配色</b>:\n<a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog Donate</a>を\nダウンロード</string>
+    <string name="dialog_for_widget">Pour un <b>widget</b>:\nEcran d\'acceuil→\nAppuyez et maintenez→\nChoisissez «Widgets»</string>
+    <string name="dialog_for_donate">Pour autres <b>arrangements\nde couleurs</b>:\n\
+Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog Donate</a></string>
     
-    <string name="dialog_please_wait">少々お待ちください</string>
-    <string name="dialog_compiling_log">ログを集めています。。。</string>
-    <string name="subject_log_report">ログ</string>
-    <string name="menu_title_partial_select">部分セレクション</string>
-    <string name="dialog_partial_select_explanation">1. <b>最初</b>のラインをセレクト。\n2. <b>最後</b>のラインをセレクト。</string>
-    <string name="toast_invalid_selection">無効なセレクション。もう一度やってみなさい。</string>
-    <string name="checkbox_never_show_partial_select_help">もう見せない。</string>
-    <string name="toast_started_select_partial">部分セレクションモード開始</string>
+    <string name="dialog_please_wait">Veuillez attendre</string>
+    <string name="dialog_compiling_log">Compilation de journaux</string>
+    <string name="subject_log_report">Signaler un journal</string>
+    <string name="menu_title_partial_select">Selection partielle</string>
+    <string name="dialog_partial_select_explanation">1. Appuyez sur le <b>premier</b> ligne.\n2. Appuyez sur le <b>dernier</b> ligne.</string>
+    <string name="toast_invalid_selection">Selection pas valable. Veuillez essayer de nouveau.</string>
+    <string name="checkbox_never_show_partial_select_help">Ne jamais remonter.</string>
+    <string name="toast_started_select_partial">Commencement du mode "selection partielle."</string>
     
-    <string name="log_cleared">ログ空けた。押し続けたら、リロードできます。</string>
-    <string name="filter_choice">検索</string>
-    <string name="filter_choice_tag">タグ</string>
-    <string name="filter_choice_pid">プロセスID</string>
+    <string name="log_cleared">Journaux nettoyés. Pour afficher de nouveau, appuyez et maintenez.</string>
+    <string name="filter_choice">Rechercher par...</string>
+    <string name="filter_choice_tag">Tag</string>
+    <string name="filter_choice_pid">ID de processus</string>
     
-    <string name="send_as_text">テクストとして送る</string>
-    <string name="send_as_attachment">添付として送る</string>
-    <string name="save">セーブ</string>
-	<string name="save_as">セーブ...</string>
-	<string name="save_log">ログをセーブ</string>
-	<string name="log_level">レベル</string>
-	<string name="open">開ける</string>
-	<string name="open_log">ログを開ける</string>
-	<string name="record_log">ログを記録</string>
-	<string name="start_recording_log">記録</string>
-	<string name="clear">空ける</string>
-	<string name="send_log">送る</string>
-	<string name="main_log">%sのログを読む</string>
-	<string name="stop_recording_log">記録を阻止</string>
-	<string name="about">情報</string>
-	<string name="delete_saved_log">セーブしたログを削除</string>
-	<string name="manage_saved_logs">セーブしたログ</string>
-	<string name="expand_all">広くする</string>
-	<string name="collapse_all">狭くする</string>
+    <string name="send_as_text">Envoyer comme texte</string>
+    <string name="send_as_attachment">Envoyer comme pièce jointe.</string>
+    <string name="save">Sauvegarder</string>
+	<string name="save_as">Sauvegarder comme...</string>
+	<string name="save_log">Sauvegarder un journal</string>
+	<string name="log_level">Niveau</string>
+	<string name="open">Ouvrir</string>
+	<string name="open_log">Ouvrir un journal</string>
+	<string name="record_log">Enregistrer un journal</string>
+	<string name="start_recording_log">Enregistrer</string>
+	<string name="clear">Nettoyer</string>
+	<string name="send_log">Envoyer</string>
+	<string name="main_log">Lire le journal "%s"</string>
+	<string name="stop_recording_log">Arrêter</string>
+	<string name="about">Infos</string>
+	<string name="delete_saved_log">Supprimer journal/journaux</string>
+	<string name="manage_saved_logs">Journaux sauvegardés</string>
+	<string name="expand_all">Etendre</string>
+	<string name="collapse_all">Effondrer</string>
 	
 	<string name="no_saved_logs">セーブしたログはありません。</string>
 	<string name="recording_in_progress">もう記録中。</string>
