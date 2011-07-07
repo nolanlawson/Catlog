@@ -39,7 +39,7 @@
 				android:layout_height="wrap_content" android:id="@+id/widget_subtext"
 				android:textSize="12sp"
 				android:textColor="@android:color/white"
-				android:gravity="center_vertical" android:text="@string/record_log"
+				android:gravity="center_vertical" android:text="@string/widget_start_recording"
 				android:singleLine="true" android:ellipsize="marquee" />
 
 		</LinearLayout>

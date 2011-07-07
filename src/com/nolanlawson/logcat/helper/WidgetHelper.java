@@ -73,7 +73,7 @@ public class WidgetHelper {
 		
 		// change the subtext depending on whether the service is running or not
 		CharSequence subtext = context.getText(
-				serviceRunning ? R.string.widget_recording_in_progress : R.string.record_log);
+				serviceRunning ? R.string.widget_recording_in_progress : R.string.widget_start_recording);
 		updateViews.setTextViewText(R.id.widget_subtext, subtext);
 		
 		// if service not running, don't show the "recording" icon

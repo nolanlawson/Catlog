@@ -8,12 +8,12 @@
 Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog Donate</a></string>
     
     <string name="dialog_please_wait">Veuillez attendre</string>
-    <string name="dialog_compiling_log">Compilation de journaux</string>
-    <string name="subject_log_report">Signaler un journal</string>
+    <string name="dialog_compiling_log">Compilation de journaux en cours...</string>
+    <string name="subject_log_report">Envoyer un journal</string>
     <string name="menu_title_partial_select">Selection partielle</string>
     <string name="dialog_partial_select_explanation">1. Appuyez sur le <b>premier</b> ligne.\n2. Appuyez sur le <b>dernier</b> ligne.</string>
     <string name="toast_invalid_selection">Selection pas valable. Veuillez essayer de nouveau.</string>
-    <string name="checkbox_never_show_partial_select_help">Ne jamais remonter.</string>
+    <string name="checkbox_never_show_partial_select_help">Ne plus afficher.</string>
     <string name="toast_started_select_partial">Commencement du mode "selection partielle."</string>
     
     <string name="log_cleared">Journaux nettoyés. Pour afficher de nouveau, appuyez et maintenez.</string>
@@ -31,12 +31,11 @@ Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog D
 	<string name="open_log">Ouvrir un journal</string>
 	<string name="record_log">Enregistrer un journal</string>
 	<string name="start_recording_log">Enregistrer</string>
-	<string name="clear">Nettoyer</string>
 	<string name="send_log">Envoyer</string>
-	<string name="main_log">Lire le journal \"%s\"</string>
-	<string name="stop_recording_log">Terminer</string>
+	<string name="main_log">Lire le journal «%s»</string>
+	<string name="stop_recording_log">Arrêter</string>
 	<string name="about">A propos de CatLog</string>
-	<string name="delete_saved_log">Supprimer des journaux</string>
+	<string name="delete_saved_log">Suppression de journaux</string>
 	<string name="manage_saved_logs">Journaux sauvegardés</string>
 	
 	<string name="no_saved_logs">Aucun journal sauvegardé.</string>
@@ -56,14 +55,14 @@ Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog D
 	
 	<string name="notification_title">Enregistrement en cours</string>
 	<string name="notification_ticker">Enregistrement en cours</string>
-	<string name="notification_subtext">Pour terminer l\'enregistrement, appuyez ici.</string>
+	<string name="notification_subtext">Pour arrêter, appuyez ici.</string>
 	
 	<string name="about_catlog">A propos de CatLog</string>
 
 	<string name="pref_text_size_title">Taille de police</string>
 	
-	<string name="pref_expanded_by_default_title">Etendre par defaut</string>
-	<string name="pref_expanded_by_default_summary">Par default, les lignes de journal seront étendus.</string>
+	<string name="pref_expanded_by_default_title">Etendre par défaut</string>
+	<string name="pref_expanded_by_default_summary">Par défault, les lignes de journal seront étendus.</string>
 
 	<string name="pref_show_timestamp_title">Pid et estampille</string>
 	<string name="pref_show_timestamp_summary">Quand étendu, afficher le pid et l\'estampille.</string>
@@ -78,7 +77,7 @@ Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog D
 	<string name="pref_buffer_choice_radio">Radio</string>
 
 	<string name="pref_theme_title">Arrangement de couleurs</string>
-	<string name="pref_theme_summary_free">La version "Donate" est requise.</string>
+	<string name="pref_theme_summary_free">La version «Donate» est requise.</string>
 	<string name="pref_theme_choice_dark_name">Foncé</string>
 	<string name="pref_theme_choice_light_name">Clair</string>
 	<string name="pref_theme_choice_android_name">Android</string>
@@ -98,13 +97,14 @@ Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog D
     
     <string name="settings">Paramètres</string>
     
-    <string name="save_file_first">Il faut sauvegarder le journal à l\'avance.</string>
+    <string name="save_file_first">Il faut sauvegarder le journal d\'avance.</string>
     
     <string name="as_attachment">Pièce jointe</string>
     <string name="as_text">Texte</string>
     <string name="choose_format">Format</string>
     
-    <string name="widget_recording_in_progress">Enregistrement en cours...</string>
+    <string name="widget_start_recording">Enregistrer</string>
+    <string name="widget_recording_in_progress">En cours...</string>
     <string name="first_run_pref_title">Réinitialiser l\'introduction</string>
     <string name="first_run_pref_summary">Afficher de nouveau le message d\'introduction</string>
     <string name="first_run_title">Bienvenue à CatLog!</string>

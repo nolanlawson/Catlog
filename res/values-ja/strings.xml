@@ -29,7 +29,6 @@
 	<string name="open_log">ログを開ける</string>
 	<string name="record_log">ログを記録</string>
 	<string name="start_recording_log">記録</string>
-	<string name="clear">空ける</string>
 	<string name="send_log">送信</string>
 	<string name="main_log">%sのログを読む</string>
 	<string name="stop_recording_log">記録を阻止</string>
@@ -102,6 +101,7 @@
     <string name="as_text">テクスト</string>
     <string name="choose_format">形</string>
     
+    <string name="widget_start_recording">ログを記録</string>
     <string name="widget_recording_in_progress">記録中...</string>
     <string name="first_run_pref_title">紹介リセット</string>
     <string name="first_run_pref_summary">また紹介のメッセージを見せる。</string>

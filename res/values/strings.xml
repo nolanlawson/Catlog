@@ -31,7 +31,6 @@
 	<string name="open_log">Open Log</string>
 	<string name="record_log">Record Log</string>
 	<string name="start_recording_log">Record</string>
-	<string name="clear">Clear All</string>
 	<string name="send_log">Send</string>
 	<string name="main_log">Play %s Log</string>
 	<string name="stop_recording_log">Stop Recording</string>
@@ -135,6 +134,7 @@
     <string name="as_text">As Text</string>
     <string name="choose_format">Choose Format</string>
     
+    <string name="widget_start_recording">Record Log</string>
     <string name="widget_recording_in_progress">Recording...</string>
     <string name="first_run">first_run8</string>
     <string name="first_run_pref_title">Reset Introduction</string>
