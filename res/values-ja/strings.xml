@@ -4,8 +4,8 @@
     
     <string name="plural_suffix"></string>
     
-    <string name="dialog_for_widget"><b>ウィジェット</b>:\nホーム 画面→\n押し続けて→\n「ウィジェット」\nに押します</string>
-    <string name="dialog_for_donate"><b>ほかの配色</b>:\n<a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog Donate</a>を\nダウンロードします</string>
+    <string name="dialog_for_widget"><b>ウィジェット</b>:\nホーム 画面→\n押し続けて→\n「ウィジェット」\nにタッチ</string>
+    <string name="dialog_for_donate"><b>ほかの配色</b>:\n<a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog Donate</a>を\nダウンロード</string>
     
     <string name="edit_text_hint">検索</string>
     
@@ -19,16 +19,16 @@
     <string name="pref_hide_partial_select_help">pref_hide_partial_select_help</string>
     <string name="toast_started_select_partial">部分セレクションモード開始</string>
     
-    <string name="log_cleared">ログ空けた。リロードのために、ロンゴ・プレス.</string>
+    <string name="log_cleared">ログ空けた。押し続けたら、リロードできます。</string>
     <string name="filter_choice">検索</string>
     <string name="filter_choice_tag">タグ</string>
     <string name="filter_choice_pid">プロセスID</string>
     
-    <string name="send_as_text">テクストとして</string>
-    <string name="send_as_attachment">添付として</string>
+    <string name="send_as_text">テクストとして送る</string>
+    <string name="send_as_attachment">添付として送る</string>
     <string name="save">セーブ</string>
 	<string name="save_as">セーブ...</string>
-	<string name="save_log">ログをセーブする</string>
+	<string name="save_log">ログをセーブ</string>
 	<string name="log_level">レベル</string>
 	<string name="open">開ける</string>
 	<string name="open_log">ログを開ける</string>
@@ -41,13 +41,13 @@
 	<string name="about">情報</string>
 	<string name="delete_saved_log">セーブしたログを削除</string>
 	<string name="manage_saved_logs">セーブしたログ</string>
-	<string name="expand_all">大きくする</string>
-	<string name="collapse_all">小さくする</string>
+	<string name="expand_all">広くする</string>
+	<string name="collapse_all">広くする</string>
 	
 	<string name="no_saved_logs">セーブしたログはありません。</string>
 	<string name="recording_in_progress">もう記録中。</string>
 	<string name="enter_good_filename">妥当なファイル名を入力してくだなさい。</string>
-	<string name="log_saved">セーブ完了.</string>
+	<string name="log_saved">セーブ完了。</string>
     <string name="copy_to_clipboard">クリップボードにこピーする</string>
 	<string name="copied_to_clipboard">クリップボードコピー完了。</string>
 	<string name="enter_filename">SDカードにセーブするファイル名：</string>
@@ -57,11 +57,11 @@
 	<string name="are_you_sure">大丈夫でしょうか? ファイルは%dつ削除されます。</string>
 	<string name="log_recording_started">ログ記録開始。</string>
 	<string name="unable_to_save_log">ログのセーブはだめでした。妥当なファイル名入力しましたか？</string>
-	<string name="sd_card_not_found">SDカード見つからなかったです。</string>
+	<string name="sd_card_not_found">SDカードが見つかりませんでした。</string>
 	
 	<string name="notification_title">ログ記録中</string>
 	<string name="notification_ticker">ログ記録開始</string>
-	<string name="notification_subtext">ここで押したら、記録を阻止できます。</string>
+	<string name="notification_subtext">ここでタップしたら、記録を阻止できます。</string>
 	
 	<string name="about_catlog">CatLogについて</string>
 
@@ -74,7 +74,7 @@
 	<string name="pref_show_timestamp_summary">広いときには、おまけの情報を見せる。</string>
 
 	<string name="pref_log_line_period_title">書く期間</string>
-	<string name="pref_log_line_period_summary" formatted="false">記録中は、SDカードに 格 %dつのライン%s　（デフォルト：%s）。</string>
+	<string name="pref_log_line_period_summary" formatted="false">記録中は、SDカードに格%dつのライン%s（デフォルト：%s）。</string>
 	<string name="pref_log_line_period_error">１から１０００までのインテジャを入力してください。</string>
 
 	<string name="pref_buffer_title">ログのバッファ</string>
@@ -92,14 +92,14 @@
 	<string name="pref_theme_choice_sprint_name">Big Yellow</string>
 	<string name="pref_theme_choice_tmobile_name">T-Mo</string>
 
-	<string name="pref_cat_appearance">ルックス</string>
+	<string name="pref_cat_appearance">表示</string>
 	<string name="pref_cat_configuration">コンフィグレーション</string>
 
-	<string name="text_size_xsmall_name">超短い (8pt)</string>
-	<string name="text_size_small_name">短い (10pt)</string>
-    <string name="text_size_medium_name">波 (12pt)</string>
-    <string name="text_size_large_name">高い (14pt)</string>
-    <string name="text_size_xlarge_name">超高い (16pt)</string>
+	<string name="text_size_xsmall_name">超短い(8pt)</string>
+	<string name="text_size_small_name">短い(10pt)</string>
+    <string name="text_size_medium_name">並(12pt)</string>
+    <string name="text_size_large_name">高い(14pt)</string>
+    <string name="text_size_xlarge_name">超高い(16pt)</string>
     
     <string name="settings">設定</string>
     
