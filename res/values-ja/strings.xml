@@ -9,10 +9,10 @@
     <string name="dialog_compiling_log">ログを集めています。。。</string>
     <string name="subject_log_report">ログ</string>
     <string name="menu_title_partial_select">部分セレクション</string>
-    <string name="dialog_partial_select_explanation">1. <b>最初</b>のラインをセレクト。\n2. <b>最後</b>のラインをセレクト。</string>
-    <string name="toast_invalid_selection">無効なセレクション。もう一度やってみなさい。</string>
+    <string name="dialog_partial_select_explanation">1. 最初のラインをセレクト。\n2. 最後のラインをセレクト。</string>
+    <string name="toast_invalid_selection">無効なセレクション。もう一度やってみてください。</string>
     <string name="checkbox_never_show_partial_select_help">もう見せない。</string>
-    <string name="toast_started_select_partial">部分セレクションモード開始</string>
+    <string name="toast_started_select_partial">部分セレクションモード開始。</string>
     
     <string name="log_cleared">ログ空けた。押し続けたら、リロードできます。</string>
     <string name="filter_choice">検索</string>
@@ -44,9 +44,9 @@
     <string name="copy_to_clipboard">クリップボードにこピーする</string>
 	<string name="copied_to_clipboard">クリップボードコピー完了。</string>
 	<string name="enter_filename">SDカードにセーブするファイル名：</string>
-	<string name="select_logs_to_delete">どのログを削除します？</string>
+	<string name="select_logs_to_delete">削除したいと思うログを選んでください。</string>
 	<string name="files_deleted">ファイルは%dつ削除されました。</string>
-	<string name="delete_all">全部削除する</string>
+	<string name="delete_all">全部削除</string>
 	<string name="are_you_sure">大丈夫でしょうか? ファイルは%dつ削除されます。</string>
 	<string name="log_recording_started">ログ記録開始。</string>
 	<string name="unable_to_save_log">ログのセーブはだめでした。妥当なファイル名入力しましたか？</string>
