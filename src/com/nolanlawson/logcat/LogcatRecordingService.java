@@ -1,13 +1,14 @@
 package com.nolanlawson.logcat;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import android.app.IntentService;
@@ -23,11 +24,13 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
+import com.nolanlawson.logcat.data.LogLine;
 import com.nolanlawson.logcat.helper.LogcatHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
 import com.nolanlawson.logcat.helper.WidgetHelper;
+import com.nolanlawson.logcat.reader.LogcatReader;
 import com.nolanlawson.logcat.util.UtilLogger;
 
 /**
@@ -37,8 +40,6 @@ import com.nolanlawson.logcat.util.UtilLogger;
  * 
  */
 public class LogcatRecordingService extends IntentService {
-
-	private static final String LOGCAT_DATE_FORMAT = "MM-dd HH:mm:ss.SSS";
 
 	private static final Class<?>[] mStartForegroundSignature = new Class[] {
 	    int.class, Notification.class};
@@ -50,7 +51,7 @@ public class LogcatRecordingService extends IntentService {
 	
 	private static UtilLogger log = new UtilLogger(LogcatRecordingService.class);
 
-	private Process logcatProcess;
+	private LogcatReader reader;
 
 	private NotificationManager mNM;
 	private Method mStartForeground;
@@ -226,13 +227,12 @@ public class LogcatRecordingService extends IntentService {
 		
 		SaveLogHelper.deleteLogIfExists(filename);
 		
+		String bufferPref = PreferenceHelper.getBuffer(getApplicationContext());
+		
 		// get the current last log line, so we can know what needs to be skipped
-		String currentLastLine = getCurentLastLogLine();
+		String currentLastLine = getLastLogLine(bufferPref);
 		
 		log.d("current last line is %s", currentLastLine);
-		
-		logcatProcess = null;
-		BufferedReader reader = null;
 		
 		StringBuilder stringBuilder = new StringBuilder();
 		
@@ -240,19 +240,14 @@ public class LogcatRecordingService extends IntentService {
 		
 		try {
 			
-			String bufferPref = PreferenceHelper.getBuffer(getApplicationContext());
-			
 			// use the "time" log so we can see what time the logs were logged at
-			logcatProcess = LogcatHelper.getLogcatProcess(bufferPref, getApplicationContext());
-
-			reader = new BufferedReader(new InputStreamReader(logcatProcess
-					.getInputStream()), 8192);
+			reader = LogcatHelper.getLogcatReader(bufferPref, getApplicationContext());
 		
 			Date currentDate = new Date(System.currentTimeMillis());
 			
 			log.d("currentDate is %s", currentDate);
 			
-			SimpleDateFormat dateFormat = new SimpleDateFormat(LOGCAT_DATE_FORMAT);
+			SimpleDateFormat dateFormat = new SimpleDateFormat(LogLine.LOGCAT_DATE_FORMAT);
 			
 			String line;
 			int lineCount = 0;
@@ -325,15 +320,7 @@ public class LogcatRecordingService extends IntentService {
 
 		finally {
 			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					log.e(e, "unexpected exception");
-				}
-			}
-			
-			if (logcatProcess != null) {
-				logcatProcess.destroy();
+				reader.closeQuietly();
 			}
 
 			log.d("CatlogService ended");
@@ -346,43 +333,26 @@ public class LogcatRecordingService extends IntentService {
 			} else {
 				makeToast(R.string.unable_to_save_log, Toast.LENGTH_LONG);
 			}
-			
-
 		}
 	}
 
-	private String getCurentLastLogLine() {
-		Process dumpLogcatProcess = null;
-		BufferedReader reader = null;
-		String result = null;
-		try {
-			dumpLogcatProcess = Runtime.getRuntime().exec(
-					new String[] { "logcat", "-d", "-v", "time" }); // -d just dumps the whole thing
 
-			reader = new BufferedReader(new InputStreamReader(dumpLogcatProcess
-					.getInputStream()), 8192);
-			
-			String line;
-			while ((line = reader.readLine()) != null) {
-				result = line;
-			}
-		} catch (IOException e) {
-			log.e(e, "unexpected exception");
-		} finally {		
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					log.e(e, "unexpected exception");
-				}
-			}
-			
-			if (dumpLogcatProcess != null) {
-				dumpLogcatProcess.destroy();
-			}
+	private String getLastLogLine(String bufferPref) {
+		if (!bufferPref.equals(getApplicationContext().getString(R.string.pref_buffer_choice_all_value))) {
+			return LogcatHelper.getLastLogLine(bufferPref, getApplicationContext());
 		}
 		
-		return result;
+		// have to compare all three
+		
+		List<String> lastLines = new ArrayList<String>();
+		for (String buffer : LogcatHelper.BUFFERS) {
+			lastLines.add(LogcatHelper.getLastLogLine(buffer, getApplicationContext()));
+		}
+		
+		Collections.sort(lastLines, LogcatHelper.getLogComparator());
+		
+		// get the latest possible one
+		return lastLines.get(lastLines.size() - 1);
 	}
 
 
@@ -415,8 +385,8 @@ public class LogcatRecordingService extends IntentService {
 	
 	private void killProcess() {
 		// kill the logcat process
-		if (logcatProcess != null) {
-			logcatProcess.destroy();
+		if (reader != null) {
+			reader.closeQuietly();
 		}
 	}
 	

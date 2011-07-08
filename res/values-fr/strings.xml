@@ -75,6 +75,7 @@ Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog D
 	<string name="pref_buffer_choice_main">Main</string>
 	<string name="pref_buffer_choice_events">Events</string>
 	<string name="pref_buffer_choice_radio">Radio</string>
+	<string name="pref_buffer_choice_all">Tout</string>
 
 	<string name="pref_theme_title">Arrangement de couleurs</string>
 	<string name="pref_theme_summary_free">La version «Donate» est requise.</string>

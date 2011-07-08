@@ -89,9 +89,11 @@
 	<string name="pref_buffer_choice_main">Main</string>
 	<string name="pref_buffer_choice_events">Events</string>
 	<string name="pref_buffer_choice_radio">Radio</string>
+	<string name="pref_buffer_choice_all">All Combined</string>
 	<string name="pref_buffer_choice_main_value">main</string>
 	<string name="pref_buffer_choice_events_value">events</string>
 	<string name="pref_buffer_choice_radio_value">radio</string>
+	<string name="pref_buffer_choice_all_value">all_combined</string>
 
 	<string name="pref_theme">theme</string>
 	<string name="pref_theme_title">Color Scheme</string>

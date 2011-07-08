@@ -12,6 +12,8 @@ import com.nolanlawson.logcat.util.UtilLogger;
 
 public class LogLine {
 
+	public static final String LOGCAT_DATE_FORMAT = "MM-dd HH:mm:ss.SSS";
+	
 	private static Pattern logPattern = Pattern.compile("(\\w)/([^(]+)\\(\\s*(\\d+)\\): (.*)");
 	
 	private static UtilLogger log = new UtilLogger(LogLine.class);

@@ -4,12 +4,14 @@
 		<item>@string/pref_buffer_choice_main</item>
 		<item>@string/pref_buffer_choice_events</item>
 		<item>@string/pref_buffer_choice_radio</item>
+		<item>@string/pref_buffer_choice_all</item>
 	</string-array>	
 	
 	<string-array name="pref_buffer_choice_values">
 		<item>@string/pref_buffer_choice_main_value</item>
 		<item>@string/pref_buffer_choice_events_value</item>
 		<item>@string/pref_buffer_choice_radio_value</item>
+		<item>@string/pref_buffer_choice_all_value</item>
 	</string-array>	
 
 	<string-array name="pref_theme_choices_values">

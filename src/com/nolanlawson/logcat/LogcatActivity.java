@@ -1,9 +1,6 @@
 package com.nolanlawson.logcat;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -63,6 +60,7 @@ import com.nolanlawson.logcat.helper.LogcatHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
+import com.nolanlawson.logcat.reader.LogcatReader;
 import com.nolanlawson.logcat.util.LogLineAdapterUtil;
 import com.nolanlawson.logcat.util.UtilLogger;
 
@@ -965,42 +963,27 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		protected Void doInBackground(Void... params) {
 			log.d("doInBackground()");
 			
-			Process logcatProcess = null;
-			BufferedReader reader = null;
+			LogcatReader reader = null;
 			
 			try {
 
 				String bufferPref = PreferenceHelper.getBuffer(LogcatActivity.this);
-				
-				logcatProcess = LogcatHelper.getLogcatProcess(bufferPref, LogcatActivity.this);
+				reader = LogcatHelper.getLogcatReader(bufferPref, LogcatActivity.this);
 
-				reader = new BufferedReader(new InputStreamReader(logcatProcess
-						.getInputStream()), 8192);
-				
 				String line;
 				
 				while ((line = reader.readLine()) != null && !isCancelled()) {
 					publishProgress(line);
-					
 				} 
 			} catch (Exception e) {
 				log.e(e, "unexpected error");
 				
 			} finally {
 				if (reader != null) {
-					try {
-						reader.close();
-					} catch (IOException e) {
-						log.e(e, "unexpected exception");
-					}
-				}
-				
-				if (logcatProcess != null) {
-					logcatProcess.destroy();
+					reader.closeQuietly();
 				}
 
 				log.d("AsyncTask has died");
-
 			}
 			
 			return null;
