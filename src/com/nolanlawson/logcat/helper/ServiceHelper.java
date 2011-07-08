@@ -9,6 +9,7 @@ import android.content.Intent;
 
 import com.nolanlawson.logcat.CrazyLoggerService;
 import com.nolanlawson.logcat.LogcatRecordingService;
+import com.nolanlawson.logcat.reader.LogcatReaderLoader;
 import com.nolanlawson.logcat.util.UtilLogger;
 
 public class ServiceHelper {
@@ -53,6 +54,11 @@ public class ServiceHelper {
 			
 			Intent intent = new Intent(context, LogcatRecordingService.class);
 			intent.putExtra("filename", filename);
+			
+			// load "lastLine" in the background
+			LogcatReaderLoader loader = LogcatReaderLoader.create(context);
+			intent.putExtra("loader", loader);
+			
 			context.startService(intent);
 		}
 	}

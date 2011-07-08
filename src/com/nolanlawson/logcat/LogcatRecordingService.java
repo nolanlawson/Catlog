@@ -18,12 +18,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
-import com.nolanlawson.logcat.helper.LogcatHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
 import com.nolanlawson.logcat.helper.WidgetHelper;
 import com.nolanlawson.logcat.reader.LogcatReader;
+import com.nolanlawson.logcat.reader.LogcatReaderLoader;
 import com.nolanlawson.logcat.util.UtilLogger;
 
 /**
@@ -86,8 +86,6 @@ public class LogcatRecordingService extends IntentService {
 		
 		handler = new Handler(Looper.getMainLooper());
 		
-		initializeReader();
-		
 		try {
 			mStartForeground = getClass().getMethod("startForeground",
 					mStartForegroundSignature);
@@ -102,12 +100,11 @@ public class LogcatRecordingService extends IntentService {
 	}
 
 
-	private void initializeReader() {
+	private void initializeReader(Intent intent) {
 		try {
-			String bufferPref = PreferenceHelper.getBuffer(getApplicationContext());
-			
 			// use the "time" log so we can see what time the logs were logged at
-			reader = LogcatHelper.getLogcatReader(true, bufferPref, getApplicationContext());
+			LogcatReaderLoader loader = intent.getParcelableExtra("loader");
+			reader = loader.loadReader();
 		
 			while (!reader.readyToRecord()) {
 				reader.readLine();
@@ -241,6 +238,8 @@ public class LogcatRecordingService extends IntentService {
 		String filename = intent.getStringExtra("filename");
 		
 		SaveLogHelper.deleteLogIfExists(filename);
+		
+		initializeReader(intent);
 		
 		StringBuilder stringBuilder = new StringBuilder();
 		

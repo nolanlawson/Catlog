@@ -56,11 +56,11 @@ import com.nolanlawson.logcat.data.LogLine;
 import com.nolanlawson.logcat.data.LogLineAdapter;
 import com.nolanlawson.logcat.data.TagAndProcessIdAdapter;
 import com.nolanlawson.logcat.helper.DialogHelper;
-import com.nolanlawson.logcat.helper.LogcatHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
 import com.nolanlawson.logcat.reader.LogcatReader;
+import com.nolanlawson.logcat.reader.LogcatReaderLoader;
 import com.nolanlawson.logcat.util.LogLineAdapterUtil;
 import com.nolanlawson.logcat.util.UtilLogger;
 
@@ -966,9 +966,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			LogcatReader reader = null;
 			
 			try {
-
-				String bufferPref = PreferenceHelper.getBuffer(LogcatActivity.this);
-				reader = LogcatHelper.getLogcatReader(false, bufferPref, LogcatActivity.this);
+						
+				LogcatReaderLoader loader = LogcatReaderLoader.create(LogcatActivity.this);
+				reader = loader.loadReader();
 
 				String line;
 				

@@ -3,10 +3,9 @@ package com.nolanlawson.logcat.reader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-
-import android.content.Context;
 
 import com.nolanlawson.logcat.helper.LogcatHelper;
 import com.nolanlawson.logcat.util.UtilLogger;
@@ -25,11 +24,12 @@ public class MultipleLogcatReader extends AbsLogcatReader {
 	private List<ReaderThread> readerThreads = new LinkedList<ReaderThread>();
 	private BlockingQueue<String> queue = new ArrayBlockingQueue<String>(1);
 	
-	public MultipleLogcatReader(boolean recordingMode, Context context) throws IOException {
+	public MultipleLogcatReader(boolean recordingMode, Map<String,String> lastLines) throws IOException {
 		super(recordingMode);
 		// read from all three buffers at once
 		for (String logBuffer : LogcatHelper.BUFFERS) {
-			ReaderThread readerThread = new ReaderThread(logBuffer, context);
+			String lastLine = lastLines.get(logBuffer);
+			ReaderThread readerThread = new ReaderThread(logBuffer, lastLine);
 			readerThread.start();
 			readerThreads.add(readerThread);
 		}
@@ -88,8 +88,8 @@ public class MultipleLogcatReader extends AbsLogcatReader {
 		
 		private boolean killed;
 		
-		public ReaderThread(String logBuffer, Context context) throws IOException {
-			this.reader = new SingleLogcatReader(recordingMode, logBuffer, context);
+		public ReaderThread(String logBuffer, String lastLine) throws IOException {
+			this.reader = new SingleLogcatReader(recordingMode, logBuffer, lastLine);
 		}
 
 		@Override

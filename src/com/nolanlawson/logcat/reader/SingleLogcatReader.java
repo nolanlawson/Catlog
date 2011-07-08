@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import android.content.Context;
-
 import com.nolanlawson.logcat.helper.LogcatHelper;
 import com.nolanlawson.logcat.util.UtilLogger;
 
@@ -18,23 +16,20 @@ public class SingleLogcatReader extends AbsLogcatReader {
 	private String logBuffer;
 	private String lastLine;
 	
-	public SingleLogcatReader(boolean recordingMode, String logBuffer, Context context) throws IOException {
+	public SingleLogcatReader(boolean recordingMode, String logBuffer, String lastLine) throws IOException {
 		super(recordingMode);
 		this.logBuffer = logBuffer;
-		init(context);
+		this.lastLine = lastLine;
+		init();
 	}
 	
 	
-	private void init(Context context) throws IOException {
+	private void init() throws IOException {
 		// use the "time" log so we can see what time the logs were logged at
-		logcatProcess = LogcatHelper.getLogcatProcess(logBuffer, context);
+		logcatProcess = LogcatHelper.getLogcatProcess(logBuffer);
 		
 		bufferedReader = new BufferedReader(new InputStreamReader(logcatProcess
 				.getInputStream()), 8192);
-		
-		if (recordingMode) {
-			lastLine = LogcatHelper.getLastLogLine(logBuffer, context);
-		}
 	}
 	
 

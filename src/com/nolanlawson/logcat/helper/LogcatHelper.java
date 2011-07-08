@@ -8,56 +8,47 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-import android.content.Context;
 import android.text.TextUtils;
 
-import com.nolanlawson.logcat.R;
-import com.nolanlawson.logcat.reader.LogcatReader;
-import com.nolanlawson.logcat.reader.MultipleLogcatReader;
-import com.nolanlawson.logcat.reader.SingleLogcatReader;
 import com.nolanlawson.logcat.util.UtilLogger;
 
 public class LogcatHelper {
 
 	private static final UtilLogger log = new UtilLogger(LogcatHelper.class);
 	
-	public static final String[] BUFFERS = {"main", "events", "radio"};
+	public static final String BUFFER_MAIN = "main";
+	public static final String BUFFER_EVENTS = "events";
+	public static final String BUFFER_RADIO = "radio";
 	
-	public static Process getLogcatProcess(String buffer, Context context) throws IOException {
+	public static final List<String> BUFFERS = Arrays.asList(BUFFER_MAIN, BUFFER_EVENTS, BUFFER_RADIO);
+	
+	public static Process getLogcatProcess(String buffer) throws IOException {
 		
 		
-		List<String> args = getLogcatArgs(buffer, context);
+		List<String> args = getLogcatArgs(buffer);
 		return Runtime.getRuntime().exec(args.toArray(new String[args.size()]));
 	}
 	
-	private static List<String> getLogcatArgs(String buffer, Context context) {
+	private static List<String> getLogcatArgs(String buffer) {
 		List<String> args = new ArrayList<String>(Arrays.asList("logcat", "-v", "time"));
 		
 		// for some reason, adding -b main excludes log output from AndroidRuntime runtime exceptions,
 		// whereas just leaving it blank keeps them in.  So do not specify the buffer if it is "main"
-		if (!buffer.equals(context.getString(R.string.pref_buffer_choice_main_value))) {
+		if (!buffer.equals(BUFFER_MAIN)) {
 			args.add("-b");
 			args.add(buffer);
 		}
 		
 		return args;
 	}
-
-	public static LogcatReader getLogcatReader(boolean recordingMode, String bufferPref, Context context) throws IOException {
-		if (bufferPref.equals(context.getString(R.string.pref_buffer_choice_all_value))) {
-			return new MultipleLogcatReader(recordingMode, context);
-		} else {
-			return new SingleLogcatReader(recordingMode, bufferPref, context);
-		}
-	}
 	
-	public static String getLastLogLine(String buffer, Context context) {
+	public static String getLastLogLine(String buffer) {
 		Process dumpLogcatProcess = null;
 		BufferedReader reader = null;
 		String result = null;
 		try {
 			
-			List<String> args = getLogcatArgs(buffer, context);
+			List<String> args = getLogcatArgs(buffer);
 			args.add("-d"); // -d just dumps the whole thing
 			
 			dumpLogcatProcess = Runtime.getRuntime().exec(args.toArray(new String[args.size()]));
