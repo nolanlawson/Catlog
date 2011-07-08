@@ -5,10 +5,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import android.app.ProgressDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.os.AsyncTask;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -22,6 +24,41 @@ import android.widget.TextView.OnEditorActionListener;
 import com.nolanlawson.logcat.R;
 
 public class DialogHelper {
+	
+	public static void startRecordingWithProgressDialog(final String filename, final Runnable onPostExecute, final Context context) {
+		
+		final ProgressDialog progressDialog = new ProgressDialog(context);
+		progressDialog.setTitle(context.getString(R.string.dialog_please_wait));
+		progressDialog.setMessage(context.getString(R.string.dialog_initializing_recorder));
+		
+		new AsyncTask<Void, Void, Void>(){
+
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+				progressDialog.show();
+			}
+
+			@Override
+			protected Void doInBackground(Void... params) {
+				ServiceHelper.startBackgroundServiceIfNotAlreadyRunning(context, filename);
+				return null;
+			}
+			
+			@Override
+			protected void onPostExecute(Void result) {
+				super.onPostExecute(result);
+				if (progressDialog != null && progressDialog.isShowing()) {
+					progressDialog.dismiss();
+				}
+				if (onPostExecute != null) {
+					onPostExecute.run();
+				}
+			}
+		}
+		.execute((Void)null);
+		
+	}
 	
 	public static boolean isInvalidFilename(CharSequence filename) {
 		
@@ -45,7 +82,7 @@ public class DialogHelper {
 		OnClickListener onClickListener = new OnClickListener() {
 			
 			@Override
-			public void onClick(DialogInterface dialog, int which) {
+			public void onClick(final DialogInterface dialog, int which) {
 				
 				if (DialogHelper.isInvalidFilename(editText.getText())) {
 					
@@ -53,11 +90,16 @@ public class DialogHelper {
 				} else {
 					
 					String filename = editText.getText().toString();
-					ServiceHelper.startBackgroundServiceIfNotAlreadyRunning(context, filename);
+					Runnable runnable = new Runnable(){
+
+						@Override
+						public void run() {
+							dialog.dismiss();
+						}
+					};
+					startRecordingWithProgressDialog(filename, runnable, context);
 					
 				}
-				
-				dialog.dismiss();
 				
 			}
 		};		

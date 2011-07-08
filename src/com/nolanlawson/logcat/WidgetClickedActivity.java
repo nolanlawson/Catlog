@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.nolanlawson.logcat.helper.DialogHelper;
-import com.nolanlawson.logcat.helper.ServiceHelper;
 import com.nolanlawson.logcat.helper.WidgetHelper;
 
 public class WidgetClickedActivity extends Activity {
@@ -47,10 +46,17 @@ public class WidgetClickedActivity extends Activity {
 				} else {
 					
 					String filename = editText.getText().toString();
-					ServiceHelper.startBackgroundServiceIfNotAlreadyRunning(WidgetClickedActivity.this, filename);
 					
+					Runnable runnable = new Runnable(){
+
+						@Override
+						public void run() {
+							finish();
+						}
+					};
+					
+					DialogHelper.startRecordingWithProgressDialog(filename, runnable, WidgetClickedActivity.this);
 				}
-				finish();
 			}
 		});
 		cancelButton.setOnClickListener(new View.OnClickListener() {

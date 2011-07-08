@@ -9,6 +9,7 @@
     
     <string name="dialog_please_wait">Please wait</string>
     <string name="dialog_compiling_log">Compiling log...</string>
+    <string name="dialog_initializing_recorder">Loading recorder...</string>
     <string name="subject_log_report">Log report</string>
     <string name="menu_title_partial_select">Select Partial</string>
     <string name="dialog_partial_select_explanation">1. Select the <b>first</b> line.\n2. Then select the <b>last</b> line.</string>

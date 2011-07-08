@@ -9,6 +9,7 @@ Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog D
     
     <string name="dialog_please_wait">Veuillez attendre</string>
     <string name="dialog_compiling_log">Compilation de journaux en cours...</string>
+    <string name="dialog_initializing_recorder">Chargement d\'enregistreur en cours...</string>
     <string name="subject_log_report">Envoyer un journal</string>
     <string name="menu_title_partial_select">Sélection partielle</string>
     <string name="dialog_partial_select_explanation">1. Appuyez sur le <b>premier</b> ligne.\n2. Appuyez sur le <b>dernier</b> ligne.</string>
