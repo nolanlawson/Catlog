@@ -16,7 +16,7 @@ import com.nolanlawson.logcat.util.UtilLogger;
  * @author nolan
  *
  */
-public class MultipleLogcatReader implements LogcatReader {
+public class MultipleLogcatReader extends AbsLogcatReader {
 	
 	private static UtilLogger log = new UtilLogger(MultipleLogcatReader.class);
 
@@ -25,8 +25,8 @@ public class MultipleLogcatReader implements LogcatReader {
 	private List<ReaderThread> readerThreads = new LinkedList<ReaderThread>();
 	private BlockingQueue<String> queue = new ArrayBlockingQueue<String>(1);
 	
-	public MultipleLogcatReader(Context context) throws IOException {
-		
+	public MultipleLogcatReader(boolean recordingMode, Context context) throws IOException {
+		super(recordingMode);
 		// read from all three buffers at once
 		for (String logBuffer : LogcatHelper.BUFFERS) {
 			ReaderThread readerThread = new ReaderThread(logBuffer, context);
@@ -48,6 +48,18 @@ public class MultipleLogcatReader implements LogcatReader {
 		return null;
 	}
 	
+
+	@Override
+	public boolean readyToRecord() {
+		for (ReaderThread thread : readerThreads) {
+			if (!thread.reader.readyToRecord()) {
+				return false;
+			}
+		}
+		return true;
+	}	
+	
+	@Override
 	public void killQuietly() {
 		for (ReaderThread thread : readerThreads) {
 			thread.killed = true;
@@ -77,7 +89,7 @@ public class MultipleLogcatReader implements LogcatReader {
 		private boolean killed;
 		
 		public ReaderThread(String logBuffer, Context context) throws IOException {
-			this.reader = new SingleLogcatReader(logBuffer, context);
+			this.reader = new SingleLogcatReader(recordingMode, logBuffer, context);
 		}
 
 		@Override
@@ -95,5 +107,5 @@ public class MultipleLogcatReader implements LogcatReader {
 			}
 			log.d("thread died");
 		}
-	}	
+	}
 }

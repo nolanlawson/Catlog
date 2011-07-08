@@ -43,11 +43,11 @@ public class LogcatHelper {
 		return args;
 	}
 
-	public static LogcatReader getLogcatReader(String bufferPref, Context context) throws IOException {
+	public static LogcatReader getLogcatReader(boolean recordingMode, String bufferPref, Context context) throws IOException {
 		if (bufferPref.equals(context.getString(R.string.pref_buffer_choice_all_value))) {
-			return new MultipleLogcatReader(context);
+			return new MultipleLogcatReader(recordingMode, context);
 		} else {
-			return new SingleLogcatReader(bufferPref, context);
+			return new SingleLogcatReader(recordingMode, bufferPref, context);
 		}
 	}
 	

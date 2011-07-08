@@ -15,4 +15,7 @@ public interface LogcatReader {
 	 * Kill the reader and close all resources without throwing any exceptions.
 	 */
 	public void killQuietly();
+	
+	public boolean readyToRecord();
+	
 }

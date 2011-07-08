@@ -3,12 +3,6 @@ package com.nolanlawson.logcat;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 import java.util.Random;
 
 import android.app.IntentService;
@@ -24,7 +18,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
-import com.nolanlawson.logcat.data.LogLine;
 import com.nolanlawson.logcat.helper.LogcatHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
@@ -93,6 +86,8 @@ public class LogcatRecordingService extends IntentService {
 		
 		handler = new Handler(Looper.getMainLooper());
 		
+		initializeReader();
+		
 		try {
 			mStartForeground = getClass().getMethod("startForeground",
 					mStartForegroundSignature);
@@ -104,6 +99,26 @@ public class LogcatRecordingService extends IntentService {
 			mStartForeground = mStopForeground = null;
 		}
 
+	}
+
+
+	private void initializeReader() {
+		try {
+			String bufferPref = PreferenceHelper.getBuffer(getApplicationContext());
+			
+			// use the "time" log so we can see what time the logs were logged at
+			reader = LogcatHelper.getLogcatReader(true, bufferPref, getApplicationContext());
+		
+			while (!reader.readyToRecord()) {
+				reader.readLine();
+				// keep skipping lines until we find one that is past the last log line, i.e.
+				// it's ready to record
+			}			
+			makeToast(R.string.log_recording_started, Toast.LENGTH_SHORT);
+		} catch (IOException e) {
+			log.d(e, "");
+		}
+		
 	}
 
 
@@ -227,81 +242,14 @@ public class LogcatRecordingService extends IntentService {
 		
 		SaveLogHelper.deleteLogIfExists(filename);
 		
-		String bufferPref = PreferenceHelper.getBuffer(getApplicationContext());
-		
-		// get the current last log line, so we can know what needs to be skipped
-		String currentLastLine = getLastLogLine(bufferPref);
-		
-		log.d("current last line is %s", currentLastLine);
-		
 		StringBuilder stringBuilder = new StringBuilder();
 		
-		makeToast(R.string.log_recording_started, Toast.LENGTH_SHORT);
-		
 		try {
-			
-			// use the "time" log so we can see what time the logs were logged at
-			reader = LogcatHelper.getLogcatReader(bufferPref, getApplicationContext());
-		
-			Date currentDate = new Date(System.currentTimeMillis());
-			
-			log.d("currentDate is %s", currentDate);
-			
-			SimpleDateFormat dateFormat = new SimpleDateFormat(LogLine.LOGCAT_DATE_FORMAT);
 			
 			String line;
 			int lineCount = 0;
 			int logLinePeriod = PreferenceHelper.getLogLinePeriodPreference(getApplicationContext());
-			
-			// keep skipping lines until we find one that is past the current last log line,
-			// or the timestamp is later than the current time.
-			// Unfortunately, Android logcat does not print out the year, so if
-			// somebody starts this process at January 1st at 12:01am he/she
-			// will get the entire log buffer.  But that's not the end of the world.
-			
-			boolean pastCurrentTime = false;
-			
 			while ((line = reader.readLine()) != null) {
-				
-				if (!pastCurrentTime) {
-					
-					if (line.equals(currentLastLine)) {
-						log.d("line matches dumped last line '%s', done skipping", currentLastLine);
-						pastCurrentTime = true;
-						continue;
-					}
-					
-					if (line.length() < 19) { // length of date format at beginning of log line
-						log.d("log line too short: %s", line);
-						continue;
-					}
-					
-					// first get the timestamp
-					Date lineDate = null;
-					
-					try {
-						lineDate = dateFormat.parse(line);
-					} catch (ParseException e) {
-						log.d(e, "datetime parseException");
-						continue;
-					}
-					
-					if (lineDate == null) {
-						log.d("lineDate is null");
-						continue;
-					}
-					
-					// assume that the date in logcat comes from this year
-					lineDate.setYear(currentDate.getYear());
-					
-					if (lineDate.before(currentDate)) {
-						log.d("lineDate %s is before currentDate %s; skipping", lineDate, currentDate);
-						continue;
-					} else {
-						log.d("lineDate %s is after currentDate %s; done skipping", lineDate, currentDate);
-						pastCurrentTime = true;
-					}
-				}
 				
 				stringBuilder.append(line).append("\n");
 				
@@ -311,7 +259,6 @@ public class LogcatRecordingService extends IntentService {
 					stringBuilder.delete(0, stringBuilder.length()); // clear
 				}
 			}
-
 		}
 
 		catch (IOException e) {
@@ -335,26 +282,6 @@ public class LogcatRecordingService extends IntentService {
 			}
 		}
 	}
-
-
-	private String getLastLogLine(String bufferPref) {
-		if (!bufferPref.equals(getApplicationContext().getString(R.string.pref_buffer_choice_all_value))) {
-			return LogcatHelper.getLastLogLine(bufferPref, getApplicationContext());
-		}
-		
-		// have to compare all three
-		
-		List<String> lastLines = new ArrayList<String>();
-		for (String buffer : LogcatHelper.BUFFERS) {
-			lastLines.add(LogcatHelper.getLastLogLine(buffer, getApplicationContext()));
-		}
-		
-		Collections.sort(lastLines, LogcatHelper.getLogComparator());
-		
-		// get the latest possible one
-		return lastLines.get(lastLines.size() - 1);
-	}
-
 
 	private void startLogcatActivityToViewSavedFile(String filename) {
 		

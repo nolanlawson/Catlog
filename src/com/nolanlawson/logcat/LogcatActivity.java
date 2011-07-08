@@ -968,7 +968,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			try {
 
 				String bufferPref = PreferenceHelper.getBuffer(LogcatActivity.this);
-				reader = LogcatHelper.getLogcatReader(bufferPref, LogcatActivity.this);
+				reader = LogcatHelper.getLogcatReader(false, bufferPref, LogcatActivity.this);
 
 				String line;
 				
