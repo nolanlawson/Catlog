@@ -31,7 +31,8 @@
 	<string name="record_log">ログを記録</string>
 	<string name="start_recording_log">記録</string>
 	<string name="send_log">送信</string>
-	<string name="main_log">%sのログを読む</string>
+	<string name="play_x_log">%sのログを読む</string>
+	<string name="play_all_logs">全部を読む</string>	
 	<string name="stop_recording_log">記録を阻止</string>
 	<string name="about">情報</string>
 	<string name="delete_saved_log">セーブしたログを削除</string>

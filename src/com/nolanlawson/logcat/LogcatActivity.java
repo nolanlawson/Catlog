@@ -316,9 +316,14 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		mainLogMenuItem.setEnabled(!showingMainLog);
 		mainLogMenuItem.setVisible(!showingMainLog);
-		String mainLogTitle = String.format(getString(R.string.main_log), 
-				PreferenceHelper.getBufferName(this));
-		mainLogMenuItem.setTitle(mainLogTitle);
+		String bufferPref = PreferenceHelper.getBuffer(this);
+		if (bufferPref.equals(getString(R.string.pref_buffer_choice_all_value))) {
+			mainLogMenuItem.setTitle(R.string.play_all_logs);
+		} else {
+			String mainLogTitle = String.format(getString(R.string.play_x_log), 
+					PreferenceHelper.getBufferName(this));
+			mainLogMenuItem.setTitle(mainLogTitle);			
+		}
 		
 		saveLogMenuItem.setEnabled(showingMainLog);
 		saveLogMenuItem.setVisible(showingMainLog);

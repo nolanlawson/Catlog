@@ -33,7 +33,8 @@ Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog D
 	<string name="record_log">Enregistrer un journal</string>
 	<string name="start_recording_log">Enregistrer</string>
 	<string name="send_log">Envoyer</string>
-	<string name="main_log">Lire le journal «%s»</string>
+	<string name="play_x_log">Lire le journal «%s»</string>
+	<string name="play_all_logs">Lire tout</string>	
 	<string name="stop_recording_log">Arrêter</string>
 	<string name="about">A propos de CatLog</string>
 	<string name="delete_saved_log">Suppression de journaux</string>
