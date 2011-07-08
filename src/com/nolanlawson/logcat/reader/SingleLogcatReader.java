@@ -39,15 +39,15 @@ public class SingleLogcatReader implements LogcatReader {
 
 	@Override
 	public void killQuietly() {
+		if (logcatProcess != null) {
+			logcatProcess.destroy();
+		}
 		if (bufferedReader != null) {
 			try {
 				bufferedReader.close();
 			} catch (IOException e) {
 				log.e(e, "unexpected exception");
 			}
-		}
-		if (logcatProcess != null) {
-			logcatProcess.destroy();
 		}
 	}
 
