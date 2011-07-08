@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:catlog= "http://schemas.android.com/apk/res/com.nolanlawson.logcat"
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="fill_parent" android:gravity="center_horizontal"
 	android:id="@+id/main_background">
@@ -73,9 +74,18 @@
 		</LinearLayout>
 	</LinearLayout>
 
-	<ListView android:layout_width="fill_parent"
-		android:layout_height="0px" android:layout_weight="1.0" android:id="@android:id/list"
-		android:paddingBottom="2dp" android:paddingTop="1dp"
-		android:dividerHeight="0px"/>
+    <com.nolanlawson.logcat.widget.CustomFastScrollView android:layout_width="fill_parent"
+				android:layout_height="0px" android:layout_weight="1.0" 
+				catlog:overlayWidth="175dp" catlog:overlayHeight="110dp" catlog:overlayTextSize="36dp"
+				catlog:overlayScrollThumbWidth="60dp" android:id="@+id/fast_scroll_view">
+				
+		<ListView android:layout_width="fill_parent"
+			android:layout_height="fill_parent" android:id="@android:id/list"
+			android:paddingBottom="2dp" android:paddingTop="1dp"
+			android:dividerHeight="0px"/>	
+	
+	</com.nolanlawson.logcat.widget.CustomFastScrollView>
+
+
 
 </LinearLayout>

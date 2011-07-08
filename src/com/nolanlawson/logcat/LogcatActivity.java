@@ -63,6 +63,7 @@ import com.nolanlawson.logcat.reader.LogcatReader;
 import com.nolanlawson.logcat.reader.LogcatReaderLoader;
 import com.nolanlawson.logcat.util.LogLineAdapterUtil;
 import com.nolanlawson.logcat.util.UtilLogger;
+import com.nolanlawson.logcat.widget.CustomFastScrollView;
 
 public class LogcatActivity extends ListActivity implements TextWatcher, OnScrollListener, 
 		FilterListener, OnEditorActionListener, OnItemLongClickListener, OnClickListener, OnLongClickListener {
@@ -85,6 +86,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	private Button clearButton, expandButton, collapseButton;
 	private TextView filenameTextView;
 	private View borderView1, borderView2, borderView3, borderView4;
+	private CustomFastScrollView fastScrollView;
 	
 	private int firstVisibleItem = -1;
 	private boolean autoscrollToBottom = true;
@@ -945,6 +947,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		borderView2 = findViewById(R.id.main_border_view_2);
 		borderView3 = findViewById(R.id.main_border_view_3);
 		borderView4 = findViewById(R.id.main_border_view_4);
+		
+		fastScrollView = (CustomFastScrollView) findViewById(R.id.fast_scroll_view);
+		fastScrollView.listItemsChanged();
 		
 	}
 	
