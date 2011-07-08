@@ -12,12 +12,7 @@ public interface LogcatReader {
 	public String readLine() throws IOException;
 	
 	/**
-	 * Close without throwing any exceptions.
+	 * Kill the reader and close all resources without throwing any exceptions.
 	 */
-	public void closeQuietly();
-	
-	/**
-	 * Kill the reader.
-	 */
-	public void kill();
+	public void killQuietly();
 }

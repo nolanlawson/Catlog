@@ -320,7 +320,7 @@ public class LogcatRecordingService extends IntentService {
 
 		finally {
 			if (reader != null) {
-				reader.closeQuietly();
+				reader.killQuietly();
 			}
 
 			log.d("CatlogService ended");
@@ -386,7 +386,7 @@ public class LogcatRecordingService extends IntentService {
 	private void killProcess() {
 		// kill the logcat process
 		if (reader != null) {
-			reader.closeQuietly();
+			reader.killQuietly();
 		}
 	}
 	

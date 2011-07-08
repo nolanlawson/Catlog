@@ -22,8 +22,10 @@ public class MultipleLogcatReader implements LogcatReader {
 	
 	private static UtilLogger log = new UtilLogger(MultipleLogcatReader.class);
 
-	private static final long INDIVIDUAL_WAIT_TIME = 1000;
-	private static final long LOOP_WAIT_TIME = 1000;
+	private static final long MIN_INDIVIDUAL_WAIT_TIME = 10;
+	private static final long STARTING_INDIVIDUAL_WAIT_TIME = 200;
+	private static final double INDIVIDUAL_WAIT_TIME_DECREMENT = 2;
+	private static final long LOOP_WAIT_TIME = 0;
 	
 	private boolean killed;
 	private PriorityQueue<String> recentLogsBuffer = new PriorityQueue<String>(16, LogcatHelper.getLogComparator());
@@ -50,13 +52,12 @@ public class MultipleLogcatReader implements LogcatReader {
 						recentLogsBuffer.add(line);
 					} else {
 						// this buffer made me wait, so we'll be less tolerant next time; cut the wait time by half
-						thread.waitTime = new Double(thread.waitTime / 1.1).longValue();
+						thread.decreaseWaitTime();
 					}
 				} catch (InterruptedException e) {
 					log.d(e, "unexpected exception");
 				}
 			}
-			
 			
 			if (recentLogsBuffer.isEmpty()) {
 				// keep polling for data from the readers
@@ -74,29 +75,37 @@ public class MultipleLogcatReader implements LogcatReader {
 		}
 	}
 	
-	public void closeQuietly() {
-		for (ReaderThread thread : readerThreads) {
-			thread.reader.closeQuietly();
-			thread.killed = true;
-		}
-	}
-	
-	public void kill() {
-		for (ReaderThread thread : readerThreads) {
-			thread.reader.kill();
-		}
+	public void killQuietly() {
 		killed = true;
+		new Thread(new Runnable(){
+
+			@Override
+			public void run() {
+				for (ReaderThread thread : readerThreads) {
+					thread.reader.killQuietly();
+					thread.killed = true;
+				}
+				
+			}
+		}).start();
 	}
 	
 	private class ReaderThread extends Thread {
 
 		SingleLogcatReader reader;
 		BlockingQueue<String> queue = new ArrayBlockingQueue<String>(1);
-		private long waitTime = INDIVIDUAL_WAIT_TIME;
+		private long waitTime = STARTING_INDIVIDUAL_WAIT_TIME;
 		private boolean killed;
 		
 		public ReaderThread(String logBuffer, Context context) throws IOException {
 			this.reader = new SingleLogcatReader(logBuffer, context);
+		}
+
+		public void decreaseWaitTime() {
+			waitTime = Math.max(
+					MIN_INDIVIDUAL_WAIT_TIME, 
+					new Double(waitTime / INDIVIDUAL_WAIT_TIME_DECREMENT).longValue());
+			
 		}
 
 		@Override

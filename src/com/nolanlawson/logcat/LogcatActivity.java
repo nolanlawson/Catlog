@@ -980,7 +980,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				
 			} finally {
 				if (reader != null) {
-					reader.closeQuietly();
+					reader.killQuietly();
 				}
 
 				log.d("AsyncTask has died");
