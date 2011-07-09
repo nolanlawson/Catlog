@@ -1287,6 +1287,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		// if the bottom of the list isn't visible anymore, then stop autoscrolling
 		autoscrollToBottom = (firstVisibleItem + visibleItemCount == totalItemCount);
 		
+		getListView().setFastScrollEnabled(!autoscrollToBottom);
+		
 	}
 
 	@Override
