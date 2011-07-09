@@ -51,6 +51,7 @@ public class LogcatRecordingService extends IntentService {
 	private Method mStopForeground;
 	private Object[] mStartForegroundArgs = new Object[2];
 	private Object[] mStopForegroundArgs = new Object[1];
+	private boolean killed;
 	
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		
@@ -106,12 +107,14 @@ public class LogcatRecordingService extends IntentService {
 			LogcatReaderLoader loader = intent.getParcelableExtra("loader");
 			reader = loader.loadReader();
 		
-			while (!reader.readyToRecord()) {
+			while (!reader.readyToRecord() && !killed) {
 				reader.readLine();
 				// keep skipping lines until we find one that is past the last log line, i.e.
 				// it's ready to record
 			}			
-			makeToast(R.string.log_recording_started, Toast.LENGTH_SHORT);
+			if (!killed) {
+				makeToast(R.string.log_recording_started, Toast.LENGTH_SHORT);
+			}
 		} catch (IOException e) {
 			log.d(e, "");
 		}
@@ -314,6 +317,7 @@ public class LogcatRecordingService extends IntentService {
 		if (reader != null) {
 			reader.killQuietly();
 		}
+		killed = true;
 	}
 	
 }
