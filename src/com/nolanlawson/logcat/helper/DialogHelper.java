@@ -30,6 +30,7 @@ public class DialogHelper {
 		final ProgressDialog progressDialog = new ProgressDialog(context);
 		progressDialog.setTitle(context.getString(R.string.dialog_please_wait));
 		progressDialog.setMessage(context.getString(R.string.dialog_initializing_recorder));
+		progressDialog.setCancelable(false);
 		
 		new AsyncTask<Void, Void, Void>(){
 
