@@ -69,7 +69,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	
 	private static final int REQUEST_CODE_SETTINGS = 1;
 	
-	// maximum number of log lines to display bofore truncating.
+	// maximum number of log lines to display before truncating.
 	// this avoids OutOfMemoryErrors
 	private static final int MAX_NUM_LOG_LINES = 1000;
 	// how often to check to see if we've gone over the max size
