@@ -3,14 +3,9 @@ package com.nolanlawson.logcat.reader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import android.text.TextUtils;
 
-import com.nolanlawson.logcat.data.LogLine;
 import com.nolanlawson.logcat.helper.LogcatHelper;
 import com.nolanlawson.logcat.util.UtilLogger;
 
@@ -22,29 +17,13 @@ public class SingleLogcatReader extends AbsLogcatReader {
 	private BufferedReader bufferedReader;
 	private String logBuffer;
 	private String lastLine;
-	private Date lastLineDate;
-	private DateFormat dateFormat = new SimpleDateFormat(LogLine.LOGCAT_DATE_FORMAT);
 	
 	public SingleLogcatReader(boolean recordingMode, String logBuffer, String lastLine) throws IOException {
 		super(recordingMode);
 		this.logBuffer = logBuffer;
 		this.lastLine = lastLine;
-		this.lastLineDate = toDate(lastLine);
 		init();
 	}
-	
-	
-	private Date toDate(String line) {
-		if (!TextUtils.isEmpty(line)) {
-			if (line.length() >= 19) { // length of timestamp at beginning of line
-				try {
-					return dateFormat.parse(line);
-				} catch (ParseException ignore) {}
-			}
-		}
-		return null;
-	}
-
 
 	private void init() throws IOException {
 		// use the "time" log so we can see what time the logs were logged at
@@ -89,8 +68,16 @@ public class SingleLogcatReader extends AbsLogcatReader {
 	}
 	
 	private boolean isAfterLastTime(String line) {
-		Date lineDate = toDate(line);
-		return lineDate != null && lastLineDate != null && lineDate.after(lastLineDate);
+		// doing a string comparison is sufficient to determine whether this line is chronologically
+		// after the last line, because the format they use is exactly the same and 
+		// lists larger time period before smaller ones
+		return isDatedLogLine(lastLine) && isDatedLogLine(line) && line.compareTo(lastLine) > 0;
+		
+	}
+	
+	private boolean isDatedLogLine(String line) {
+		// 18 is the size of the logcat timestamp
+		return (!TextUtils.isEmpty(line) && line.length() >= 18 && Character.isDigit(line.charAt(0)));
 	}
 
 
