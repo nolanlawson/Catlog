@@ -110,6 +110,9 @@
     <string name="first_run_pref_summary">また紹介のメッセージを見せる。</string>
     <string name="first_run_title">CatLogにようこそ！</string>
     <string name="first_run_message">\  
+<b>1.2.3のアップデート！</b>\n\
+&#160;&#160;&#160;&#160;- 新しいバッファ：「全部」。\n\
+&#160;&#160;&#160;&#160;- バグフィックス。\n\n\    
 <b>1.2.1と1.2.2のアップデート！</b>\n\
 &#160;&#160;&#160;&#160;- 日本語とフランス語のローカリゼーション。\
 </string> 
