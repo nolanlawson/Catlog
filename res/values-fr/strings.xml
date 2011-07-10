@@ -36,7 +36,7 @@ Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog D
 	<string name="play_x_log">Lire le journal «%s»</string>
 	<string name="play_all_logs">Lire tout</string>	
 	<string name="stop_recording_log">Arrêter</string>
-	<string name="about">A propos de CatLog</string>
+	<string name="about">A propos</string>
 	<string name="delete_saved_log">Suppression de journaux</string>
 	<string name="manage_saved_logs">Journaux sauvegardés</string>
 	
@@ -113,7 +113,7 @@ Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog D
     <string name="first_run_title">Bienvenue à CatLog!</string>
     <string name="first_run_message">\  
 <b>Nouveautés en 1.2.3!</b>\n\
-&#160;&#160;&#160;&#160;- Nouveau buffer: "Tout."\n\
+&#160;&#160;&#160;&#160;- Nouveau buffer: \"Tout.\"\n\
 &#160;&#160;&#160;&#160;- Corrections de bugs.\n\n\
 <b>Nouveautés en 1.2.1/1.2.2！</b>\n\
 &#160;&#160;&#160;&#160;- Localisations en français et japonais.\
