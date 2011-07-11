@@ -251,7 +251,7 @@ public class LogcatRecordingService extends IntentService {
 			String line;
 			int lineCount = 0;
 			int logLinePeriod = PreferenceHelper.getLogLinePeriodPreference(getApplicationContext());
-			while ((line = reader.readLine()) != null) {
+			while ((line = reader.readLine()) != null && !killed) {
 				
 				stringBuilder.append(line).append("\n");
 				
@@ -261,13 +261,9 @@ public class LogcatRecordingService extends IntentService {
 					stringBuilder.delete(0, stringBuilder.length()); // clear
 				}
 			}
-		}
-
-		catch (IOException e) {
+		} catch (IOException e) {
 			log.e(e, "unexpected exception");
-		}
-
-		finally {
+		} finally {
 			if (reader != null) {
 				reader.killQuietly();
 			}

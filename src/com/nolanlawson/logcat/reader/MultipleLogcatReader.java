@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+import android.os.AsyncTask;
+
 import com.nolanlawson.logcat.helper.LogcatHelper;
 import com.nolanlawson.logcat.util.UtilLogger;
 
@@ -65,21 +67,18 @@ public class MultipleLogcatReader extends AbsLogcatReader {
 			thread.killed = true;
 		}
 		
-		new Thread(new Runnable(){
+		// do in background, because otherwise we might hang
+		new AsyncTask<Void, Void, Void>(){
 
 			@Override
-			public void run() {
+			protected Void doInBackground(Void... params) {
 				for (ReaderThread thread : readerThreads) {
 					thread.reader.killQuietly();
 				}
+				queue.offer(DUMMY_NULL);
+				return null;
 			}
-		}).start();
-		
-		try {
-			queue.put(DUMMY_NULL);
-		} catch (InterruptedException e) {
-			log.d(e, "");
-		}
+		}.execute((Void)null);
 	}
 	
 	private class ReaderThread extends Thread {
