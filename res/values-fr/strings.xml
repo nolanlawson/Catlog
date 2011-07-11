@@ -50,7 +50,7 @@ Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog D
 	<string name="select_logs_to_delete">Sélectionnez les journaux à supprimer.</string>
 	<string name="files_deleted">%d fichiers supprimés.</string>
 	<string name="delete_all">Tout supprimer</string>
-	<string name="are_you_sure">Etes-vous sûre? %d fichiers seront supprimés.</string>
+	<string name="are_you_sure">%d fichiers seront supprimés.</string>
 	<string name="log_recording_started">Enregistrement en cours.</string>
 	<string name="unable_to_save_log">Impossible de sauvegarder le journal. Avez-vous entré un nom de fichier valable?</string>
 	<string name="sd_card_not_found">Aucune carte SD trouvée.</string>

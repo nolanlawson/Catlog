@@ -48,7 +48,7 @@
 	<string name="select_logs_to_delete">削除したいと思うログを選んでください。</string>
 	<string name="files_deleted">ファイルは%dつ削除されました。</string>
 	<string name="delete_all">全部削除</string>
-	<string name="are_you_sure">大丈夫でしょうか? ファイルは%dつ削除されます。</string>
+	<string name="are_you_sure">ファイルは%dつ削除されます。</string>
 	<string name="log_recording_started">ログ記録開始。</string>
 	<string name="unable_to_save_log">ログのセーブはだめでした。妥当なファイル名入力しましたか？</string>
 	<string name="sd_card_not_found">SDカードが見つかりませんでした。</string>
