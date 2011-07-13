@@ -14,6 +14,8 @@ import android.util.Log;
  */
 public class CrazyLoggerService extends IntentService {
 	
+	private static final long INTERVAL = 300;
+	
 	private boolean kill = false;
 
 	public CrazyLoggerService() {
@@ -27,7 +29,7 @@ public class CrazyLoggerService extends IntentService {
 		while (!kill) {
 		
 			try {
-				Thread.sleep(300);
+				Thread.sleep(INTERVAL);
 			} catch (InterruptedException e) {
 				Log.e("CrazyLoggerService", "error", e);
 			}
