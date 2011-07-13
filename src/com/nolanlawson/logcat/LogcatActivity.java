@@ -591,6 +591,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 						public void onClick(final DialogInterface dialog, final int which) {
 							
 							final ProgressDialog getBodyProgressDialog = new ProgressDialog(LogcatActivity.this);
+							getBodyProgressDialog.setCancelable(false);
 							
 							// do in the background to avoid jank
 							AsyncTask<Void, Void, String> getBodyTask = new AsyncTask<Void, Void, String>() {
