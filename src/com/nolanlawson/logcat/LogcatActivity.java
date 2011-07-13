@@ -82,7 +82,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	private ProgressBar darkProgressBar, lightProgressBar;
 	private LogLineAdapter adapter;
 	private LogReaderAsyncTask task;
-	private Button clearButton, expandButton, collapseButton;
+	private Button clearButton, expandButton, pauseButton;
 	private TextView filenameTextView;
 	private View borderView1, borderView2, borderView3, borderView4;
 	
@@ -210,7 +210,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 						restartMainLog();
 					} else {
 						// settings activity returned - text size might have changed, so update list
-						expandOrCollapseAll(!collapsedMode);
+						expandOrCollapseAll();
 						adapter.notifyDataSetChanged();
 					}
 				}
@@ -399,20 +399,20 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		startActivityForResult(intent, REQUEST_CODE_SETTINGS);
 	}
 
-	private void expandOrCollapseAll(boolean expanded) {
+	private void expandOrCollapseAll() {
 		
-		collapsedMode = !expanded;
+		collapsedMode = !collapsedMode;
 		
 		int oldFirstVisibleItem = firstVisibleItem;
 		
 		for (LogLine logLine : adapter.getTrueValues()) {
 			if (logLine != null) {
-				logLine.setExpanded(expanded);
+				logLine.setExpanded(!collapsedMode);
 			}
 		}
 		
-		expandButton.setVisibility(collapsedMode ? View.VISIBLE : View.GONE);
-		collapseButton.setVisibility(collapsedMode ? View.GONE : View.VISIBLE);
+		expandButton.setCompoundDrawablesWithIntrinsicBounds(
+				collapsedMode ? R.drawable.ic_menu_more_32 : R.drawable.ic_menu_less_32, 0, 0, 0);
 		
 		adapter.notifyDataSetChanged();
 		
@@ -861,8 +861,11 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		currentlyOpenLog = filename;
 		collapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(getApplicationContext());
 		clearButton.setVisibility(filename == null? View.VISIBLE : View.GONE);
-		expandButton.setVisibility(collapsedMode ? View.VISIBLE : View.GONE);
-		collapseButton.setVisibility(collapsedMode ? View.GONE : View.VISIBLE);
+		pauseButton.setVisibility(filename == null? View.VISIBLE : View.GONE);
+		pauseButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_media_pause, 0, 0, 0);
+		expandButton.setCompoundDrawablesWithIntrinsicBounds(
+				collapsedMode ? R.drawable.ic_menu_more_32 : R.drawable.ic_menu_less_32, 0, 0, 0);
+		
 		
 		resetFilter();
 		updateDisplayedFilename();
@@ -932,9 +935,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		clearButton = (Button) findViewById(R.id.main_clear_button);
 		expandButton = (Button) findViewById(R.id.main_more_button);
-		collapseButton = (Button) findViewById(R.id.main_less_button);
+		pauseButton = (Button) findViewById(R.id.main_pause_button);
 		
-		for (Button button : new Button[]{clearButton, expandButton, collapseButton}) {
+		for (Button button : new Button[]{clearButton, expandButton, pauseButton}) {
 			button.setOnClickListener(this);
 		}
 		clearButton.setOnLongClickListener(this);
@@ -959,87 +962,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		
 	}	
-	
-	private class LogReaderAsyncTask extends AsyncTask<Void,String,Void> {
-		
-		private int counter = 0;
-		
-		@Override
-		protected Void doInBackground(Void... params) {
-			log.d("doInBackground()");
-			
-			LogcatReader reader = null;
-			
-			try {
-						
-				LogcatReaderLoader loader = LogcatReaderLoader.create(LogcatActivity.this);
-				reader = loader.loadReader();
-
-				String line;
-				
-				while ((line = reader.readLine()) != null && !isCancelled()) {
-					publishProgress(line);
-				} 
-			} catch (Exception e) {
-				log.e(e, "unexpected error");
-				
-			} finally {
-				if (reader != null) {
-					reader.killQuietly();
-				}
-
-				log.d("AsyncTask has died");
-			}
-			
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
-			log.d("onPostExecute()");
-		}
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			log.d("onPreExecute()");
-			
-			resetDisplayedLog(null);
-			
-			showProgressBar();
-		}
-
-		@Override
-		protected void onProgressUpdate(String... values) {
-			super.onProgressUpdate(values);
-
-			String line = values[0];
-			
-			hideProgressBar();
-			
-			adapter.addWithFilter(LogLine.newLogLine(line, !collapsedMode), searchEditText.getText());
-			
-			// check to see if the list needs to be truncated to avoid out of memory errors
-			if (++counter % UPDATE_CHECK_INTERVAL == 0 
-					&& adapter.getTrueValues().size() > MAX_NUM_LOG_LINES) {
-				int numItemsToRemove = adapter.getTrueValues().size() - MAX_NUM_LOG_LINES;
-				adapter.removeFirst(numItemsToRemove);
-				log.d("truncating %d lines from log list to avoid out of memory errors", numItemsToRemove);
-			}
-			
-			if (autoscrollToBottom) {
-				getListView().setSelection(getListView().getCount());
-			}
-			
-		}
-
-		@Override
-		protected void onCancelled() {
-			super.onCancelled();
-			log.d("onCancelled()");
-		}
-	}
 	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -1268,15 +1190,26 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				Toast.makeText(this, R.string.log_cleared, Toast.LENGTH_LONG).show();
 				break;
 			case R.id.main_more_button:
-				expandOrCollapseAll(true);
+				expandOrCollapseAll();
 				break;
-			case R.id.main_less_button:
-				expandOrCollapseAll(false);
+			case R.id.main_pause_button:
+				pauseOrUnpause();
 				break;
 		}
 		
 	}
 	
+	private void pauseOrUnpause() {
+		if (task.isPaused()) {
+			task.unpause();
+		} else {
+			task.pause();
+		}
+		
+		pauseButton.setCompoundDrawablesWithIntrinsicBounds(
+				task.isPaused() ? R.drawable.ic_media_play : R.drawable.ic_media_pause, 0, 0, 0);
+	}
+
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {
@@ -1344,5 +1277,107 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		getListView().setDivider(new ColorDrawable(color));
 		
 	}
+	
+	private class LogReaderAsyncTask extends AsyncTask<Void,String,Void> {
+		
+		private int counter = 0;
+		private boolean paused;
+		private Object lock = new Object();
+		
+		@Override
+		protected Void doInBackground(Void... params) {
+			log.d("doInBackground()");
+			
+			LogcatReader reader = null;
+			
+			try {
+						
+				LogcatReaderLoader loader = LogcatReaderLoader.create(LogcatActivity.this);
+				reader = loader.loadReader();
 
+				String line;
+				
+				while ((line = reader.readLine()) != null && !isCancelled()) {
+					if (paused) {
+						synchronized (lock) {
+							lock.wait();
+						}
+					}
+					publishProgress(line);
+				} 
+			} catch (Exception e) {
+				log.e(e, "unexpected error");
+				
+			} finally {
+				if (reader != null) {
+					reader.killQuietly();
+				}
+
+				log.d("AsyncTask has died");
+			}
+			
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			log.d("onPostExecute()");
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			log.d("onPreExecute()");
+			
+			resetDisplayedLog(null);
+			
+			showProgressBar();
+		}
+
+		@Override
+		protected void onProgressUpdate(String... values) {
+			super.onProgressUpdate(values);
+
+			String line = values[0];
+			
+			hideProgressBar();
+			
+			adapter.addWithFilter(LogLine.newLogLine(line, !collapsedMode), searchEditText.getText());
+			
+			// check to see if the list needs to be truncated to avoid out of memory errors
+			if (++counter % UPDATE_CHECK_INTERVAL == 0 
+					&& adapter.getTrueValues().size() > MAX_NUM_LOG_LINES) {
+				int numItemsToRemove = adapter.getTrueValues().size() - MAX_NUM_LOG_LINES;
+				adapter.removeFirst(numItemsToRemove);
+				log.d("truncating %d lines from log list to avoid out of memory errors", numItemsToRemove);
+			}
+			
+			if (autoscrollToBottom) {
+				getListView().setSelection(getListView().getCount());
+			}
+			
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+			log.d("onCancelled()");
+		}
+		
+		public void pause() {
+			paused = true;
+		}
+		
+		public void unpause() {
+			paused = false;
+			synchronized (lock) {
+				lock.notify();
+			}
+		}
+		
+		public boolean isPaused() {
+			return paused;
+		}
+	}
 }

@@ -17,15 +17,15 @@
 			android:layout_width="0px"	android:layout_weight="1"
 			android:hint="@string/main_edit_text_hint" />
 		
+		<Button android:drawableLeft="@drawable/ic_media_pause"
+			android:layout_height="wrap_content" android:layout_width="wrap_content"
+			android:id="@+id/main_pause_button"/>		
+		
 		<Button android:drawableLeft="@drawable/ic_menu_more_32"
 			android:layout_height="wrap_content" android:layout_width="wrap_content"
 			android:id="@+id/main_more_button"/>
-			
-		<Button android:drawableLeft="@drawable/ic_menu_less_32_4"
-			android:layout_height="wrap_content" android:layout_width="wrap_content"
-			android:id="@+id/main_less_button" android:visible="false"/>
 									
-		<Button android:drawableLeft="@drawable/ic_menu_clear_playlist_32"
+		<Button android:drawableLeft="@drawable/ic_menu_close_clear_cancel_32"
 			android:layout_height="wrap_content" android:layout_width="wrap_content"
 			android:id="@+id/main_clear_button"/>
 
