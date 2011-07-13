@@ -1365,6 +1365,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		protected void onCancelled() {
 			super.onCancelled();
 			log.d("onCancelled()");
+			if (paused) {
+				unpause();
+			}
 		}
 		
 		public void pause() {
