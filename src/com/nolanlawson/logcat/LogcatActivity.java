@@ -1283,8 +1283,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	private class LogReaderAsyncTask extends AsyncTask<Void,String,Void> {
 		
 		private int counter = 0;
-		private boolean paused;
-		private Object lock = new Object();
+		private volatile boolean paused;
+		private final Object lock = new Object();
 		
 		@Override
 		protected Void doInBackground(Void... params) {
@@ -1302,7 +1302,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				while ((line = reader.readLine()) != null && !isCancelled()) {
 					if (paused) {
 						synchronized (lock) {
-							lock.wait();
+							if (paused) {
+								lock.wait();
+							}
 						}
 					}
 					publishProgress(line);
@@ -1371,12 +1373,14 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		}
 		
 		public void pause() {
-			paused = true;
+			synchronized (lock) {
+				paused = true;
+			}
 		}
 		
 		public void unpause() {
-			paused = false;
 			synchronized (lock) {
+				paused = false;
 				lock.notify();
 			}
 		}
