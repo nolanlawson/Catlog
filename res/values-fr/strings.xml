@@ -8,8 +8,8 @@
 Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog Donate</a></string>
     
     <string name="dialog_please_wait">Veuillez attendre</string>
-    <string name="dialog_compiling_log">Compilation de journaux en cours...</string>
-    <string name="dialog_initializing_recorder">Chargement d\'enregistreur en cours...</string>
+    <string name="dialog_compiling_log">Compilation de journaux en cours…</string>
+    <string name="dialog_initializing_recorder">Chargement d\'enregistreur en cours…</string>
     <string name="subject_log_report">Envoyer un journal</string>
     <string name="menu_title_partial_select">Sélection partielle</string>
     <string name="dialog_partial_select_explanation">1. Appuyez sur le <b>premier</b> ligne.\n2. Appuyez sur le <b>dernier</b> ligne.</string>
@@ -18,14 +18,14 @@ Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog D
     <string name="toast_started_select_partial">Commencement du mode "sélection partielle."</string>
     
     <string name="log_cleared">Journaux nettoyés. Pour afficher de nouveau, appuyez et maintenez.</string>
-    <string name="filter_choice">Rechercher par...</string>
+    <string name="filter_choice">Rechercher par…</string>
     <string name="filter_choice_tag">Tag</string>
     <string name="filter_choice_pid">Pid</string>
     
     <string name="send_as_text">Envoyer comme texte</string>
     <string name="send_as_attachment">Envoyer comme pièce jointe</string>
     <string name="save">Sauvegarder</string>
-	<string name="save_as">Sauvegarder...</string>
+	<string name="save_as">Sauvegarder…</string>
 	<string name="save_log">Sauvegarder un journal</string>
 	<string name="log_level">Niveau</string>
 	<string name="open">Ouvrir</string>
@@ -107,7 +107,7 @@ Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog D
     <string name="choose_format">Format</string>
     
     <string name="widget_start_recording">Enregistrer</string>
-    <string name="widget_recording_in_progress">En cours...</string>
+    <string name="widget_recording_in_progress">En cours…</string>
     <string name="first_run_pref_title">Réinitialiser l\'introduction</string>
     <string name="first_run_pref_summary">Afficher de nouveau le message d\'introduction</string>
     <string name="first_run_title">Bienvenue à CatLog!</string>
