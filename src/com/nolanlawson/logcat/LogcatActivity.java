@@ -210,7 +210,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 						restartMainLog();
 					} else {
 						// settings activity returned - text size might have changed, so update list
-						expandOrCollapseAll();
+						expandOrCollapseAll(false);
 						adapter.notifyDataSetChanged();
 					}
 				}
@@ -399,9 +399,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		startActivityForResult(intent, REQUEST_CODE_SETTINGS);
 	}
 
-	private void expandOrCollapseAll() {
+	private void expandOrCollapseAll(boolean change) {
 		
-		collapsedMode = !collapsedMode;
+		collapsedMode = change ? !collapsedMode : collapsedMode;
 		
 		int oldFirstVisibleItem = firstVisibleItem;
 		
@@ -1190,7 +1190,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				Toast.makeText(this, R.string.log_cleared, Toast.LENGTH_LONG).show();
 				break;
 			case R.id.main_more_button:
-				expandOrCollapseAll();
+				expandOrCollapseAll(true);
 				break;
 			case R.id.main_pause_button:
 				pauseOrUnpause();
@@ -1309,9 +1309,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 					}
 					publishProgress(line);
 				} 
+			} catch (InterruptedException e) {
+				log.d(e, "expected error");
 			} catch (Exception e) {
-				log.e(e, "unexpected error");
-				
+				log.d(e, "unexpected error");
 			} finally {
 				if (reader != null) {
 					reader.killQuietly();
