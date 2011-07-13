@@ -18,7 +18,7 @@
 		android:summary="@string/pref_show_timestamp_summary"
 		android:persistent="true" android:defaultValue="true"/>
 		
-	<ListPreference android:key="@string/pref_theme"
+	<com.nolanlawson.logcat.widget.MockDisabledListPreference android:key="@string/pref_theme"
 		android:title="@string/pref_theme_title" android:persistent="true"
 		android:entries="@array/pref_theme_choices_names" android:entryValues="@array/pref_theme_choices_values"
 		android:defaultValue="@string/pref_theme_choice_dark_value" />		

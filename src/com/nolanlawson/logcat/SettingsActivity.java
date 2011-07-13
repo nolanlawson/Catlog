@@ -3,17 +3,20 @@ package com.nolanlawson.logcat;
 import java.util.Arrays;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceActivity;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceActivity;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.nolanlawson.logcat.helper.DonateHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
+import com.nolanlawson.logcat.widget.MockDisabledListPreference;
 
 public class SettingsActivity extends PreferenceActivity implements OnPreferenceChangeListener{
 	
@@ -21,7 +24,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	private static final int MIN_LOG_LINE_PERIOD = 1;
 	
 	private EditTextPreference logLinePeriodPreference;
-	private ListPreference textSizePreference, themePreference, bufferPreference;
+	private ListPreference textSizePreference, bufferPreference;
+	private MockDisabledListPreference themePreference;
 	
 	private boolean bufferChanged = false;
 	
@@ -49,7 +53,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 		textSizePreference.setSummary(textSizePreference.getEntry());
 		textSizePreference.setOnPreferenceChangeListener(this);
 		
-		themePreference = (ListPreference) findPreference(getString(R.string.pref_theme));
+		themePreference = (MockDisabledListPreference) findPreference(getString(R.string.pref_theme));
 		themePreference.setOnPreferenceChangeListener(this);
 		
 		bufferPreference = (ListPreference) findPreference(getString(R.string.pref_buffer));
@@ -65,11 +69,27 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 				: getString(R.string.pref_theme_summary_free);
 		
 		themePreference.setSummary(themeSummary);
-		
-		themePreference.setEnabled(donateInstalled);
+		themePreference.setEnabledAppearance(donateInstalled);
+		if (!donateInstalled) {
+			themePreference.overrideOnClick(new OnPreferenceClickListener() {
+				
+				@Override
+				public boolean onPreferenceClick(Preference preference) {
+					openDonateVersionInMarket();
+					return true;
+				}
+			});
+		}
 		
 	}
 	
+	private void openDonateVersionInMarket() {
+		
+		Intent intent = new Intent(Intent.ACTION_VIEW, 
+				Uri.parse("market://details?id=com.nolanlawson.logcat.donate"));
+		startActivity(intent);
+	}
+
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
 		
 		if (preference.getKey().equals(getString(R.string.pref_log_line_period))) {
