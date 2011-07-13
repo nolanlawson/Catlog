@@ -19,7 +19,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
@@ -613,7 +612,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 								@Override
 								protected String doInBackground(Void... params) {
 
-									return asText ? TextUtils.join("\n", getCurrentLogAsListOfStrings()) : null;
+									return asText ? getCurrentLogAsCharSequence().toString() : null;
 								}
 
 								@Override
@@ -641,6 +640,17 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			result.add(adapter.getItem(i).getOriginalLine());
 		}
 		
+		return result;
+	}
+	
+	private CharSequence getCurrentLogAsCharSequence() {
+		StringBuilder result = new StringBuilder();
+		for (int i = 0; i < adapter.getCount(); i ++) {
+			if (i > 0) {
+				result.append('\n');
+			}
+			result.append(adapter.getItem(i).getOriginalLine());
+		}
 		return result;
 	}
 
