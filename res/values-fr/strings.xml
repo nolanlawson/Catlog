@@ -75,7 +75,7 @@ Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog D
 	<string name="pref_log_line_period_summary" formatted="false">Pendant l\'enregistrement, écrire à la carte SD tous les %d lignes. (Défault: %s)</string>
 	<string name="pref_log_line_period_error">Veuillez entrer un nombre entier entre 1 et 1000.</string>
 
-	<string name="pref_buffer_title">Buffer(s) de journal</string>
+	<string name="pref_buffer_title">Buffers de journal</string>
 	<string name="pref_buffer_choice_main">Main</string>
 	<string name="pref_buffer_choice_events">Events</string>
 	<string name="pref_buffer_choice_radio">Radio</string>
