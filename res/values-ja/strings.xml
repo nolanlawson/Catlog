@@ -31,7 +31,9 @@
 	<string name="record_log">ログを記録</string>
 	<string name="start_recording_log">記録</string>
 	<string name="send_log">送信</string>
-	<string name="play_x_log">%sのログを読む</string>
+	<string name="play_x1_log">%sを読む</string>
+	<string name="play_x2_log" formatted="false">%sと%sを読む</string>
+	<string name="play_x3_log">全部を読む</string>		
 	<string name="delimiter">と</string>
 	<string name="stop_recording_log">記録を阻止</string>
 	<string name="about">情報</string>

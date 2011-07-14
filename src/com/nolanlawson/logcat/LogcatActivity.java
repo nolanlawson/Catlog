@@ -19,7 +19,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
@@ -321,8 +320,22 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		mainLogMenuItem.setVisible(!showingMainLog);
 		List<String> bufferNames = PreferenceHelper.getBufferNames(this);
 
-		String mainLogTitle = String.format(getString(R.string.play_x_log), 
-				TextUtils.join(getString(R.string.delimiter), bufferNames));
+		// change the displayed menu name depending on how many logs are to be shown
+		String mainLogTitle;
+		switch (bufferNames.size()) {
+			case 1:
+				mainLogTitle = String.format(getString(R.string.play_x1_log), bufferNames.get(0));
+				break;
+			case 2:
+				mainLogTitle = String.format(getString(R.string.play_x2_log), 
+						bufferNames.get(0), bufferNames.get(1));
+				break;
+			default: // 3
+				mainLogTitle = getString(R.string.play_x3_log);				
+				break;
+				
+		}
+
 		mainLogMenuItem.setTitle(mainLogTitle);			
 		
 		saveLogMenuItem.setEnabled(showingMainLog);

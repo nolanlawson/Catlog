@@ -34,7 +34,9 @@
 	<string name="record_log">Record Log</string>
 	<string name="start_recording_log">Record</string>
 	<string name="send_log">Send</string>
-	<string name="play_x_log">Play %s Log</string>
+	<string name="play_x1_log">Play %s Log</string>
+	<string name="play_x2_log" formatted="false">Play %s, %s</string>
+	<string name="play_x3_log">Play All Logs</string>
 	<string name="delimiter">,&#160;</string>
 	<string name="stop_recording_log">Stop Recording</string>
 	<string name="about">About</string>
