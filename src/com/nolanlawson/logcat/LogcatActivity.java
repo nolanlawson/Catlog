@@ -108,6 +108,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         
         log.d("initial collapsed mode is %s", collapsedMode);
         
+        UpdateHelper.runUpdatesIfNecessary(LogcatActivity.this);
+        
         setUpWidgets();
         
         setUpAdapter();
@@ -147,7 +149,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	
 							public void onClick(DialogInterface dialog, int which) {
 								PreferenceHelper.setFirstRunPreference(getApplicationContext(), false);
-								UpdateHelper.runUpdate1(LogcatActivity.this);
 								dialog.dismiss();
 							}
 						})

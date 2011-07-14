@@ -18,7 +18,7 @@ public class UpdateHelper {
 	 * "main,radio,events"
 	 * @param context
 	 */
-	public static void runUpdate1(Context context) {
+	private static void runUpdate1(Context context) {
 		
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 		String bufferPref = sharedPrefs.getString(

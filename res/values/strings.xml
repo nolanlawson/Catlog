@@ -38,6 +38,7 @@
 	<string name="play_x2_log" formatted="false">Play %s, %s</string>
 	<string name="play_x3_log">Play All Logs</string>
 	<string name="delimiter">,&#160;</string>
+	<string name="simultaneous">&#160;(Simultaneous)</string>
 	<string name="stop_recording_log">Stop Recording</string>
 	<string name="about">About</string>
 	<string name="delete_saved_log">Delete Saved Logs</string>

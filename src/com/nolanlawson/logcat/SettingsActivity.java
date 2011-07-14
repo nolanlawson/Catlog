@@ -23,7 +23,7 @@ import com.nolanlawson.logcat.util.StringUtil;
 import com.nolanlawson.logcat.widget.MockDisabledListPreference;
 import com.nolanlawson.logcat.widget.MultipleChoicePreference;
 
-public class SettingsActivity extends PreferenceActivity implements OnPreferenceChangeListener, OnPreferenceClickListener{
+public class SettingsActivity extends PreferenceActivity implements OnPreferenceChangeListener {
 	
 	private static final int MAX_LOG_LINE_PERIOD = 1000;
 	private static final int MIN_LOG_LINE_PERIOD = 1;
@@ -64,7 +64,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 		
 		bufferPreference = (MultipleChoicePreference) findPreference(getString(R.string.pref_buffer));
 		bufferPreference.setOnPreferenceChangeListener(this);
-		setMultiChoiceSummary(bufferPreference, bufferPreference.getValue());
+		setBufferPreferenceSummary(bufferPreference.getValue());
 		
 		boolean donateInstalled = DonateHelper.isDonateVersionInstalled(this) ;
 		
@@ -137,7 +137,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 				bufferChanged = true;
 			}
 			
-			setMultiChoiceSummary(bufferPreference, newValue.toString());
+			setBufferPreferenceSummary(newValue.toString());
 			return true;
 			
 		} else { // text size pref
@@ -165,27 +165,24 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	    }
 	    return super.onKeyDown(keyCode, event);
 	}
-
-	@Override
-	public boolean onPreferenceClick(Preference arg0) {
-		// buffer preference clicked
-		
-		Toast.makeText(this, "foo", Toast.LENGTH_LONG).show();
-		return true;
-	}
 	
-	private void setMultiChoiceSummary(MultipleChoicePreference preference, String value) {
+	private void setBufferPreferenceSummary(String value) {
 		
 		String[] commaSeparated = StringUtil.split(StringUtil.nullToEmpty(value), MultipleChoicePreference.DELIMITER);
 		
 		List<CharSequence> checkedEntries = new ArrayList<CharSequence>();
 		
 		for (String entryValue : commaSeparated) {
-			int idx = Arrays.asList(preference.getEntryValues()).indexOf(entryValue);
-			checkedEntries.add(preference.getEntries()[idx]);
+			int idx = Arrays.asList(bufferPreference.getEntryValues()).indexOf(entryValue);
+			checkedEntries.add(bufferPreference.getEntries()[idx]);
 		}
 		
 		String summary = TextUtils.join(getString(R.string.delimiter), checkedEntries);
-		preference.setSummary(summary);
+		
+		// add the word "simultaneous" to make it clearer what's going on with 2+ buffers
+		if (checkedEntries.size() > 1) {
+			summary += getString(R.string.simultaneous);
+		}
+		bufferPreference.setSummary(summary);
 	}
 }

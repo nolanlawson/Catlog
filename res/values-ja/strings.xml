@@ -35,6 +35,7 @@
 	<string name="play_x2_log" formatted="false">%sと%sを読む</string>
 	<string name="play_x3_log">全部を読む</string>		
 	<string name="delimiter">と</string>
+	<string name="simultaneous">（同時）</string>
 	<string name="stop_recording_log">記録を阻止</string>
 	<string name="about">情報</string>
 	<string name="delete_saved_log">セーブしたログを削除</string>

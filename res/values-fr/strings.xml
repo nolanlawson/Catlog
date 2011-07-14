@@ -36,6 +36,7 @@ Telechargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog D
 	<string name="play_x1_log">Lire %s</string>
 	<string name="play_x2_log" formatted="false">Lire %s, %s</string>
 	<string name="play_x3_log">Lire Tout</string>	
+	<string name="simultaneous">&#160;(Simultanément)</string>
 	<string name="stop_recording_log">Arrêter</string>
 	<string name="about">A propos</string>
 	<string name="delete_saved_log">Suppression de journaux</string>
