@@ -32,7 +32,7 @@
 	<string name="start_recording_log">記録</string>
 	<string name="send_log">送信</string>
 	<string name="play_x_log">%sのログを読む</string>
-	<string name="play_all_logs">全部を読む</string>	
+	<string name="delimiter">と</string>
 	<string name="stop_recording_log">記録を阻止</string>
 	<string name="about">情報</string>
 	<string name="delete_saved_log">セーブしたログを削除</string>
@@ -75,7 +75,7 @@
 	<string name="pref_buffer_choice_main">メーン</string>
 	<string name="pref_buffer_choice_events">エベント</string>
 	<string name="pref_buffer_choice_radio">ラジオ</string>
-	<string name="pref_buffer_choice_all">全部</string>
+	<string name="pref_buffer_none_checked_error">せめて一つのバッファを選択してください。</string>
 
 	<string name="pref_theme_title">配色</string>
 	<string name="pref_theme_summary_free">「Donate」のバージョン必要。</string>

@@ -1,6 +1,8 @@
 package com.nolanlawson.logcat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -11,20 +13,24 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.nolanlawson.logcat.helper.DonateHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
+import com.nolanlawson.logcat.util.StringUtil;
 import com.nolanlawson.logcat.widget.MockDisabledListPreference;
+import com.nolanlawson.logcat.widget.MultipleChoicePreference;
 
-public class SettingsActivity extends PreferenceActivity implements OnPreferenceChangeListener{
+public class SettingsActivity extends PreferenceActivity implements OnPreferenceChangeListener, OnPreferenceClickListener{
 	
 	private static final int MAX_LOG_LINE_PERIOD = 1000;
 	private static final int MIN_LOG_LINE_PERIOD = 1;
 	
 	private EditTextPreference logLinePeriodPreference;
-	private ListPreference textSizePreference, bufferPreference;
+	private ListPreference textSizePreference;
+	private MultipleChoicePreference bufferPreference;
 	private MockDisabledListPreference themePreference;
 	
 	private boolean bufferChanged = false;
@@ -56,11 +62,9 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 		themePreference = (MockDisabledListPreference) findPreference(getString(R.string.pref_theme));
 		themePreference.setOnPreferenceChangeListener(this);
 		
-		bufferPreference = (ListPreference) findPreference(getString(R.string.pref_buffer));
+		bufferPreference = (MultipleChoicePreference) findPreference(getString(R.string.pref_buffer));
 		bufferPreference.setOnPreferenceChangeListener(this);
-		int bufferIdx = Arrays.asList(bufferPreference.getEntryValues()).indexOf(bufferPreference.getValue());
-		CharSequence bufferEntry = bufferPreference.getEntries()[bufferIdx];
-		bufferPreference.setSummary(bufferEntry);
+		setMultiChoiceSummary(bufferPreference, bufferPreference.getValue());
 		
 		boolean donateInstalled = DonateHelper.isDonateVersionInstalled(this) ;
 		
@@ -117,17 +121,25 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 			int index = Arrays.asList(themePreference.getEntryValues()).indexOf(newValue.toString());
 			CharSequence newEntry = themePreference.getEntries()[index];
 			themePreference.setSummary(newEntry);
-			return true;
+			
+			return true;		
 		} else if (preference.getKey().equals(getString(R.string.pref_buffer))) {
-			// update summary
-			int index = Arrays.asList(bufferPreference.getEntryValues()).indexOf(newValue.toString());
-			CharSequence newEntry = bufferPreference.getEntries()[index];
-			bufferPreference.setSummary(newEntry);
+			// buffers pref
+			
+			// check to make sure nothing was left unchecked
+			if (TextUtils.isEmpty(newValue.toString())) {
+				Toast.makeText(this, R.string.pref_buffer_none_checked_error, Toast.LENGTH_SHORT).show();
+				return false;
+			}
+			
 			// notify the LogcatActivity that the buffer has changed
 			if (!newValue.toString().equals(bufferPreference.getValue())) {
 				bufferChanged = true;
 			}
-			return true;			
+			
+			setMultiChoiceSummary(bufferPreference, newValue.toString());
+			return true;
+			
 		} else { // text size pref
 			
 			int index = Arrays.asList(textSizePreference.getEntryValues()).indexOf(newValue);
@@ -153,5 +165,27 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	    }
 	    return super.onKeyDown(keyCode, event);
 	}
+
+	@Override
+	public boolean onPreferenceClick(Preference arg0) {
+		// buffer preference clicked
+		
+		Toast.makeText(this, "foo", Toast.LENGTH_LONG).show();
+		return true;
+	}
 	
+	private void setMultiChoiceSummary(MultipleChoicePreference preference, String value) {
+		
+		String[] commaSeparated = StringUtil.split(StringUtil.nullToEmpty(value), MultipleChoicePreference.DELIMITER);
+		
+		List<CharSequence> checkedEntries = new ArrayList<CharSequence>();
+		
+		for (String entryValue : commaSeparated) {
+			int idx = Arrays.asList(preference.getEntryValues()).indexOf(entryValue);
+			checkedEntries.add(preference.getEntries()[idx]);
+		}
+		
+		String summary = TextUtils.join(getString(R.string.delimiter), checkedEntries);
+		preference.setSummary(summary);
+	}
 }

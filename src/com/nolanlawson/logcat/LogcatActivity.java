@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
@@ -58,6 +59,7 @@ import com.nolanlawson.logcat.helper.DialogHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
+import com.nolanlawson.logcat.helper.UpdateHelper;
 import com.nolanlawson.logcat.reader.LogcatReader;
 import com.nolanlawson.logcat.reader.LogcatReaderLoader;
 import com.nolanlawson.logcat.util.LogLineAdapterUtil;
@@ -146,6 +148,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	
 							public void onClick(DialogInterface dialog, int which) {
 								PreferenceHelper.setFirstRunPreference(getApplicationContext(), false);
+								UpdateHelper.runUpdate1(LogcatActivity.this);
+								dialog.dismiss();
 							}
 						})
 					.setCancelable(false)
@@ -315,14 +319,11 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		mainLogMenuItem.setEnabled(!showingMainLog);
 		mainLogMenuItem.setVisible(!showingMainLog);
-		String bufferPref = PreferenceHelper.getBuffer(this);
-		if (bufferPref.equals(getString(R.string.pref_buffer_choice_all_value))) {
-			mainLogMenuItem.setTitle(R.string.play_all_logs);
-		} else {
-			String mainLogTitle = String.format(getString(R.string.play_x_log), 
-					PreferenceHelper.getBufferName(this));
-			mainLogMenuItem.setTitle(mainLogTitle);			
-		}
+		List<String> bufferNames = PreferenceHelper.getBufferNames(this);
+
+		String mainLogTitle = String.format(getString(R.string.play_x_log), 
+				TextUtils.join(getString(R.string.delimiter), bufferNames));
+		mainLogMenuItem.setTitle(mainLogTitle);			
 		
 		saveLogMenuItem.setEnabled(showingMainLog);
 		saveLogMenuItem.setVisible(showingMainLog);

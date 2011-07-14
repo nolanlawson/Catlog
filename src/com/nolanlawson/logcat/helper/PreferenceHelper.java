@@ -1,8 +1,10 @@
 package com.nolanlawson.logcat.helper;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
@@ -12,7 +14,9 @@ import android.preference.PreferenceManager;
 
 import com.nolanlawson.logcat.R;
 import com.nolanlawson.logcat.data.ColorScheme;
+import com.nolanlawson.logcat.util.StringUtil;
 import com.nolanlawson.logcat.util.UtilLogger;
+import com.nolanlawson.logcat.widget.MultipleChoicePreference;
 
 public class PreferenceHelper {
 	
@@ -201,20 +205,29 @@ public class PreferenceHelper {
 		
 	}
 	
-	public static String getBuffer(Context context) {
+	public static List<String> getBuffers(Context context) {
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 		
 		String defaultValue = context.getString(R.string.pref_buffer_choice_main_value);
 		String key = context.getString(R.string.pref_buffer);
 		
-		return sharedPrefs.getString(key, defaultValue);
+		String value = sharedPrefs.getString(key, defaultValue);
+		
+		return Arrays.asList(StringUtil.split(value, MultipleChoicePreference.DELIMITER));
 	}
 	
-	public static String getBufferName(Context context) {
-		String buffer = getBuffer(context);
-		int idx = Arrays.asList(context.getResources().getStringArray(
-				R.array.pref_buffer_choice_values)).indexOf(buffer);
-		return context.getResources().getStringArray(R.array.pref_buffer_choices)[idx];
+	public static List<String> getBufferNames(Context context) {
+		List<String> buffers = getBuffers(context);
+		
+		List<String> bufferNames = new ArrayList<String>();
+		
+		// TODO: this is inefficient - O(n^2)
+		for (String buffer : buffers) {
+			int idx = Arrays.asList(context.getResources().getStringArray(
+					R.array.pref_buffer_choice_values)).indexOf(buffer);
+			bufferNames.add(context.getResources().getStringArray(R.array.pref_buffer_choices)[idx]);
+		}
+		return bufferNames;
 	}
 	
 	public static void setBuffer(Context context, int stringResId) {

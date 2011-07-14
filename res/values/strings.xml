@@ -35,7 +35,7 @@
 	<string name="start_recording_log">Record</string>
 	<string name="send_log">Send</string>
 	<string name="play_x_log">Play %s Log</string>
-	<string name="play_all_logs">Play All Logs</string>
+	<string name="delimiter">,&#160;</string>
 	<string name="stop_recording_log">Stop Recording</string>
 	<string name="about">About</string>
 	<string name="delete_saved_log">Delete Saved Logs</string>
@@ -87,15 +87,14 @@
 	<string name="pref_log_line_period_error">Please enter an integer between 1 and 1000.</string>
 
 	<string name="pref_buffer">buffer</string>
-	<string name="pref_buffer_title">Log Buffer</string>
+	<string name="pref_buffer_title">Log Buffers</string>
 	<string name="pref_buffer_choice_main">Main</string>
 	<string name="pref_buffer_choice_events">Events</string>
 	<string name="pref_buffer_choice_radio">Radio</string>
-	<string name="pref_buffer_choice_all">All Combined</string>
 	<string name="pref_buffer_choice_main_value">main</string>
 	<string name="pref_buffer_choice_events_value">events</string>
 	<string name="pref_buffer_choice_radio_value">radio</string>
-	<string name="pref_buffer_choice_all_value">all_combined</string>
+	<string name="pref_buffer_none_checked_error">Please check at least one buffer.</string>
 
 	<string name="pref_theme">theme</string>
 	<string name="pref_theme_title">Color Scheme</string>

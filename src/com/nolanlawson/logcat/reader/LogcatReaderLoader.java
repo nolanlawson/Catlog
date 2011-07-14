@@ -1,7 +1,6 @@
 package com.nolanlawson.logcat.reader;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +11,6 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.nolanlawson.logcat.R;
 import com.nolanlawson.logcat.helper.LogcatHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
 
@@ -54,10 +52,7 @@ public class LogcatReaderLoader implements Parcelable {
 	}
 	
 	public static LogcatReaderLoader create(Context context) {
-		String bufferPref = PreferenceHelper.getBuffer(context);
-		List<String> buffers = bufferPref.equals(context.getString(R.string.pref_buffer_choice_all_value)) 
-				? LogcatHelper.BUFFERS
-				: Collections.singletonList(bufferPref);
+		List<String> buffers = PreferenceHelper.getBuffers(context);
 		LogcatReaderLoader loader = new LogcatReaderLoader(buffers, true);
 		return loader;
 	}

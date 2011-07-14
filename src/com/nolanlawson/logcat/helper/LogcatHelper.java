@@ -20,8 +20,6 @@ public class LogcatHelper {
 	public static final String BUFFER_EVENTS = "events";
 	public static final String BUFFER_RADIO = "radio";
 	
-	public static final List<String> BUFFERS = Arrays.asList(BUFFER_MAIN, BUFFER_EVENTS, BUFFER_RADIO);
-	
 	public static Process getLogcatProcess(String buffer) throws IOException {
 		
 		

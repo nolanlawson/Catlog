@@ -27,7 +27,7 @@
 	
 	<PreferenceCategory android:title="@string/pref_cat_configuration">
 		
-	<ListPreference android:key="@string/pref_buffer"	
+	<com.nolanlawson.logcat.widget.MultipleChoicePreference android:key="@string/pref_buffer"	
 		android:title="@string/pref_buffer_title" android:persistent="true"
 		android:entries="@array/pref_buffer_choices" android:entryValues="@array/pref_buffer_choice_values"
 		android:defaultValue="@string/pref_buffer_choice_main_value" />	

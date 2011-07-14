@@ -183,4 +183,8 @@ public class StringUtil {
     	
     	return sb.toString();	
     }
+    
+    public static String nullToEmpty(String str) {
+    	return str == null ? "" : str;
+    }
 }
