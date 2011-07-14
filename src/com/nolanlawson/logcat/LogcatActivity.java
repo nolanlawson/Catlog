@@ -379,6 +379,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 					public void onClick(DialogInterface dialog, int which) {
 						partialSelectMode = true;
 						partiallySelectedLogLines.clear();
+						Toast.makeText(LogcatActivity.this, R.string.toast_started_select_partial, Toast.LENGTH_SHORT).show();
 						
 						if (checkBox.isChecked()) {
 							// hide this help dialog in the future
