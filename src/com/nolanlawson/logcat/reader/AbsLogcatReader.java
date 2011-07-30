@@ -1,5 +1,6 @@
 package com.nolanlawson.logcat.reader;
 
+
 public abstract class AbsLogcatReader implements LogcatReader {
 
 	protected boolean recordingMode;

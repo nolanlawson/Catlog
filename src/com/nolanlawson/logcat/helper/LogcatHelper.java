@@ -24,7 +24,11 @@ public class LogcatHelper {
 		
 		
 		List<String> args = getLogcatArgs(buffer);
-		return Runtime.getRuntime().exec(args.toArray(new String[args.size()]));
+		Process process = Runtime.getRuntime().exec(args.toArray(new String[args.size()]));
+		
+		ProcessHelper.incrementProcesses();
+		
+		return process;
 	}
 	
 	private static List<String> getLogcatArgs(String buffer) {
@@ -50,7 +54,7 @@ public class LogcatHelper {
 			args.add("-d"); // -d just dumps the whole thing
 			
 			dumpLogcatProcess = Runtime.getRuntime().exec(args.toArray(new String[args.size()]));
-
+			ProcessHelper.incrementProcesses();
 			reader = new BufferedReader(new InputStreamReader(dumpLogcatProcess
 					.getInputStream()), 8192);
 			
@@ -71,6 +75,7 @@ public class LogcatHelper {
 			
 			if (dumpLogcatProcess != null) {
 				dumpLogcatProcess.destroy();
+				ProcessHelper.decrementProcesses();
 			}
 		}
 		

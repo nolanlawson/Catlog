@@ -1,6 +1,7 @@
 package com.nolanlawson.logcat.reader;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +81,16 @@ public class MultipleLogcatReader extends AbsLogcatReader {
 				return null;
 			}
 		}.execute((Void)null);
+	}
+	
+	
+	@Override
+	public List<Process> getProcesses() {
+		List<Process> result = new ArrayList<Process>();
+		for (ReaderThread thread : readerThreads) {
+			result.addAll(thread.reader.getProcesses());
+		}
+		return result;
 	}
 	
 	private class ReaderThread extends Thread {
