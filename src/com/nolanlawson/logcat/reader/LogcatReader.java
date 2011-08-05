@@ -1,6 +1,7 @@
 package com.nolanlawson.logcat.reader;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface LogcatReader {
 
@@ -17,5 +18,7 @@ public interface LogcatReader {
 	public void killQuietly();
 	
 	public boolean readyToRecord();
+	
+	public List<Process> getProcesses();
 	
 }

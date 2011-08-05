@@ -37,7 +37,7 @@
 	<string name="delimiter">と</string>
 	<string name="simultaneous">（同時）</string>
 	<string name="stop_recording_log">記録を阻止</string>
-	<string name="about">情報</string>
+	<string name="about">CatLogについて</string>
 	<string name="delete_saved_log">セーブしたログを削除</string>
 	<string name="manage_saved_logs">セーブしたログ</string>
 	
@@ -112,11 +112,11 @@
     <string name="first_run_pref_title">紹介リセット</string>
     <string name="first_run_pref_summary">また紹介のメッセージを見せる。</string>
     <string name="first_run_title">CatLogにようこそ！</string>
-    <string name="first_run_message">\  
+    <string name="first_run_message">\
+<b>1.2.6のアップデート！</b>\n\
+&#160;&#160;&#160;&#160;- 小さいバグフィックス。\n\
 <b>1.2.5のアップデート！</b>\n\
-&#160;&#160;&#160;&#160;- バッファは今いくつでも選べます。\n\
-<b>1.2.4のアップデート！</b>\n\
-&#160;&#160;&#160;&#160;- 新しいポーズのボタン。\
+&#160;&#160;&#160;&#160;- バッファは今いくつでも選べます。\
 </string> 
     
 </resources>

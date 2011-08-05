@@ -22,6 +22,7 @@ import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
 import com.nolanlawson.logcat.helper.WidgetHelper;
+import com.nolanlawson.logcat.helper.ProcessHelper.ProcessType;
 import com.nolanlawson.logcat.reader.LogcatReader;
 import com.nolanlawson.logcat.reader.LogcatReaderLoader;
 import com.nolanlawson.logcat.util.UtilLogger;
@@ -105,7 +106,7 @@ public class LogcatRecordingService extends IntentService {
 		try {
 			// use the "time" log so we can see what time the logs were logged at
 			LogcatReaderLoader loader = intent.getParcelableExtra("loader");
-			reader = loader.loadReader();
+			reader = loader.loadReader(ProcessType.Recording);
 		
 			while (!reader.readyToRecord() && !killed) {
 				reader.readLine();

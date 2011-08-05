@@ -6,9 +6,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,26 +28,26 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Filter;
-import android.widget.Filter.FilterListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Filter.FilterListener;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.nolanlawson.logcat.data.ColorScheme;
 import com.nolanlawson.logcat.data.LogFileAdapter;
@@ -56,9 +56,11 @@ import com.nolanlawson.logcat.data.LogLineAdapter;
 import com.nolanlawson.logcat.data.TagAndProcessIdAdapter;
 import com.nolanlawson.logcat.helper.DialogHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
+import com.nolanlawson.logcat.helper.ProcessHelper;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
 import com.nolanlawson.logcat.helper.UpdateHelper;
+import com.nolanlawson.logcat.helper.ProcessHelper.ProcessType;
 import com.nolanlawson.logcat.reader.LogcatReader;
 import com.nolanlawson.logcat.reader.LogcatReaderLoader;
 import com.nolanlawson.logcat.util.LogLineAdapterUtil;
@@ -251,6 +253,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     	if (task != null && !task.isCancelled()) {
     		task.cancel(true);
     	}
+    	ProcessHelper.killAll();
     }
     
 
@@ -302,6 +305,11 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	    	return true;
 	    case R.id.menu_partial_select:
 	    	startPartialSelectMode();
+	    	return true;
+	    case R.id.menu_process_report:
+	    	String report = String.format("Created: %d.  Killed: %d.",
+	    			ProcessHelper.getProcessesCreated(), ProcessHelper.getProcessesKilled());
+	    	Toast.makeText(this, report, Toast.LENGTH_LONG).show();
 	    	return true;
 	    }
 	    return false;
@@ -359,6 +367,11 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		MenuItem crazyLoggerMenuItem = menu.findItem(R.id.menu_crazy_logger_service);
 		crazyLoggerMenuItem.setEnabled(UtilLogger.DEBUG_MODE);
 		crazyLoggerMenuItem.setVisible(UtilLogger.DEBUG_MODE);
+		
+		MenuItem processReportMenuItem = menu.findItem(R.id.menu_process_report);
+		processReportMenuItem.setEnabled(UtilLogger.DEBUG_MODE);
+		processReportMenuItem.setVisible(UtilLogger.DEBUG_MODE);
+		
 		
 		MenuItem partialSelectMenuItem = menu.findItem(R.id.menu_partial_select);
 		partialSelectMenuItem.setEnabled(!partialSelectMode);
@@ -1322,7 +1335,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			try {
 						
 				LogcatReaderLoader loader = LogcatReaderLoader.create(LogcatActivity.this);
-				reader = loader.loadReader();
+				reader = loader.loadReader(ProcessType.Main);
 
 				String line;
 				

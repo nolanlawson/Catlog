@@ -3,10 +3,13 @@ package com.nolanlawson.logcat.reader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Collections;
+import java.util.List;
 
 import android.text.TextUtils;
 
 import com.nolanlawson.logcat.helper.LogcatHelper;
+import com.nolanlawson.logcat.helper.ProcessHelper;
 import com.nolanlawson.logcat.util.UtilLogger;
 
 public class SingleLogcatReader extends AbsLogcatReader {
@@ -43,6 +46,7 @@ public class SingleLogcatReader extends AbsLogcatReader {
 	public void killQuietly() {
 		if (logcatProcess != null) {
 			logcatProcess.destroy();
+			ProcessHelper.decrementProcesses();
 		}
 		if (bufferedReader != null) {
 			try {
@@ -87,5 +91,10 @@ public class SingleLogcatReader extends AbsLogcatReader {
 			return false;
 		}
 		return lastLine == null;
+	}
+	
+	@Override
+	public List<Process> getProcesses() {
+		return Collections.singletonList(logcatProcess);
 	}
 }

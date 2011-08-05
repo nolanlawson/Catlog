@@ -13,6 +13,8 @@ import android.os.Parcelable;
 
 import com.nolanlawson.logcat.helper.LogcatHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
+import com.nolanlawson.logcat.helper.ProcessHelper;
+import com.nolanlawson.logcat.helper.ProcessHelper.ProcessType;
 
 public class LogcatReaderLoader implements Parcelable {
 
@@ -39,16 +41,21 @@ public class LogcatReaderLoader implements Parcelable {
 		}
 	}
 	
-	public LogcatReader loadReader() throws IOException {
+	public LogcatReader loadReader(ProcessType processType) throws IOException {
+		LogcatReader reader;
 		if (!multiple) {
 			// single reader
 			String buffer = lastLines.keySet().iterator().next();
 			String lastLine = lastLines.values().iterator().next();
-			return new SingleLogcatReader(recordingMode, buffer, lastLine);
+			reader = new SingleLogcatReader(recordingMode, buffer, lastLine);
 		} else {
 			// multiple reader
-			return new MultipleLogcatReader(recordingMode, lastLines);
+			reader = new MultipleLogcatReader(recordingMode, lastLines);
 		}
+		
+		ProcessHelper.registerProcesses(reader.getProcesses(), processType);
+		
+		return reader;
 	}
 	
 	public static LogcatReaderLoader create(Context context) {
