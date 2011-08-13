@@ -3,7 +3,9 @@ package com.nolanlawson.logcat;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -35,6 +37,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -64,6 +67,7 @@ import com.nolanlawson.logcat.helper.ProcessHelper.ProcessType;
 import com.nolanlawson.logcat.reader.LogcatReader;
 import com.nolanlawson.logcat.reader.LogcatReaderLoader;
 import com.nolanlawson.logcat.util.LogLineAdapterUtil;
+import com.nolanlawson.logcat.util.StringUtil;
 import com.nolanlawson.logcat.util.UtilLogger;
 
 public class LogcatActivity extends ListActivity implements TextWatcher, OnScrollListener, 
@@ -80,7 +84,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	private static UtilLogger log = new UtilLogger(LogcatActivity.class);
 	
 	private LinearLayout backgroundLinearLayout, mainFilenameLinearLayout;
-	private EditText searchEditText;
+	private AutoCompleteTextView searchEditText;
 	private ProgressBar darkProgressBar, lightProgressBar;
 	private LogLineAdapter adapter;
 	private LogReaderAsyncTask task;
@@ -93,6 +97,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	private boolean collapsedMode;
 	private boolean partialSelectMode;
 	private List<LogLine> partiallySelectedLogLines = new ArrayList<LogLine>(2);
+	private Set<String> searchSuggestionsSet = new HashSet<String>();
+	private ArrayAdapter<String> searchSuggestionsAdapter;
 	
 	private String currentlyOpenLog = null;
 	
@@ -869,7 +875,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				hideProgressBar();
 				
 				for (String line : logLines) {
-					adapter.add(LogLine.newLogLine(line, !collapsedMode));
+					LogLine logLine = LogLine.newLogLine(line, !collapsedMode);
+					adapter.add(logLine);
+					addToAutocompleteSuggestions(logLine);
+					
 				}
 				
 				// scroll to bottom
@@ -905,7 +914,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		pauseButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_media_pause, 0, 0, 0);
 		expandButton.setCompoundDrawablesWithIntrinsicBounds(
 				collapsedMode ? R.drawable.ic_menu_more_32 : R.drawable.ic_menu_less_32, 0, 0, 0);
-		
+		searchSuggestionsAdapter.clear();
+		searchSuggestionsSet.clear();
 		
 		resetFilter();
 		updateDisplayedFilename();
@@ -958,15 +968,18 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		});
 		
 		builder.show();
-		
 	}
 	
 	private void setUpWidgets() {
 		
-		searchEditText = (EditText) findViewById(R.id.main_edit_text);
+		searchEditText = (AutoCompleteTextView) findViewById(R.id.main_edit_text);
 		searchEditText.addTextChangedListener(this);
 		searchEditText.setOnEditorActionListener(this);
 		searchEditText.setOnClickListener(this);
+		
+		searchSuggestionsAdapter = new ArrayAdapter<String>(
+				this, R.layout.simple_list_item_small, new ArrayList<String>());
+		searchEditText.setAdapter(searchSuggestionsAdapter);
 		
 		darkProgressBar = (ProgressBar) findViewById(R.id.main_dark_progress_bar);
 		lightProgressBar = (ProgressBar) findViewById(R.id.main_light_progress_bar);
@@ -1320,6 +1333,19 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 	}
 	
+
+	private void addToAutocompleteSuggestions(LogLine logLine) {
+		// add the tags to the autocompletetextview
+		
+		if (!StringUtil.isEmptyOrWhitespaceOnly(logLine.getTag())) {
+			String trimmed = logLine.getTag().trim();
+			if (!searchSuggestionsSet.contains(trimmed)) {
+				searchSuggestionsSet.add(trimmed);
+				searchSuggestionsAdapter.add(trimmed);
+			}
+		}
+	}
+	
 	private class LogReaderAsyncTask extends AsyncTask<Void,String,Void> {
 		
 		private int counter = 0;
@@ -1388,7 +1414,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			
 			hideProgressBar();
 			
-			adapter.addWithFilter(LogLine.newLogLine(line, !collapsedMode), searchEditText.getText());
+			LogLine logLine = LogLine.newLogLine(line, !collapsedMode);
+			adapter.addWithFilter(logLine, searchEditText.getText());
+			addToAutocompleteSuggestions(logLine);
 			
 			// check to see if the list needs to be truncated to avoid out of memory errors
 			if (++counter % UPDATE_CHECK_INTERVAL == 0 

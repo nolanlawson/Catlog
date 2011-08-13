@@ -3,6 +3,8 @@ package com.nolanlawson.logcat.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.text.TextUtils;
+
 /**
  *
  * @author nolan
@@ -186,5 +188,17 @@ public class StringUtil {
     
     public static String nullToEmpty(String str) {
     	return str == null ? "" : str;
+    }
+    
+    public static boolean isEmptyOrWhitespaceOnly(String str) {
+    	if (TextUtils.isEmpty(str)) {
+    		return true;
+    	}
+    	for (int i = 0; i < str.length(); i++) {
+    		if (!Character.isWhitespace(str.charAt(i))) {
+    			return false;
+    		}
+    	}
+    	return true;
     }
 }
