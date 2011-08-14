@@ -560,7 +560,7 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
             
             
             // search by log level
-            ArrayList<LogLine> allValues = new ArrayList<LogLine>(inputList.size());
+            ArrayList<LogLine> allValues = new ArrayList<LogLine>();
             
             ArrayList<LogLine> logLines;
             synchronized (mLock) {
