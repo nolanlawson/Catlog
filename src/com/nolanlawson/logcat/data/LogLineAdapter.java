@@ -144,17 +144,18 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 	public void addWithFilter(LogLine object, CharSequence text) {
 		
         if (mOriginalValues != null) {
+        	
+        	List<LogLine> inputList = Arrays.asList(object);
+            
+            if (mFilter == null) {
+            	mFilter = new ArrayFilter();
+            }        	
+            List<LogLine> filteredObjects = mFilter.performFilteringOnList(inputList, text);
+        	
             synchronized (mLock) {
                 mOriginalValues.add(object);
                 
-                if (mFilter == null) {
-                	mFilter = new ArrayFilter();
-                }
-                
-                List<LogLine> inputList = Arrays.asList(object);
-                
-                mObjects.addAll(mFilter.performFilteringOnList(inputList, text));
-                
+                mObjects.addAll(filteredObjects);
                 
                 if (mNotifyOnChange) notifyDataSetChanged();
             }
@@ -561,7 +562,12 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
             // search by log level
             ArrayList<LogLine> allValues = new ArrayList<LogLine>(inputList.size());
             
-            for (LogLine logLine : new ArrayList<LogLine>(inputList)) {
+            ArrayList<LogLine> logLines;
+            synchronized (mLock) {
+            	logLines = new ArrayList<LogLine>(inputList);
+            }
+            
+            for (LogLine logLine : logLines) {
             	if (logLine != null && 
             			LogLineAdapterUtil.logLevelIsAcceptableGivenLogLevelLimit(logLine.getLogLevel(), logLevelLimit)) {
             		allValues.add(logLine);
