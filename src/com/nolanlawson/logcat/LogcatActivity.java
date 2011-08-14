@@ -56,6 +56,7 @@ import com.nolanlawson.logcat.data.ColorScheme;
 import com.nolanlawson.logcat.data.LogFileAdapter;
 import com.nolanlawson.logcat.data.LogLine;
 import com.nolanlawson.logcat.data.LogLineAdapter;
+import com.nolanlawson.logcat.data.SortedFilterArrayAdapter;
 import com.nolanlawson.logcat.data.TagAndProcessIdAdapter;
 import com.nolanlawson.logcat.helper.DialogHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
@@ -98,7 +99,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	private boolean partialSelectMode;
 	private List<LogLine> partiallySelectedLogLines = new ArrayList<LogLine>(2);
 	private Set<String> searchSuggestionsSet = new HashSet<String>();
-	private ArrayAdapter<String> searchSuggestionsAdapter;
+	private SortedFilterArrayAdapter<String> searchSuggestionsAdapter;
 	
 	private String currentlyOpenLog = null;
 	
@@ -977,7 +978,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		searchEditText.setOnEditorActionListener(this);
 		searchEditText.setOnClickListener(this);
 		
-		searchSuggestionsAdapter = new ArrayAdapter<String>(
+		searchSuggestionsAdapter = new SortedFilterArrayAdapter<String>(
 				this, R.layout.simple_list_item_small, new ArrayList<String>());
 		searchEditText.setAdapter(searchSuggestionsAdapter);
 		
