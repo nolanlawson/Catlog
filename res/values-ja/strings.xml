@@ -22,9 +22,9 @@
     
     <string name="send_as_text">テクストとして送る</string>
     <string name="send_as_attachment">添付として送る</string>
-    <string name="save">セーブ</string>
-	<string name="save_as">セーブ...</string>
-	<string name="save_log">ログをセーブ</string>
+    <string name="save">保存</string>
+	<string name="save_as">保存...</string>
+	<string name="save_log">ログを保存</string>
 	<string name="log_level">レベル</string>
 	<string name="open">開ける</string>
 	<string name="open_log">ログを開ける</string>
@@ -38,22 +38,22 @@
 	<string name="simultaneous">（同時）</string>
 	<string name="stop_recording_log">記録を阻止</string>
 	<string name="about">CatLogについて</string>
-	<string name="delete_saved_log">セーブしたログを削除</string>
-	<string name="manage_saved_logs">セーブしたログ</string>
+	<string name="delete_saved_log">保存したログを削除</string>
+	<string name="manage_saved_logs">保存したログ</string>
 	
-	<string name="no_saved_logs">セーブしたログはありません。</string>
+	<string name="no_saved_logs">保存したログはありません。</string>
 	<string name="recording_in_progress">もう記録中。</string>
 	<string name="enter_good_filename">妥当なファイル名を入力してくだなさい。</string>
-	<string name="log_saved">セーブ完了。</string>
+	<string name="log_saved">保存完了。</string>
     <string name="copy_to_clipboard">クリップボードにこピーする</string>
 	<string name="copied_to_clipboard">クリップボードコピー完了。</string>
-	<string name="enter_filename">SDカードにセーブするファイル名：</string>
+	<string name="enter_filename">SDカードに保存するファイル名：</string>
 	<string name="select_logs_to_delete">削除したいと思うログを選んでください。</string>
 	<string name="files_deleted">ファイルは%dつ削除されました。</string>
 	<string name="delete_all">全部削除</string>
 	<string name="are_you_sure">ファイルは%dつ削除されます。</string>
 	<string name="log_recording_started">ログ記録開始。</string>
-	<string name="unable_to_save_log">ログのセーブはだめでした。妥当なファイル名入力しましたか？</string>
+	<string name="unable_to_save_log">ログの保存はだめでした。妥当なファイル名入力しましたか？</string>
 	<string name="sd_card_not_found">SDカードが見つかりませんでした。</string>
 	
 	<string name="notification_title">ログ記録中</string>
@@ -101,7 +101,7 @@
     
     <string name="settings">設定</string>
     
-    <string name="save_file_first">ログをセーブするのは必要です。</string>
+    <string name="save_file_first">ログを保存するのは必要です。</string>
     
     <string name="as_attachment">添付</string>
     <string name="as_text">テクスト</string>
@@ -113,10 +113,10 @@
     <string name="first_run_pref_summary">また紹介のメッセージを見せる。</string>
     <string name="first_run_title">CatLogにようこそ！</string>
     <string name="first_run_message">\
+<b>1.2.7のアップデート！</b>\n\
+&#160;&#160;&#160;&#160;- 検索の時にタグを自己暗示します。\n\
 <b>1.2.6のアップデート！</b>\n\
-&#160;&#160;&#160;&#160;- 小さいバグフィックス。\n\
-<b>1.2.5のアップデート！</b>\n\
-&#160;&#160;&#160;&#160;- バッファは今いくつでも選べます。\
+&#160;&#160;&#160;&#160;- 小さいバグフィックス。\
 </string> 
     
 </resources>
