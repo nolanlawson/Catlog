@@ -9,10 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.nolanlawson.logcat.R;
-import com.nolanlawson.logcat.R.layout;
-import com.nolanlawson.logcat.R.string;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -20,9 +16,9 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.graphics.Bitmap.Config;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.ClipboardManager;
@@ -35,6 +31,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.nolanlawson.logcat.R;
 
 /**
  * Adapter that shows any apps in the system that respond to Intent.ACTION_SEND intents.  Filters out any apps in
