@@ -56,6 +56,7 @@ import com.nolanlawson.logcat.data.ColorScheme;
 import com.nolanlawson.logcat.data.LogFileAdapter;
 import com.nolanlawson.logcat.data.LogLine;
 import com.nolanlawson.logcat.data.LogLineAdapter;
+import com.nolanlawson.logcat.data.SenderAppAdapter;
 import com.nolanlawson.logcat.data.SortedFilterArrayAdapter;
 import com.nolanlawson.logcat.data.TagAndProcessIdAdapter;
 import com.nolanlawson.logcat.helper.DialogHelper;

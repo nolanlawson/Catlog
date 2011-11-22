@@ -1,4 +1,4 @@
-package com.nolanlawson.logcat;
+package com.nolanlawson.logcat.data;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -8,6 +8,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import com.nolanlawson.logcat.R;
+import com.nolanlawson.logcat.R.layout;
+import com.nolanlawson.logcat.R.string;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -84,9 +88,11 @@ public class SenderAppAdapter extends ArrayAdapter<ResolveInfo> {
 		
 		filter(items);
 		Collections.sort(items, new ResolveInfo.DisplayNameComparator(mContext.getPackageManager())); 
+
 		if (addClipboard) {
-			items.add(new DummyClipboardLaunchable());
+			items.add(0, new DummyClipboardLaunchable());
 		}
+		
 		
 		Log.d("TAG", "items are: " + items);
 		

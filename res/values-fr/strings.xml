@@ -114,10 +114,8 @@ Téléchargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog
     <string name="first_run_pref_summary">Afficher de nouveau le message d\'introduction</string>
     <string name="first_run_title">Bienvenue à CatLog!</string>
     <string name="first_run_message">\  
-<b>Nouveautés en 1.2.7!</b>\n\
-&#160;&#160;&#160;&#160;- Suggestion automatique des tags.\n\
-<b>Nouveautés en 1.2.6!</b>\n\
-&#160;&#160;&#160;&#160;- Petite correction de bug.\
+<b>Nouveautés en 1.2.8!</b>\n\
+&#160;&#160;&#160;&#160;- Réduction de la taille du fichier APK.\
 </string>     
     
 </resources>

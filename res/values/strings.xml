@@ -143,15 +143,13 @@
     
     <string name="widget_start_recording">Record Log</string>
     <string name="widget_recording_in_progress">Recording…</string>
-    <string name="first_run">first_run13</string>
+    <string name="first_run">first_run14</string>
     <string name="first_run_pref_title">Reset Introduction</string>
     <string name="first_run_pref_summary">Show introductory message again.</string>
     <string name="first_run_title">Welcome to CatLog!</string>
     <string name="first_run_message">\  
-<b>New in 1.2.7!</b>\n\
-&#160;&#160;&#160;&#160;- Autosuggestion of tag names.\n\
-<b>New in 1.2.6!</b>\n\
-&#160;&#160;&#160;&#160;- Small bugfix.\
+<b>New in 1.2.8!</b>\n\
+&#160;&#160;&#160;&#160;- Reduced size of APK file.\
 </string> 
     
 </resources>

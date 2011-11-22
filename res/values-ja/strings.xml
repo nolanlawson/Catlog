@@ -113,10 +113,8 @@
     <string name="first_run_pref_summary">また紹介のメッセージを見せる。</string>
     <string name="first_run_title">CatLogにようこそ！</string>
     <string name="first_run_message">\
-<b>1.2.7のアップデート！</b>\n\
-&#160;&#160;&#160;&#160;- 検索の時にタグを自己暗示します。\n\
-<b>1.2.6のアップデート！</b>\n\
-&#160;&#160;&#160;&#160;- 小さいバグフィックス。\
+<b>1.2.8のアップデート！</b>\n\
+&#160;&#160;&#160;&#160;- APKのファイルサイズを小さくしました。\
 </string> 
     
 </resources>
