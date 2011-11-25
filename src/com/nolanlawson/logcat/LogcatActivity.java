@@ -3,14 +3,15 @@ package com.nolanlawson.logcat;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
@@ -30,42 +32,45 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Filter;
+import android.widget.Filter.FilterListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.Filter.FilterListener;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.nolanlawson.logcat.data.ColorScheme;
+import com.nolanlawson.logcat.data.FilterAdapter;
 import com.nolanlawson.logcat.data.LogFileAdapter;
 import com.nolanlawson.logcat.data.LogLine;
 import com.nolanlawson.logcat.data.LogLineAdapter;
 import com.nolanlawson.logcat.data.SenderAppAdapter;
 import com.nolanlawson.logcat.data.SortedFilterArrayAdapter;
 import com.nolanlawson.logcat.data.TagAndProcessIdAdapter;
+import com.nolanlawson.logcat.db.CatlogDBHelper;
+import com.nolanlawson.logcat.db.FilterItem;
 import com.nolanlawson.logcat.helper.DialogHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.helper.ProcessHelper;
+import com.nolanlawson.logcat.helper.ProcessHelper.ProcessType;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
 import com.nolanlawson.logcat.helper.UpdateHelper;
-import com.nolanlawson.logcat.helper.ProcessHelper.ProcessType;
 import com.nolanlawson.logcat.reader.LogcatReader;
 import com.nolanlawson.logcat.reader.LogcatReaderLoader;
 import com.nolanlawson.logcat.util.LogLineAdapterUtil;
@@ -314,6 +319,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	    case R.id.menu_partial_select:
 	    	startPartialSelectMode();
 	    	return true;
+	    case R.id.menu_filters:
+	    	showFiltersDialog();
+	    	return true;
 	    case R.id.menu_process_report:
 	    	String report = String.format("Created: %d.  Killed: %d.",
 	    			ProcessHelper.getProcessesCreated(), ProcessHelper.getProcessesKilled());
@@ -322,7 +330,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	    }
 	    return false;
 	}
-
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
@@ -386,6 +393,85 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		partialSelectMenuItem.setVisible(!partialSelectMode);
 		
 		return super.onPrepareOptionsMenu(menu);
+	}
+
+
+	private void showFiltersDialog() {
+		
+		List<FilterItem> filters = new ArrayList<FilterItem>();
+		filters.add(FilterItem.create(-1, null)); // dummy for the "add filter" option
+		
+		CatlogDBHelper dbHelper = null;
+		try {
+			dbHelper = new CatlogDBHelper(this);
+			filters.addAll(dbHelper.findFilterItems());
+		} finally {
+			if (dbHelper != null) {
+				dbHelper.close();
+			}
+		}
+
+		Collections.sort(filters);
+
+		final FilterAdapter filterAdapter = new FilterAdapter(this, filters);
+		
+		new AlertDialog.Builder(this)
+			.setCancelable(true)
+			.setTitle(R.string.title_filters)
+			.setNegativeButton(android.R.string.cancel, null)
+			.setAdapter(filterAdapter, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					if (which == 0) { // dummy 'add filter' item
+						showAddFilterDialog(filterAdapter);
+					} else {
+						// load filter
+						searchEditText.setText(filterAdapter.getItem(which).getText());
+						dialog.dismiss();
+					}
+					
+				}
+			})
+			.show();
+		
+	}
+	
+	private void showAddFilterDialog(final FilterAdapter filterAdapter) {
+		final EditText editText = new EditText(this);
+		editText.setText(searchEditText.getText());
+		
+		new AlertDialog.Builder(this)
+			.setCancelable(true)
+			.setTitle(R.string.add_filter)
+			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					String text = editText.getText().toString().trim();
+					if (!TextUtils.isEmpty(text)) {
+						CatlogDBHelper dbHelper = null;
+						try {
+							dbHelper = new CatlogDBHelper(LogcatActivity.this);
+							FilterItem newFilterItem = dbHelper.addFilter(text);
+							if (newFilterItem != null) { // null indicates a duplicate
+								filterAdapter.add(newFilterItem);
+								filterAdapter.sort(FilterItem.DEFAULT_COMPARATOR);
+							}
+							
+						} finally {
+							if (dbHelper != null) {
+								dbHelper.close();
+							}
+						}
+					}
+					
+				}
+			})
+			.setNegativeButton(android.R.string.cancel, null)
+			.setView(editText)
+			.show();
+		
 	}
 
 	private void startPartialSelectMode() {

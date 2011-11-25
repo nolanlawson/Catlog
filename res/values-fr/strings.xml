@@ -108,6 +108,10 @@ Téléchargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog
     <string name="as_text">Texte</string>
     <string name="choose_format">Format</string>
     
+    <string name="title_filters">Filtres</string>
+    <string name="add_filter_ellipsis">Ajouter Filtre...</string> 
+    <string name="add_filter">Ajouter Filtre</string>    
+        
     <string name="widget_start_recording">Enregistrer</string>
     <string name="widget_recording_in_progress">En cours…</string>
     <string name="first_run_pref_title">Réinitialiser l\'introduction</string>

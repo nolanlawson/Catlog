@@ -107,6 +107,10 @@
     <string name="as_text">テクスト</string>
     <string name="choose_format">形</string>
     
+    <string name="title_filters">フィルター</string>
+    <string name="add_filter_ellipsis">フィルターを作る...</string>  
+    <string name="add_filter">フィルターを作る</string>    
+        
     <string name="widget_start_recording">ログを記録</string>
     <string name="widget_recording_in_progress">記録中...</string>
     <string name="first_run_pref_title">紹介リセット</string>
