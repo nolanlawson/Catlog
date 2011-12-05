@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="version">バージョン %s</string>
     <string name="main_edit_text_hint">検索</string>
     
     <string name="dialog_for_widget"><u>ウィジェット</u>:\nホーム 画面→\n押し続けて→\n「ウィジェット」を\nタッチ</string>
@@ -117,8 +118,8 @@
     <string name="first_run_pref_summary">また紹介のメッセージを見せる。</string>
     <string name="first_run_title">CatLogにようこそ！</string>
     <string name="first_run_message">\
-<b>1.2.8のアップデート！</b>\n\
-&#160;&#160;&#160;&#160;- APKのファイルサイズを小さくしました。\
+<b>1.2.9のアップデート！</b>\n\
+&#160;&#160;&#160;&#160;- 新しい「フィルター」のページ。\
 </string> 
     
 </resources>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">CatLog</string>
+    <string name="version">Version %s</string>
     <string name="donate_version_name">Donate</string>
     <string name="main_edit_text_hint">Search logs</string>
     
@@ -69,7 +70,8 @@
 	<string name="notification_title">Log recording in progress</string>
 	<string name="notification_ticker">Log recording started</string>
 	<string name="notification_subtext">Select to stop recording.</string>
-	
+
+	<string name="pref_about">about</string>	
 	<string name="about_catlog">About CatLog</string>
 
 	<string name="pref_text_size">text_size</string>
@@ -147,13 +149,13 @@
         
     <string name="widget_start_recording">Record Log</string>
     <string name="widget_recording_in_progress">Recording…</string>
-    <string name="first_run">first_run14</string>
+    <string name="first_run">first_run15</string>
     <string name="first_run_pref_title">Reset Introduction</string>
     <string name="first_run_pref_summary">Show introductory message again.</string>
     <string name="first_run_title">Welcome to CatLog!</string>
     <string name="first_run_message">\  
-<b>New in 1.2.8!</b>\n\
-&#160;&#160;&#160;&#160;- Reduced size of APK file.\
+<b>New in 1.2.9!</b>\n\
+&#160;&#160;&#160;&#160;- Added filters.\
 </string> 
     
 </resources>

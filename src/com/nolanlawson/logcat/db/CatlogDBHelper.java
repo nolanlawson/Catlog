@@ -98,7 +98,9 @@ public class CatlogDBHelper extends SQLiteOpenHelper {
 			
 			Cursor cursor = null;
 			try {
-				cursor = db.query(TABLE_NAME, new String[]{COLUMN_ID, COLUMN_TEXT}, null, null, null, null, null);
+				String selection = COLUMN_TEXT +"=?";
+				String[] selectionArgs = {text}; 
+				cursor = db.query(TABLE_NAME, new String[]{COLUMN_ID, COLUMN_TEXT}, selection, selectionArgs, null, null, null);
 				cursor.moveToNext();
 				return FilterItem.create(cursor.getInt(0), cursor.getString(1));
 			} finally {

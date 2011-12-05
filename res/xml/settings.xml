@@ -45,5 +45,13 @@
 		android:persistent="true" android:defaultValue="true"/>		
 		
 	</PreferenceCategory>
+	
+	<PreferenceCategory android:title="@string/about">
+	    
+	     <com.nolanlawson.logcat.widget.NoPopupDialogPreference android:key="@string/pref_about"
+	         android:title="@string/about_catlog"
+	         />
+	    
+	</PreferenceCategory>
 
 </PreferenceScreen>

@@ -38,9 +38,6 @@
 	<item android:id="@+id/menu_settings" android:title="@string/settings"
 		android:alphabeticShortcut="@string/settings" android:icon="@android:drawable/ic_menu_preferences" />
 				
-	<item android:id="@+id/menu_about" android:title="@string/about"
-		android:alphabeticShortcut="@string/about" android:icon="@android:drawable/ic_menu_info_details" />
-		
 	<item android:id="@+id/menu_crazy_logger_service" android:title="Crazy Logger"
 			android:alphabeticShortcut="Crazy Logger" />
 		

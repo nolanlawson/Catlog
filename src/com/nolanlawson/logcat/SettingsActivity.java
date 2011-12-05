@@ -18,6 +18,7 @@ import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.nolanlawson.logcat.helper.DonateHelper;
+import com.nolanlawson.logcat.helper.PackageHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.util.StringUtil;
 import com.nolanlawson.logcat.widget.MockDisabledListPreference;
@@ -32,6 +33,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	private ListPreference textSizePreference;
 	private MultipleChoicePreference bufferPreference;
 	private MockDisabledListPreference themePreference;
+	private Preference aboutPreference;
 	
 	private boolean bufferChanged = false;
 	
@@ -85,6 +87,18 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 			});
 		}
 		
+		aboutPreference = findPreference(getString(R.string.pref_about));
+		aboutPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				// launch about activity
+				Intent intent = new Intent(SettingsActivity.this, AboutActivity.class);
+				startActivity(intent);
+				return true;
+			}
+		});
+		aboutPreference.setSummary(String.format(getString(R.string.version), PackageHelper.getVersionName(this)));
 	}
 	
 	private void openDonateVersionInMarket() {

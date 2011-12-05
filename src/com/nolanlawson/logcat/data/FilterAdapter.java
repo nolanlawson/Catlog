@@ -62,6 +62,7 @@ public class FilterAdapter extends ArrayAdapter<FilterItem> {
 							dbHelper.close();
 						}
 					}
+					remove(filterItem);
 					notifyDataSetChanged();
 				}
 			});

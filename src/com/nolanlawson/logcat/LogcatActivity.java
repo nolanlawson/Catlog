@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
@@ -35,6 +36,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -147,7 +149,23 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     
     
     
-    private void showInitialMessage() {
+    private void addFiltersToSuggestions() {
+    	CatlogDBHelper dbHelper = null;
+    	try {
+    		dbHelper = new CatlogDBHelper(this);
+    		
+    		for (FilterItem filterItem : dbHelper.findFilterItems()) {
+    			addToAutocompleteSuggestions(filterItem.getText());
+    		}
+    	} finally {
+    		if (dbHelper != null) {
+    			dbHelper.close();
+    		}
+    	}
+		
+	}
+
+	private void showInitialMessage() {
 
 		boolean isFirstRun = PreferenceHelper.getFirstRunPreference(getApplicationContext());
 		if (isFirstRun) {
@@ -304,9 +322,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	    case R.id.menu_main_log:
 	    	startUpMainLog();
 	    	return true;
-	    case R.id.menu_about:
-	    	startAboutActivity();
-	    	return true;
 	    case R.id.menu_delete_saved_log:
 	    	startDeleteSavedLogsDialog();
 	    	return true;
@@ -419,7 +434,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			.setCancelable(true)
 			.setTitle(R.string.title_filters)
 			.setNegativeButton(android.R.string.cancel, null)
-			.setAdapter(filterAdapter, new DialogInterface.OnClickListener() {
+			.setSingleChoiceItems(filterAdapter, 0, new DialogInterface.OnClickListener() {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -427,9 +442,11 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 						showAddFilterDialog(filterAdapter);
 					} else {
 						// load filter
-						searchEditText.setText(filterAdapter.getItem(which).getText());
+						String text = filterAdapter.getItem(which).getText();
+						silentlySetSearchText(text);
 						dialog.dismiss();
 					}
+					
 					
 				}
 			})
@@ -438,40 +455,77 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	}
 	
 	private void showAddFilterDialog(final FilterAdapter filterAdapter) {
-		final EditText editText = new EditText(this);
-		editText.setText(searchEditText.getText());
 		
-		new AlertDialog.Builder(this)
+		// show a popup to add a new filter text
+		
+		final AutoCompleteTextView editText = new AutoCompleteTextView(this);
+		editText.setSingleLine();
+		editText.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+		editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+		
+		// show suggestions as the user types
+		List<String> suggestions = new ArrayList<String>(searchSuggestionsSet);
+		SortedFilterArrayAdapter<String> suggestionAdapter = new SortedFilterArrayAdapter<String>(
+				this, R.layout.simple_list_item_small, suggestions);
+		editText.setAdapter(suggestionAdapter);
+				
+		final AlertDialog alertDialog = new AlertDialog.Builder(this)
 			.setCancelable(true)
 			.setTitle(R.string.add_filter)
 			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					String text = editText.getText().toString().trim();
-					if (!TextUtils.isEmpty(text)) {
-						CatlogDBHelper dbHelper = null;
-						try {
-							dbHelper = new CatlogDBHelper(LogcatActivity.this);
-							FilterItem newFilterItem = dbHelper.addFilter(text);
-							if (newFilterItem != null) { // null indicates a duplicate
-								filterAdapter.add(newFilterItem);
-								filterAdapter.sort(FilterItem.DEFAULT_COMPARATOR);
-							}
-							
-						} finally {
-							if (dbHelper != null) {
-								dbHelper.close();
-							}
-						}
-					}
-					
+					handleNewFilterText(editText.getText().toString(), filterAdapter);
+					dialog.dismiss();
 				}
 			})
 			.setNegativeButton(android.R.string.cancel, null)
 			.setView(editText)
-			.show();
+			.create();
 		
+		// ensures that the soft keyboard doesn't weirdly pop up at startup
+		alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		
+		// when 'Done' is clicked (i.e. enter button), do the same as when "OK" is clicked
+		editText.setOnEditorActionListener(new OnEditorActionListener() {
+			
+			@Override
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_DONE) {
+					handleNewFilterText(editText.getText().toString(), filterAdapter);
+					alertDialog.dismiss();
+					return true;
+				}
+				return false;
+			}
+		});
+		
+		alertDialog.show();
+		
+	}
+
+	protected void handleNewFilterText(String text, FilterAdapter filterAdapter) {
+		text = text.trim();
+		if (!TextUtils.isEmpty(text)) {
+			CatlogDBHelper dbHelper = null;
+			try {
+				dbHelper = new CatlogDBHelper(LogcatActivity.this);
+				FilterItem filterItem = dbHelper.addFilter(text);
+				if (filterItem != null) { // null indicates duplicate
+					filterAdapter.add(filterItem);
+					filterAdapter.sort(FilterItem.DEFAULT_COMPARATOR);
+					filterAdapter.notifyDataSetChanged();
+					
+					addToAutocompleteSuggestions(text);
+				}
+											
+			} finally {
+				if (dbHelper != null) {
+					dbHelper.close();
+				}
+			}
+		}
 	}
 
 	private void startPartialSelectMode() {
@@ -666,17 +720,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		
 	}
-	
-
-
-	private void startAboutActivity() {
-		
-		Intent intent = new Intent(this,AboutActivity.class);
-		
-		startActivity(intent);
-		
-	}
-	
 	
 	private void sendLog() {
 		
@@ -1004,6 +1047,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				collapsedMode ? R.drawable.ic_menu_more_32 : R.drawable.ic_menu_less_32, 0, 0, 0);
 		searchSuggestionsAdapter.clear();
 		searchSuggestionsSet.clear();
+		addFiltersToSuggestions(); // filters are what initial populate the suggestions
 		
 		resetFilter();
 		updateDisplayedFilename();
@@ -1240,9 +1284,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				public void onClick(DialogInterface dialog, int which) {
 
 					if (which == 0) { // tag
-						searchEditText.setText(logLine.getTag());
+						silentlySetSearchText(logLine.getTag());
 					} else { // which == 1, i.e. process id
-						searchEditText.setText(Integer.toString(logLine.getProcessId()));
+						silentlySetSearchText(Integer.toString(logLine.getProcessId()));
 					}
 					
 					// put the cursor at the end
@@ -1255,6 +1299,16 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		
 		return true;
+	}
+	
+	private void silentlySetSearchText(String text) {
+		// sets the search text without invoking autosuggestions, which are really only useful when typing
+		
+		searchEditText.setFocusable(false);
+		searchEditText.setFocusableInTouchMode(false);
+		searchEditText.setText(text);            
+		searchEditText.setFocusable(true);
+		searchEditText.setFocusableInTouchMode(true);		
 	}
 	
 	
@@ -1427,13 +1481,17 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		if (!StringUtil.isEmptyOrWhitespaceOnly(logLine.getTag())) {
 			String trimmed = logLine.getTag().trim();
-			if (!searchSuggestionsSet.contains(trimmed)) {
-				searchSuggestionsSet.add(trimmed);
-				searchSuggestionsAdapter.add(trimmed);
-			}
+			addToAutocompleteSuggestions(trimmed);
 		}
 	}
 	
+	private void addToAutocompleteSuggestions(String trimmed) {
+		if (!searchSuggestionsSet.contains(trimmed)) {
+			searchSuggestionsSet.add(trimmed);
+			searchSuggestionsAdapter.add(trimmed);
+		}
+	}
+
 	private class LogReaderAsyncTask extends AsyncTask<Void,String,Void> {
 		
 		private int counter = 0;
