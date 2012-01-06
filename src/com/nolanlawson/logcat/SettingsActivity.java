@@ -1,7 +1,6 @@
 package com.nolanlawson.logcat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import android.content.Intent;
@@ -10,9 +9,9 @@ import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceActivity;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.widget.Toast;
@@ -20,6 +19,7 @@ import android.widget.Toast;
 import com.nolanlawson.logcat.helper.DonateHelper;
 import com.nolanlawson.logcat.helper.PackageHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
+import com.nolanlawson.logcat.util.ArrayUtil;
 import com.nolanlawson.logcat.util.StringUtil;
 import com.nolanlawson.logcat.widget.MockDisabledListPreference;
 import com.nolanlawson.logcat.widget.MultipleChoicePreference;
@@ -30,7 +30,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	private static final int MIN_LOG_LINE_PERIOD = 1;
 	
 	private EditTextPreference logLinePeriodPreference;
-	private ListPreference textSizePreference;
+	private ListPreference textSizePreference, defaultLevelPreference;
 	private MultipleChoicePreference bufferPreference;
 	private MockDisabledListPreference themePreference;
 	private Preference aboutPreference;
@@ -60,6 +60,10 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 		textSizePreference = (ListPreference) findPreference(getString(R.string.pref_text_size));
 		textSizePreference.setSummary(textSizePreference.getEntry());
 		textSizePreference.setOnPreferenceChangeListener(this);
+		
+		defaultLevelPreference = (ListPreference) findPreference(getString(R.string.pref_default_log_level));
+		defaultLevelPreference.setSummary(defaultLevelPreference.getEntry());
+		defaultLevelPreference.setOnPreferenceChangeListener(this);
 		
 		themePreference = (MockDisabledListPreference) findPreference(getString(R.string.pref_theme));
 		themePreference.setOnPreferenceChangeListener(this);
@@ -132,7 +136,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 			
 		} else if (preference.getKey().equals(getString(R.string.pref_theme))) {
 			// update summary
-			int index = Arrays.asList(themePreference.getEntryValues()).indexOf(newValue.toString());
+			int index = ArrayUtil.indexOf(themePreference.getEntryValues(),newValue.toString());
 			CharSequence newEntry = themePreference.getEntries()[index];
 			themePreference.setSummary(newEntry);
 			
@@ -153,13 +157,16 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 			
 			setBufferPreferenceSummary(newValue.toString());
 			return true;
+		} else { // default log level or text size pref
 			
-		} else { // text size pref
+			// update the summary to reflect changes
 			
-			int index = Arrays.asList(textSizePreference.getEntryValues()).indexOf(newValue);
-			CharSequence newEntry = textSizePreference.getEntries()[index];
+			ListPreference listPreference = (ListPreference) preference;
 			
-			textSizePreference.setSummary(newEntry);
+			int index = ArrayUtil.indexOf(listPreference.getEntryValues(),newValue);
+			CharSequence newEntry = listPreference.getEntries()[index];
+			listPreference.setSummary(newEntry);
+			
 			return true;
 		}
 		
@@ -187,7 +194,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 		List<CharSequence> checkedEntries = new ArrayList<CharSequence>();
 		
 		for (String entryValue : commaSeparated) {
-			int idx = Arrays.asList(bufferPreference.getEntryValues()).indexOf(entryValue);
+			int idx = ArrayUtil.indexOf(bufferPreference.getEntryValues(),entryValue);
 			checkedEntries.add(bufferPreference.getEntries()[idx]);
 		}
 		

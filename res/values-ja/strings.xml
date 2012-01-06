@@ -91,6 +91,9 @@
 	<string name="pref_theme_choice_sprint_name">Big Yellow</string>
 	<string name="pref_theme_choice_tmobile_name">T-Mo</string>
 
+	<string name="pref_default_log_level_title">デフォルトなレベル</string>
+	<string name="default_in_parens">(デフォルト）</string>    
+	    
 	<string name="pref_cat_appearance">表示</string>
 	<string name="pref_cat_configuration">コンフィグレーション</string>
 
@@ -118,10 +121,8 @@
     <string name="first_run_pref_summary">また紹介のメッセージを見せる。</string>
     <string name="first_run_title">CatLogにようこそ！</string>
     <string name="first_run_message">\
-<b>1.3.0のアップデート！</b>\n\
-&#160;&#160;&#160;&#160;- 小さいグラフィカルなバグフィックス。\n\
-<b>1.2.9のアップデート！</b>\n\
-&#160;&#160;&#160;&#160;- 新しい「フィルター」のページ。\
+<b>1.3.1のアップデート！</b>\n\
+&#160;&#160;&#160;&#160;- 新しい設定：「デフォルトなレベル」\
 </string> 
     
 </resources>

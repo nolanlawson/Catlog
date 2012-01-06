@@ -1,12 +1,12 @@
 package com.nolanlawson.logcat.data;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
 
 import com.nolanlawson.logcat.R;
+import com.nolanlawson.logcat.util.ArrayUtil;
 
 
 public enum ColorScheme {
@@ -67,7 +67,8 @@ public enum ColorScheme {
 
 	public String getDisplayableName(Context context) {
 		
-		int idx = Arrays.asList(context.getResources().getStringArray(R.array.pref_theme_choices_values)).indexOf(context.getString(nameResource));
+		CharSequence[] themeChoiceValues = context.getResources().getStringArray(R.array.pref_theme_choices_values);
+		int idx = ArrayUtil.indexOf(themeChoiceValues,context.getString(nameResource));
 		return context.getResources().getStringArray(R.array.pref_theme_choices_names)[idx];
 		
 	}

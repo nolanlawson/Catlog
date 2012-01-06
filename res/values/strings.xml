@@ -52,6 +52,13 @@
 	<string name="log_level_error">Error</string>
 	<string name="log_level_wtf">What a Terrible Failure</string>
 	
+	<string name="log_level_value_verbose">V</string>
+	<string name="log_level_value_debug">D</string>
+	<string name="log_level_value_info">I</string>
+	<string name="log_level_value_warn">W</string>
+	<string name="log_level_value_error">E</string>
+	<string name="log_level_value_wtf">F</string>
+	
 	<string name="no_saved_logs">No saved logs found.</string>
 	<string name="recording_in_progress">Recording already in progress.</string>
 	<string name="enter_good_filename">Please enter a valid filename.</string>
@@ -119,6 +126,10 @@
 	<string name="pref_theme_choice_att_name">Ma Bell</string>
 	<string name="pref_theme_choice_sprint_name">Big Yellow</string>
 	<string name="pref_theme_choice_tmobile_name">T-Mo</string>	
+	
+	<string name="pref_default_log_level">default_level</string>
+	<string name="pref_default_log_level_title">Default Log Level</string>
+	<string name="default_in_parens">(Default)</string>
 
 	<string name="pref_cat_appearance">Appearance</string>
 	<string name="pref_cat_configuration">Configuration</string>
@@ -149,15 +160,13 @@
         
     <string name="widget_start_recording">Record Log</string>
     <string name="widget_recording_in_progress">Recording…</string>
-    <string name="first_run">first_run16</string>
+    <string name="first_run">first_run17</string>
     <string name="first_run_pref_title">Reset Introduction</string>
     <string name="first_run_pref_summary">Show introductory message again.</string>
     <string name="first_run_title">Welcome to CatLog!</string>
     <string name="first_run_message">\
-<b>New in 1.3.0!</b>\n\
-&#160;&#160;&#160;&#160;- Small graphical fix.\n\
-<b>New in 1.2.9!</b>\n\
-&#160;&#160;&#160;&#160;- Added filters.\
+<b>New in 1.3.1!</b>\n\
+&#160;&#160;&#160;&#160;- New \"default log level\" setting.\
 </string> 
     
 </resources>

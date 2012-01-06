@@ -45,7 +45,16 @@
 		<item>@string/log_level_error</item>
 		<item>@string/log_level_wtf</item>
 	</string-array>
-	
+
+	<string-array name="log_levels_values">
+		<item>@string/log_level_value_verbose</item>
+		<item>@string/log_level_value_debug</item>
+		<item>@string/log_level_value_info</item>
+		<item>@string/log_level_value_warn</item>
+		<item>@string/log_level_value_error</item>
+		<item>@string/log_level_value_wtf</item>
+	</string-array>	    
+	    	
 	<string-array name="text_size_values">
 		<item>@string/text_size_xsmall_value</item>
 		<item>@string/text_size_small_value</item>

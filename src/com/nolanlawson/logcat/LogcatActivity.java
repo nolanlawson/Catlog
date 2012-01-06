@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Set;
 
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,28 +33,28 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Filter;
-import android.widget.Filter.FilterListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Filter.FilterListener;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.nolanlawson.logcat.data.ColorScheme;
 import com.nolanlawson.logcat.data.FilterAdapter;
@@ -69,12 +69,13 @@ import com.nolanlawson.logcat.db.FilterItem;
 import com.nolanlawson.logcat.helper.DialogHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.helper.ProcessHelper;
-import com.nolanlawson.logcat.helper.ProcessHelper.ProcessType;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
 import com.nolanlawson.logcat.helper.UpdateHelper;
+import com.nolanlawson.logcat.helper.ProcessHelper.ProcessType;
 import com.nolanlawson.logcat.reader.LogcatReader;
 import com.nolanlawson.logcat.reader.LogcatReaderLoader;
+import com.nolanlawson.logcat.util.ArrayUtil;
 import com.nolanlawson.logcat.util.LogLineAdapterUtil;
 import com.nolanlawson.logcat.util.StringUtil;
 import com.nolanlawson.logcat.util.UtilLogger;
@@ -1047,7 +1048,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				
 				for (String line : logLines) {
 					LogLine logLine = LogLine.newLogLine(line, !collapsedMode);
-					adapter.add(logLine);
+					adapter.addWithFilter(logLine, searchEditText.getText());
 					addToAutocompleteSuggestions(logLine);
 					
 				}
@@ -1088,9 +1089,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		searchSuggestionsAdapter.clear();
 		searchSuggestionsSet.clear();
 		addFiltersToSuggestions(); // filters are what initial populate the suggestions
-		
-		resetFilter();
 		updateDisplayedFilename();
+		resetFilter();
 		
 	}
 
@@ -1113,7 +1113,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 
 	private void resetFilter() {
 
-		adapter.setLogLevelLimit(0);
+		String defaultLogLevel = Character.toString(PreferenceHelper.getDefaultLogLevelPreference(this));
+		CharSequence[] logLevels = getResources().getStringArray(R.array.log_levels_values);
+		adapter.setLogLevelLimit(ArrayUtil.indexOf(logLevels,defaultLogLevel));
+		logLevelChanged();
 		
 		// silently change edit text
 		searchEditText.removeTextChangedListener(this);
@@ -1124,11 +1127,19 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 
 	private void showLogLevelDialog() {
 	
+		CharSequence[] logLevels = getResources().getStringArray(R.array.log_levels);
+		
+		// put the word "default" after whatever the default log level is
+		String defaultLogLevel = Character.toString(PreferenceHelper.getDefaultLogLevelPreference(this));
+		int index = ArrayUtil.indexOf(getResources().getStringArray(R.array.log_levels_values),defaultLogLevel);
+		
+		logLevels[index] = logLevels[index].toString() + " " + getString(R.string.default_in_parens);
+		
 		Builder builder = new Builder(this);
 		
 		builder.setTitle(R.string.log_level)
 			.setCancelable(true)
-			.setSingleChoiceItems(R.array.log_levels, adapter.getLogLevelLimit(), new DialogInterface.OnClickListener() {
+			.setSingleChoiceItems(logLevels, adapter.getLogLevelLimit(), new DialogInterface.OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {

@@ -24,6 +24,7 @@ public class PreferenceHelper {
 		Collections.synchronizedMap(new HashMap<Integer,Integer>());
 	
 	private static float textSize = -1;
+	private static Character defaultLogLevel = null;
 	private static Boolean showTimestampAndPid = null;
 	private static ColorScheme colorScheme = null;
 	
@@ -78,6 +79,23 @@ public class PreferenceHelper {
 		editor.commit();
 	}
 	
+	public static char getDefaultLogLevelPreference(Context context) {
+		
+		if (defaultLogLevel == null) {
+			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+			
+			String logLevelPref = sharedPrefs.getString(
+					context.getText(R.string.pref_default_log_level).toString(), 
+					context.getText(R.string.log_level_value_verbose).toString());		
+			
+			defaultLogLevel = logLevelPref.charAt(0);
+		}
+		
+		return defaultLogLevel;
+		
+
+	}
+	
 	public static float getTextSizePreference(Context context) {
 		
 		if (textSize == -1) {
@@ -106,6 +124,7 @@ public class PreferenceHelper {
 	}
 	
 	public static void clearCache() {
+		defaultLogLevel = null;
 		textSize = -1;
 		showTimestampAndPid = null;
 		colorScheme = null;

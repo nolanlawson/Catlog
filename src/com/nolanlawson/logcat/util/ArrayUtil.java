@@ -4,6 +4,15 @@ import java.lang.reflect.Array;
 
 public class ArrayUtil {
 	
+	public static <T> int indexOf(T[] array, T object) {
+		for (int i = 0; i < array.length; i++) {
+			if (object.equals(array[i])) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
 	// copied from Java 6 source
 	
 	 public static int[] copyOfRange(int[] original, int start, int end) {
