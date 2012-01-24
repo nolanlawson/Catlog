@@ -129,6 +129,7 @@
 	
 	<string name="pref_default_log_level">default_level</string>
 	<string name="pref_default_log_level_title">Default Log Level</string>
+	<string name="pref_default_log_level_summary">Log level at startup and when opening files (%s)</string>
 	<string name="default_in_parens">(Default)</string>
 
 	<string name="pref_cat_appearance">Appearance</string>

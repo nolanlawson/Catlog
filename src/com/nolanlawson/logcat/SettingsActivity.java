@@ -62,8 +62,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 		textSizePreference.setOnPreferenceChangeListener(this);
 		
 		defaultLevelPreference = (ListPreference) findPreference(getString(R.string.pref_default_log_level));
-		defaultLevelPreference.setSummary(defaultLevelPreference.getEntry());
 		defaultLevelPreference.setOnPreferenceChangeListener(this);
+		setDefaultLevelPreferenceSummary(defaultLevelPreference.getEntry());
 		
 		themePreference = (MockDisabledListPreference) findPreference(getString(R.string.pref_theme));
 		themePreference.setOnPreferenceChangeListener(this);
@@ -105,6 +105,12 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 		aboutPreference.setSummary(String.format(getString(R.string.version), PackageHelper.getVersionName(this)));
 	}
 	
+	private void setDefaultLevelPreferenceSummary(CharSequence entry) {
+		defaultLevelPreference.setSummary(
+				String.format(getString(R.string.pref_default_log_level_summary), entry));
+		
+	}
+
 	private void openDonateVersionInMarket() {
 		
 		Intent intent = new Intent(Intent.ACTION_VIEW, 
@@ -157,7 +163,20 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 			
 			setBufferPreferenceSummary(newValue.toString());
 			return true;
-		} else { // default log level or text size pref
+		} else if (preference.getKey().equals(getString(R.string.pref_default_log_level))) {
+			// default log level preference
+			
+			// update the summary to reflect changes
+			
+			ListPreference listPreference = (ListPreference) preference;
+			
+			int index = ArrayUtil.indexOf(listPreference.getEntryValues(),newValue);
+			CharSequence newEntry = listPreference.getEntries()[index];
+			setDefaultLevelPreferenceSummary(newEntry);
+			
+			return true;
+			
+		} else { // text size pref
 			
 			// update the summary to reflect changes
 			

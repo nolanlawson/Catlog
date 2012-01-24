@@ -93,6 +93,7 @@ Téléchargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog
 	<string name="pref_theme_choice_tmobile_name">T-Mo</string>
 	
 	<string name="pref_default_log_level_title">Niveau de Défaut</string>
+	<string name="pref_default_log_level_summary">Niveau au démarrage et à l\'ouverture d\'un fichier (%s)</string>
 	<string name="default_in_parens">(Défaut)</string>
 
 	<string name="pref_cat_appearance">Affichage</string>

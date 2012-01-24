@@ -92,6 +92,7 @@
 	<string name="pref_theme_choice_tmobile_name">T-Mo</string>
 
 	<string name="pref_default_log_level_title">デフォルトなレベル</string>
+	<string name="pref_default_log_level_summary">スタートアップとファイルを開ける時のレベル　（%s）</string>
 	<string name="default_in_parens">(デフォルト）</string>    
 	    
 	<string name="pref_cat_appearance">表示</string>
