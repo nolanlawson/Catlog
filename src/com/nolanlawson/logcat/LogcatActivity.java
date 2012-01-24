@@ -1031,24 +1031,34 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		// do in background to avoid jank
 		
-		AsyncTask<Void, Void, List<String>> openFileTask = new AsyncTask<Void, Void, List<String>>(){
+		AsyncTask<Void, Void, List<LogLine>> openFileTask = new AsyncTask<Void, Void, List<LogLine>>(){
 
 			@Override
-			protected List<String> doInBackground(Void... params) {
+			protected void onPreExecute() {
+				super.onPreExecute();
+				resetDisplayedLog(filename);
+				
+				showProgressBar();
+			}
 
-				List<String> logLines = SaveLogHelper.openLog(filename);
+			@Override
+			protected List<LogLine> doInBackground(Void... params) {
+
+				List<String> lines = SaveLogHelper.openLog(filename);
+				List<LogLine> logLines = new ArrayList<LogLine>();
+				for (String line : lines) {
+					logLines.add(LogLine.newLogLine(line, !collapsedMode));
+				}
 				return logLines;
 			}
 
 			@Override
-			protected void onPostExecute(List<String> logLines) {
+			protected void onPostExecute(List<LogLine> logLines) {
 				super.onPostExecute(logLines);
-				resetDisplayedLog(filename);
 				hideProgressBar();
 				
-				for (String line : logLines) {
-					LogLine logLine = LogLine.newLogLine(line, !collapsedMode);
-					adapter.addWithFilter(logLine, searchEditText.getText());
+				for (LogLine logLine : logLines) {
+					adapter.addWithFilter(logLine, "");
 					addToAutocompleteSuggestions(logLine);
 					
 				}
@@ -1115,7 +1125,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 
 		String defaultLogLevel = Character.toString(PreferenceHelper.getDefaultLogLevelPreference(this));
 		CharSequence[] logLevels = getResources().getStringArray(R.array.log_levels_values);
-		adapter.setLogLevelLimit(ArrayUtil.indexOf(logLevels,defaultLogLevel));
+		int logLevelLimit = ArrayUtil.indexOf(logLevels,defaultLogLevel);
+		adapter.setLogLevelLimit(logLevelLimit);
 		logLevelChanged();
 		
 		// silently change edit text
@@ -1543,7 +1554,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		}
 	}
 
-	private class LogReaderAsyncTask extends AsyncTask<Void,String,Void> {
+	private class LogReaderAsyncTask extends AsyncTask<Void,LogLine,Void> {
 		
 		private int counter = 0;
 		private volatile boolean paused;
@@ -1570,7 +1581,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 							}
 						}
 					}
-					publishProgress(line);
+					LogLine logLine = LogLine.newLogLine(line, !collapsedMode);
+					publishProgress(logLine);
 				} 
 			} catch (InterruptedException e) {
 				log.d(e, "expected error");
@@ -1604,14 +1616,13 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		}
 
 		@Override
-		protected void onProgressUpdate(String... values) {
+		protected void onProgressUpdate(LogLine... values) {
 			super.onProgressUpdate(values);
 
-			String line = values[0];
+			LogLine logLine = values[0];
 			
 			hideProgressBar();
 			
-			LogLine logLine = LogLine.newLogLine(line, !collapsedMode);
 			adapter.addWithFilter(logLine, searchEditText.getText());
 			addToAutocompleteSuggestions(logLine);
 			
