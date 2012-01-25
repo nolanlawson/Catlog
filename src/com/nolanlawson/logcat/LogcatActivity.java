@@ -1436,14 +1436,18 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 
 		switch (v.getId()) {
 			case R.id.main_edit_text:
-				if (searchEditText.length() > 0) {
+				if (searchEditText != null && searchEditText.length() > 0) {
 					// I think it's intuitive to click an edit text and have all the text selected
 					searchEditText.setSelection(0, searchEditText.length());
 				}
 				break;
 			case R.id.main_clear_button:
-				searchEditText.setText("");
-				adapter.clear();
+				if (searchEditText != null) {
+					searchEditText.setText("");
+				}
+				if (adapter != null) {
+					adapter.clear();
+				}
 				Toast.makeText(this, R.string.log_cleared, Toast.LENGTH_LONG).show();
 				break;
 			case R.id.main_more_button:
@@ -1457,14 +1461,18 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	}
 	
 	private void pauseOrUnpause() {
-		if (task.isPaused()) {
-			task.unpause();
-		} else {
-			task.pause();
-		}
+		LogReaderAsyncTask currentTask = task;
 		
-		pauseButton.setCompoundDrawablesWithIntrinsicBounds(
-				task.isPaused() ? R.drawable.ic_media_play : R.drawable.ic_media_pause, 0, 0, 0);
+		if (currentTask != null) {
+			if (currentTask.isPaused()) {
+				currentTask.unpause();
+			} else {
+				currentTask.pause();
+			}
+		
+			pauseButton.setCompoundDrawablesWithIntrinsicBounds(
+					currentTask.isPaused() ? R.drawable.ic_media_play : R.drawable.ic_media_pause, 0, 0, 0);
+		}
 	}
 
 	@Override

@@ -117,17 +117,15 @@ public class LogLine {
 		LogLine logLine = new LogLine();
 		logLine.setExpanded(expanded);
 		
-		// first get the timestamp
-		String timestamp = null;
-		
 		// if the first char is a digit, then this starts out with a timestamp
 		// otherwise, it's a legacy log or the beginning of the log output or something
-		if (!TextUtils.isEmpty(originalLine) && TextUtils.isDigitsOnly(Character.toString(originalLine.charAt(0)))) {
-			timestamp = originalLine.substring(0,18);
+		if (!TextUtils.isEmpty(originalLine) 
+				&& TextUtils.isDigitsOnly(Character.toString(originalLine.charAt(0)))
+				&& originalLine.length() >= 19) {
+			String timestamp = originalLine.substring(0,18);
+			logLine.setTimestamp(timestamp);
 			originalLine = originalLine.substring(19); // cut off timestamp
 		}
-		
-		logLine.setTimestamp(timestamp);
 		
 		Matcher matcher = logPattern.matcher(originalLine);
 		
