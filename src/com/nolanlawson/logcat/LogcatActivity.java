@@ -1559,6 +1559,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		private int counter = 0;
 		private volatile boolean paused;
 		private final Object lock = new Object();
+		private boolean firstLineReceived;
 		
 		@Override
 		protected Void doInBackground(Void... params) {
@@ -1621,7 +1622,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 
 			LogLine logLine = values[0];
 			
-			hideProgressBar();
+			if (!firstLineReceived) {
+				firstLineReceived = true;
+				hideProgressBar();
+			}
 			
 			adapter.addWithFilter(logLine, searchEditText.getText());
 			addToAutocompleteSuggestions(logLine);
