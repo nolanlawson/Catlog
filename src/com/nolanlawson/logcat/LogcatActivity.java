@@ -67,12 +67,14 @@ import com.nolanlawson.logcat.data.TagAndProcessIdAdapter;
 import com.nolanlawson.logcat.db.CatlogDBHelper;
 import com.nolanlawson.logcat.db.FilterItem;
 import com.nolanlawson.logcat.helper.DialogHelper;
+import com.nolanlawson.logcat.helper.LogcatHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.helper.ProcessHelper;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
 import com.nolanlawson.logcat.helper.UpdateHelper;
 import com.nolanlawson.logcat.helper.ProcessHelper.ProcessType;
+import com.nolanlawson.logcat.intents.Intents;
 import com.nolanlawson.logcat.reader.LogcatReader;
 import com.nolanlawson.logcat.reader.LogcatReaderLoader;
 import com.nolanlawson.logcat.util.ArrayUtil;
@@ -184,15 +186,50 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 							public void onClick(DialogInterface dialog, int which) {
 								PreferenceHelper.setFirstRunPreference(getApplicationContext(), false);
 								dialog.dismiss();
+								doAfterInitialMessage(getIntent());
 							}
 						})
 					.setCancelable(false)
 			        .setIcon(R.drawable.icon).show();
 
+		} else {
+			doAfterInitialMessage(getIntent());
 		}
 
 		
 	}
+
+	private void doAfterInitialMessage(Intent intent) {
+		
+		// handle an intent that was sent from an external application
+		
+		if (intent != null && Intents.ACTION_LAUNCH.equals(intent.getAction())) {
+			
+			String filter = intent.getStringExtra(Intents.EXTRA_FILTER);
+			String level = intent.getStringExtra(Intents.EXTRA_LEVEL);
+			
+			if (!TextUtils.isEmpty(filter)) {
+				silentlySetSearchText(filter);
+			}
+			
+			
+			if (!TextUtils.isEmpty(level)) {
+				CharSequence[] logLevels = getResources().getStringArray(R.array.log_levels_values);
+				int logLevelLimit = ArrayUtil.indexOf(logLevels, level.toUpperCase());
+				
+				if (logLevelLimit == -1) {
+					String invalidLevel = String.format(getString(R.string.toast_invalid_level), level);
+					Toast.makeText(this, invalidLevel, Toast.LENGTH_LONG).show();
+				} else {
+					adapter.setLogLevelLimit(logLevelLimit);
+					logLevelChanged();
+				}
+				
+			}
+		}
+		
+	}
+
 
 	@Override
     public void onResume() {
@@ -215,8 +252,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		
+		doAfterInitialMessage(intent);
+		
 		// launched from the widget or notification
-        if (intent != null && intent.hasExtra("filename")) {
+        if (intent != null && !Intents.ACTION_LAUNCH.equals(intent.getAction()) && intent.hasExtra("filename")) {
         	String filename = intent.getStringExtra("filename");
         	openLog(filename);
         }

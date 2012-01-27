@@ -24,7 +24,7 @@
     <string name="send_as_text">テクストとして送る</string>
     <string name="send_as_attachment">添付として送る</string>
     <string name="save">保存</string>
-	<string name="save_as">保存...</string>
+	<string name="save_as">保存&#8230;</string>
 	<string name="save_log">ログを保存</string>
 	<string name="log_level">レベル</string>
 	<string name="open">開ける</string>
@@ -113,15 +113,19 @@
     <string name="choose_format">形</string>
     
     <string name="title_filters">フィルター</string>
-    <string name="add_filter_ellipsis">フィルターを作る...</string>  
+    <string name="add_filter_ellipsis">フィルターを作る&#8230;</string>  
     <string name="add_filter">フィルターを作る</string>    
+    
+    <string name="toast_invalid_level">無効なレベルの名：%s</string>
         
     <string name="widget_start_recording">ログを記録</string>
-    <string name="widget_recording_in_progress">記録中...</string>
+    <string name="widget_recording_in_progress">記録中&#8230;</string>
     <string name="first_run_pref_title">紹介リセット</string>
     <string name="first_run_pref_summary">また紹介のメッセージを見せる。</string>
     <string name="first_run_title">CatLogにようこそ！</string>
     <string name="first_run_message">\
+<b>1.3.2のアップデート！</b>\n\
+&#160;&#160;&#160;&#160;- CatLogがIntentで別のアプリに呼ばれることはできます。\n\
 <b>1.3.1のアップデート！</b>\n\
 &#160;&#160;&#160;&#160;- 新しい設定：「デフォルトなレベル」\
 </string> 

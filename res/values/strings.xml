@@ -156,16 +156,20 @@
     <string name="choose_format">Choose Format</string>
     
     <string name="title_filters">Filters</string>
-    <string name="add_filter_ellipsis">Add Filter...</string>
+    <string name="add_filter_ellipsis">Add Filter&#8230;</string>
     <string name="add_filter">Add Filter</string>
+    
+    <string name="toast_invalid_level">Invalid level name: %s</string>
         
     <string name="widget_start_recording">Record Log</string>
     <string name="widget_recording_in_progress">Recording…</string>
-    <string name="first_run">first_run17</string>
+    <string name="first_run">first_run18</string>
     <string name="first_run_pref_title">Reset Introduction</string>
     <string name="first_run_pref_summary">Show introductory message again.</string>
     <string name="first_run_title">Welcome to CatLog!</string>
     <string name="first_run_message">\
+<b>New in 1.3.2!</b>\n\
+&#160;&#160;&#160;&#160;- CatLog can be invoked from external intents.\n\
 <b>New in 1.3.1!</b>\n\
 &#160;&#160;&#160;&#160;- New \"default log level\" setting.\
 </string> 
