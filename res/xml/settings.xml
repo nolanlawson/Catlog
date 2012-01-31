@@ -43,7 +43,13 @@
 		android:summary="@string/pref_log_line_period_summary"
 		android:persistent="true" android:defaultValue="@string/pref_log_line_period_default"/>
 		
-		
+	<com.nolanlawson.logcat.widget.NonnegativeIntegerEditTextPreference 
+		android:key="@string/pref_display_limit"
+		android:title="@string/pref_display_limit_title"
+		android:summary="@string/pref_display_limit_summary"
+		android:persistent="true" android:defaultValue="@string/pref_display_limit_default"/>
+	
+			
 	<CheckBoxPreference android:key="@string/first_run"
 		android:title="@string/first_run_pref_title"
 		android:summary="@string/first_run_pref_summary"

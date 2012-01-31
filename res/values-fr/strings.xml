@@ -96,6 +96,11 @@ Téléchargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog
 	<string name="pref_default_log_level_summary">Niveau au démarrage et à l\'ouverture d\'un fichier (%s)</string>
 	<string name="default_in_parens">(Défaut)</string>
 
+	<string name="pref_display_limit_title">Limite d\'Affichage</string>
+	<string name="pref_display_limit_summary" formatted="false">Afficher les %d derniers logs seulement, pour éviter des OutOfMemoryErrors. (Défaut: %s)</string>
+	<string name="toast_invalid_display_limit" formatted="false">Veuillez entrer un nombre entier entre %d et %d.</string>
+	<string name="toast_pref_changed_restart_required">Paramètre changée. Un redémarrage de CatLog est nécessaire pour effectuer les changements.</string>
+	
 	<string name="pref_cat_appearance">Affichage</string>
 	<string name="pref_cat_configuration">Configuration</string>
 

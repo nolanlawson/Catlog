@@ -85,9 +85,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	
 	private static final int REQUEST_CODE_SETTINGS = 1;
 	
-	// maximum number of log lines to display before truncating.
-	// this avoids OutOfMemoryErrors
-	private static final int MAX_NUM_LOG_LINES = 1000;
 	// how often to check to see if we've gone over the max size
 	private static final int UPDATE_CHECK_INTERVAL = 200;
 	
@@ -1673,10 +1670,13 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			adapter.addWithFilter(logLine, searchEditText.getText());
 			addToAutocompleteSuggestions(logLine);
 			
+			// how many logs to keep in memory?  this avoids OutOfMemoryErrors
+			int maxNumLogLines = PreferenceHelper.getDisplayLimitPreference(LogcatActivity.this);
+			
 			// check to see if the list needs to be truncated to avoid out of memory errors
 			if (++counter % UPDATE_CHECK_INTERVAL == 0 
-					&& adapter.getTrueValues().size() > MAX_NUM_LOG_LINES) {
-				int numItemsToRemove = adapter.getTrueValues().size() - MAX_NUM_LOG_LINES;
+					&& adapter.getTrueValues().size() > maxNumLogLines) {
+				int numItemsToRemove = adapter.getTrueValues().size() - maxNumLogLines;
 				adapter.removeFirst(numItemsToRemove);
 				log.d("truncating %d lines from log list to avoid out of memory errors", numItemsToRemove);
 			}

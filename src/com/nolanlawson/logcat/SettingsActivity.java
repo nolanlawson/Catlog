@@ -28,8 +28,10 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	
 	private static final int MAX_LOG_LINE_PERIOD = 1000;
 	private static final int MIN_LOG_LINE_PERIOD = 1;
+	private static final int MAX_DISPLAY_LIMIT = 100000;
+	private static final int MIN_DISPLAY_LIMIT = 1000;
 	
-	private EditTextPreference logLinePeriodPreference;
+	private EditTextPreference logLinePeriodPreference, displayLimitPreference;
 	private ListPreference textSizePreference, defaultLevelPreference;
 	private MultipleChoicePreference bufferPreference;
 	private MockDisabledListPreference themePreference;
@@ -47,6 +49,15 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	}
 	
 	private void setUpPreferences() {
+		
+		displayLimitPreference = (EditTextPreference) findPreference(getString(R.string.pref_display_limit));
+		
+		int displayLimitValue = PreferenceHelper.getDisplayLimitPreference(this);
+		
+		displayLimitPreference.setSummary(String.format(getString(R.string.pref_display_limit_summary).toString(),
+				displayLimitValue, getString(R.string.pref_display_limit_default)));
+		
+		displayLimitPreference.setOnPreferenceChangeListener(this);
 		
 		logLinePeriodPreference = (EditTextPreference) findPreference(getString(R.string.pref_log_line_period));
 		
@@ -120,7 +131,36 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
 		
-		if (preference.getKey().equals(getString(R.string.pref_log_line_period))) {
+		if (preference.getKey().equals(getString(R.string.pref_display_limit))) {
+
+			// display buffer preference; update summary
+			
+			String input = ((String)newValue).trim();
+
+			try {
+				
+				int value = Integer.parseInt(input);
+				if (value >= MIN_DISPLAY_LIMIT && value <= MAX_DISPLAY_LIMIT) {
+					PreferenceHelper.setLogLinePeriodPreference(this, value);
+					logLinePeriodPreference.setSummary(String.format(getString(R.string.pref_display_limit_summary).toString(),
+							value, getString(R.string.pref_display_limit_default)));
+					
+					// notify that a restart is required
+					Toast.makeText(this, R.string.toast_pref_changed_restart_required, Toast.LENGTH_LONG).show();
+					
+					return true;
+				}
+				
+			} catch (NumberFormatException ignore) { }
+			
+
+			String invalidEntry = String.format(getString(R.string.toast_invalid_display_limit), MIN_DISPLAY_LIMIT, MAX_DISPLAY_LIMIT);
+			Toast.makeText(this, invalidEntry, Toast.LENGTH_LONG).show();
+			return false;			
+			
+		} else if (preference.getKey().equals(getString(R.string.pref_log_line_period))) {
+			
+			// log line period preference; update summary
 			
 			String input = ((String)newValue).trim();
 

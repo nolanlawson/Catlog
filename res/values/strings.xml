@@ -131,6 +131,14 @@
 	<string name="pref_default_log_level_title">Default Log Level</string>
 	<string name="pref_default_log_level_summary">Log level at startup and when opening files (%s)</string>
 	<string name="default_in_parens">(Default)</string>
+	
+	<string name="pref_display_limit">display_limit</string>
+	<string name="pref_display_limit_title">Log Display Limit</string>
+	<string name="pref_display_limit_summary" formatted="false">Show only the last %d logs, to avoid OutOfMemoryErrors. (Default: %s)</string>
+	<string name="toast_invalid_display_limit" formatted="false">Please enter a valid number between %d and %d.</string>
+	<string name="toast_pref_changed_restart_required">Setting updated. Restart CatLog to see the changes.</string>
+	
+	<string name="pref_display_limit_default">10000</string>
 
 	<string name="pref_cat_appearance">Appearance</string>
 	<string name="pref_cat_configuration">Configuration</string>

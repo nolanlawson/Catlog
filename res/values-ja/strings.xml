@@ -94,7 +94,12 @@
 	<string name="pref_default_log_level_title">デフォルトなレベル</string>
 	<string name="pref_default_log_level_summary">スタートアップとファイルを開ける時のレベル　（%s）</string>
 	<string name="default_in_parens">(デフォルト）</string>    
-	    
+	
+	<string name="pref_display_limit_title">ログの表現の限界</string>
+	<string name="pref_display_limit_summary" formatted="false">OutOfMemoryErrorを避けるために、最終のログを%dだけ見せます。（デフォルト：%s）</string>
+	<string name="toast_invalid_display_limit" formatted="false">%dから%dまでのインテジャを入力してください。</string>
+	<string name="toast_pref_changed_restart_required">設定は受理されました。CatLogのリスタートは必要です。</string>
+	
 	<string name="pref_cat_appearance">表示</string>
 	<string name="pref_cat_configuration">コンフィグレーション</string>
 

@@ -27,10 +27,20 @@ public class PreferenceHelper {
 	private static Character defaultLogLevel = null;
 	private static Boolean showTimestampAndPid = null;
 	private static ColorScheme colorScheme = null;
+	private static int displayLimit = -1;
 	
 	private static UtilLogger log = new UtilLogger(PreferenceHelper.class);
 	
 	private static final String WIDGET_EXISTS_PREFIX = "widget_";
+	
+	public static void clearCache() {
+		defaultLogLevel = null;
+		textSize = -1;
+		showTimestampAndPid = null;
+		colorScheme = null;
+		ellipsisLengthsCache.clear();
+		displayLimit = -1;
+	}	
 	
 	public static boolean getWidgetExistsPreference(Context context, int appWidgetId) {
 		
@@ -56,6 +66,26 @@ public class PreferenceHelper {
 		
 	}
 	
+	public static int getDisplayLimitPreference(Context context) {
+		
+		if (displayLimit == -1) {
+		
+			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+			
+			String defaultValue = context.getText(R.string.pref_display_limit_default).toString();
+			
+			String intAsString = sharedPrefs.getString(context.getText(R.string.pref_display_limit).toString(), defaultValue);
+			
+			try { 
+				displayLimit = Integer.parseInt(intAsString);
+			} catch (NumberFormatException e) {
+				displayLimit = Integer.parseInt(defaultValue);
+			}
+		}
+		
+		return displayLimit;
+	}
+	
 	public static int getLogLinePeriodPreference(Context context) {
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 		
@@ -68,6 +98,15 @@ public class PreferenceHelper {
 		} catch (NumberFormatException e) {
 			return Integer.parseInt(defaultValue);
 		}
+	}
+	
+	public static void setDisplayLimitPreference(Context context, int value) {
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+		Editor editor = sharedPrefs.edit();
+		
+		editor.putString(context.getText(R.string.pref_display_limit).toString(), Integer.toString(value));
+		
+		editor.commit();
 	}
 	
 	public static void setLogLinePeriodPreference(Context context, int value) {
@@ -121,14 +160,6 @@ public class PreferenceHelper {
 		
 		return textSize;
 		
-	}
-	
-	public static void clearCache() {
-		defaultLogLevel = null;
-		textSize = -1;
-		showTimestampAndPid = null;
-		colorScheme = null;
-		ellipsisLengthsCache.clear();
 	}
 	
 	private static void cacheTextsize(Context context, int dimenId) {
