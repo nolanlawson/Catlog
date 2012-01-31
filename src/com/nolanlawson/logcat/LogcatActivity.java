@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Set;
 
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,7 +22,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
@@ -33,28 +32,28 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Filter;
+import android.widget.Filter.FilterListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.Filter.FilterListener;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.nolanlawson.logcat.data.ColorScheme;
 import com.nolanlawson.logcat.data.FilterAdapter;
@@ -67,13 +66,12 @@ import com.nolanlawson.logcat.data.TagAndProcessIdAdapter;
 import com.nolanlawson.logcat.db.CatlogDBHelper;
 import com.nolanlawson.logcat.db.FilterItem;
 import com.nolanlawson.logcat.helper.DialogHelper;
-import com.nolanlawson.logcat.helper.LogcatHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.helper.ProcessHelper;
+import com.nolanlawson.logcat.helper.ProcessHelper.ProcessType;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
 import com.nolanlawson.logcat.helper.UpdateHelper;
-import com.nolanlawson.logcat.helper.ProcessHelper.ProcessType;
 import com.nolanlawson.logcat.intents.Intents;
 import com.nolanlawson.logcat.reader.LogcatReader;
 import com.nolanlawson.logcat.reader.LogcatReaderLoader;
@@ -515,11 +513,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	private void showAddFilterDialog(final FilterAdapter filterAdapter) {
 		
 		// show a popup to add a new filter text
-		
-		final AutoCompleteTextView editText = new AutoCompleteTextView(this);
-		editText.setSingleLine();
-		editText.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-		editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		final AutoCompleteTextView editText =
+				(AutoCompleteTextView) inflater.inflate(R.layout.new_filter_text_view, null, false);
 		
 		// show suggestions as the user types
 		List<String> suggestions = new ArrayList<String>(searchSuggestionsSet);
