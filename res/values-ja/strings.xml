@@ -102,6 +102,7 @@
 	
 	<string name="pref_cat_appearance">表示</string>
 	<string name="pref_cat_configuration">コンフィグレーション</string>
+	<string name="pref_cat_advanced">アドバンスド</string>
 
 	<string name="text_size_xsmall_name">超短い(8pt)</string>
 	<string name="text_size_small_name">短い(10pt)</string>

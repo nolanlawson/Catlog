@@ -103,7 +103,8 @@ Téléchargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog
 	
 	<string name="pref_cat_appearance">Affichage</string>
 	<string name="pref_cat_configuration">Configuration</string>
-
+	<string name="pref_cat_advanced">Avancé</string>
+	
 	<string name="text_size_xsmall_name">Très petit (8pt)</string>
 	<string name="text_size_small_name">Petit (10pt)</string>
     <string name="text_size_medium_name">Moyen (12pt)</string>
