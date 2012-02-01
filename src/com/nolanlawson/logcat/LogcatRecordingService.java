@@ -35,11 +35,6 @@ import com.nolanlawson.logcat.util.UtilLogger;
  */
 public class LogcatRecordingService extends IntentService {
 
-	private static final Class<?>[] mStartForegroundSignature = new Class[] {
-	    int.class, Notification.class};
-	private static final Class<?>[] mStopForegroundSignature = new Class[] {
-	    boolean.class};
-	
 	private static final String ACTION_STOP_RECORDING = "com.nolanlawson.catlog.action.STOP_RECORDING";
 	public static final String URI_SCHEME = "catlog_recording_service";
 	
@@ -50,8 +45,7 @@ public class LogcatRecordingService extends IntentService {
 	private NotificationManager mNM;
 	private Method mStartForeground;
 	private Method mStopForeground;
-	private Object[] mStartForegroundArgs = new Object[2];
-	private Object[] mStopForegroundArgs = new Object[1];
+	private Method mSetForeground;
 	private boolean killed;
 	
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -89,14 +83,19 @@ public class LogcatRecordingService extends IntentService {
 		handler = new Handler(Looper.getMainLooper());
 		
 		try {
-			mStartForeground = getClass().getMethod("startForeground",
-					mStartForegroundSignature);
-			mStopForeground = getClass().getMethod("stopForeground",
-					mStopForegroundSignature);
+			mStartForeground = getClass().getMethod("startForeground", int.class, Notification.class);
+			mStopForeground = getClass().getMethod("stopForeground", boolean.class);
 		} catch (NoSuchMethodException e) {
 			// Running on an older platform.
 			log.d(e,"running on older platform; couldn't find startForeground method");
 			mStartForeground = mStopForeground = null;
+		}
+		try {
+			mSetForeground = getClass().getMethod("setForeground", boolean.class);
+		} catch (NoSuchMethodException e) {
+			// running on newer platform
+			log.d(e,"running on newer platform; couldn't find setForeground method");
+			mSetForeground = null;
 		}
 
 	}
@@ -185,10 +184,8 @@ public class LogcatRecordingService extends IntentService {
 	private void startForegroundCompat(int id, Notification notification) {
 	    // If we have the new startForeground API, then use it.
 	    if (mStartForeground != null) {
-	        mStartForegroundArgs[0] = Integer.valueOf(id);
-	        mStartForegroundArgs[1] = notification;
 	        try {
-	            mStartForeground.invoke(this, mStartForegroundArgs);
+	            mStartForeground.invoke(this, Integer.valueOf(id), notification);
 	        } catch (InvocationTargetException e) {
 	            // Should not happen.
 	            log.d(e, "Unable to invoke startForeground");
@@ -200,7 +197,17 @@ public class LogcatRecordingService extends IntentService {
 	    }
 
 	    // Fall back on the old API.
-	    setForeground(true);
+	    if (mSetForeground != null) {
+	    	try {
+				mSetForeground.invoke(this, Boolean.TRUE);
+			} catch (IllegalAccessException e) {
+				// Should not happen.
+	            log.d(e, "Unable to invoke setForeground");
+			} catch (InvocationTargetException e) {
+				// Should not happen.
+	            log.d(e, "Unable to invoke setForeground");
+			}
+	    }
 	    mNM.notify(id, notification);
 	}
 
@@ -211,9 +218,8 @@ public class LogcatRecordingService extends IntentService {
 	private void stopForegroundCompat(int id) {
 	    // If we have the new stopForeground API, then use it.
 	    if (mStopForeground != null) {
-	        mStopForegroundArgs[0] = Boolean.TRUE;
 	        try {
-	            mStopForeground.invoke(this, mStopForegroundArgs);
+	            mStopForeground.invoke(this, Boolean.TRUE);
 	        } catch (InvocationTargetException e) {
 	            // Should not happen.
 	            log.d(e, "Unable to invoke stopForeground");
@@ -227,7 +233,17 @@ public class LogcatRecordingService extends IntentService {
 	    // Fall back on the old API.  Note to cancel BEFORE changing the
 	    // foreground state, since we could be killed at that point.
 	    mNM.cancel(id);
-	    setForeground(false);
+	    if (mSetForeground != null) {
+	    	try {
+				mSetForeground.invoke(this, Boolean.FALSE);
+			} catch (IllegalAccessException e) {
+				// Should not happen.
+	            log.d(e, "Unable to invoke setForeground");
+			} catch (InvocationTargetException e) {
+				// Should not happen.
+	            log.d(e, "Unable to invoke setForeground");
+			}
+	    }
 	}
 
 	protected void onHandleIntent(Intent intent) {
