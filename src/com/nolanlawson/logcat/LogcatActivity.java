@@ -10,7 +10,6 @@ import java.util.Set;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -21,6 +20,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -40,9 +40,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -80,8 +82,8 @@ import com.nolanlawson.logcat.util.LogLineAdapterUtil;
 import com.nolanlawson.logcat.util.StringUtil;
 import com.nolanlawson.logcat.util.UtilLogger;
 
-public class LogcatActivity extends ListActivity implements TextWatcher, OnScrollListener, 
-		FilterListener, OnEditorActionListener, OnItemLongClickListener, OnClickListener, OnLongClickListener {
+public class LogcatActivity extends FragmentActivity implements TextWatcher, OnScrollListener, 
+		FilterListener, OnEditorActionListener, OnItemLongClickListener, OnClickListener, OnLongClickListener, OnItemClickListener {
 	
 	private static final int REQUEST_CODE_SETTINGS = 1;
 	
@@ -98,6 +100,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	private Button clearButton, expandButton, pauseButton;
 	private TextView filenameTextView;
 	private View borderView1, borderView2, borderView3, borderView4;
+	private ListView listView;
 	
 	private int firstVisibleItem = -1;
 	private boolean autoscrollToBottom = true;
@@ -1198,6 +1201,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	
 	private void setUpWidgets() {
 		
+		listView = (ListView) findViewById(android.R.id.list);
+		listView.setOnItemClickListener(this);
+		
 		searchEditText = (AutoCompleteTextView) findViewById(R.id.main_edit_text);
 		searchEditText.addTextChangedListener(this);
 		searchEditText.setOnEditorActionListener(this);
@@ -1230,6 +1236,14 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 	}
 	
+	private ListView getListView() {
+		return listView;
+	}
+	
+	private void setListAdapter(BaseAdapter adapter) {
+		getListView().setAdapter(adapter);
+	}
+	
 	private void setUpAdapter() {
 		
 		adapter = new LogLineAdapter(this, R.layout.logcat_list_item, new ArrayList<LogLine>());
@@ -1243,9 +1257,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	}	
 	
 	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-		
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		LogLine logLine = adapter.getItem(position);
 		
 		if (partialSelectMode) {
