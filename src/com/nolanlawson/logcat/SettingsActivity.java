@@ -142,7 +142,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 				int value = Integer.parseInt(input);
 				if (value >= MIN_DISPLAY_LIMIT && value <= MAX_DISPLAY_LIMIT) {
 					PreferenceHelper.setLogLinePeriodPreference(this, value);
-					logLinePeriodPreference.setSummary(String.format(getString(R.string.pref_display_limit_summary).toString(),
+					displayLimitPreference.setSummary(String.format(getString(R.string.pref_display_limit_summary).toString(),
 							value, getString(R.string.pref_display_limit_default)));
 					
 					// notify that a restart is required
