@@ -95,7 +95,7 @@
 	<string name="pref_default_log_level_summary">スタートアップとファイルを開ける時のレベル　（%s）</string>
 	<string name="default_in_parens">(デフォルト）</string>    
 	
-	<string name="pref_display_limit_title">ログの表現の限界</string>
+	<string name="pref_display_limit_title">ログの表示の限界</string>
 	<string name="pref_display_limit_summary" formatted="false">OutOfMemoryErrorを避けるために、最終のログを%dだけ見せます。（デフォルト：%s）</string>
 	<string name="toast_invalid_display_limit" formatted="false">%dから%dまでのインテジャを入力してください。</string>
 	<string name="toast_pref_changed_restart_required">設定は受理されました。CatLogのリスタートは必要です。</string>
@@ -129,11 +129,10 @@
     <string name="first_run_pref_title">紹介リセット</string>
     <string name="first_run_pref_summary">また紹介のメッセージを見せる。</string>
     <string name="first_run_title">CatLogにようこそ！</string>
-    <string name="first_run_message">\
-<b>1.3.2のアップデート！</b>\n\
-&#160;&#160;&#160;&#160;- CatLogがIntentで別のアプリに呼ばれることはできます。\n\
-<b>1.3.1のアップデート！</b>\n\
-&#160;&#160;&#160;&#160;- 新しい設定：「デフォルトなレベル」\
-</string> 
-    
+	<string name="first_run_message">\
+<b>1.3.3のアップデート！</b>\n\
+&#160;&#160;&#160;&#160;- 新しい設定：「ログの表示の限界」。「\n\
+&#160;&#160;&#160;&#160;- ICSで"Kill failed" のメッセージを削除。\n\
+&#160;&#160;&#160;&#160;- パフォーマンスの改善。\
+</string>
 </resources>
