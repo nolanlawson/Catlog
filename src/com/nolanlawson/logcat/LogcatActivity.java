@@ -67,8 +67,6 @@ import com.nolanlawson.logcat.db.CatlogDBHelper;
 import com.nolanlawson.logcat.db.FilterItem;
 import com.nolanlawson.logcat.helper.DialogHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
-import com.nolanlawson.logcat.helper.ProcessHelper;
-import com.nolanlawson.logcat.helper.ProcessHelper.ProcessType;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
 import com.nolanlawson.logcat.helper.UpdateHelper;
@@ -306,8 +304,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 
 	@Override
     public void onPause() {
-    	
     	super.onPause();
+    	log.d("onPause() called");
     	
     	cancelPartialSelect();
     }
@@ -315,11 +313,11 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     @Override
     public void onDestroy() {
     	super.onDestroy();
+    	log.d("onDestroy() called");
     	
     	if (task != null && !task.isCancelled()) {
     		task.cancel(true);
     	}
-    	ProcessHelper.killAll();
     }
     
 
@@ -371,11 +369,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	    	return true;
 	    case R.id.menu_filters:
 	    	showFiltersDialog();
-	    	return true;
-	    case R.id.menu_process_report:
-	    	String report = String.format("Created: %d.  Killed: %d.",
-	    			ProcessHelper.getProcessesCreated(), ProcessHelper.getProcessesKilled());
-	    	Toast.makeText(this, report, Toast.LENGTH_LONG).show();
 	    	return true;
 	    }
 	    return false;
@@ -432,11 +425,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		MenuItem crazyLoggerMenuItem = menu.findItem(R.id.menu_crazy_logger_service);
 		crazyLoggerMenuItem.setEnabled(UtilLogger.DEBUG_MODE);
 		crazyLoggerMenuItem.setVisible(UtilLogger.DEBUG_MODE);
-		
-		MenuItem processReportMenuItem = menu.findItem(R.id.menu_process_report);
-		processReportMenuItem.setEnabled(UtilLogger.DEBUG_MODE);
-		processReportMenuItem.setVisible(UtilLogger.DEBUG_MODE);
-		
 		
 		MenuItem partialSelectMenuItem = menu.findItem(R.id.menu_partial_select);
 		partialSelectMenuItem.setEnabled(!partialSelectMode);
@@ -1600,17 +1588,17 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		private volatile boolean paused;
 		private final Object lock = new Object();
 		private boolean firstLineReceived;
+		private boolean killed;
+		private LogcatReader reader;
 		
 		@Override
 		protected Void doInBackground(Void... params) {
 			log.d("doInBackground()");
 			
-			LogcatReader reader = null;
-			
 			try {
 						
 				LogcatReaderLoader loader = LogcatReaderLoader.create(LogcatActivity.this);
-				reader = loader.loadReader(ProcessType.Main);
+				reader = loader.loadReader();
 
 				String line;
 				
@@ -1630,14 +1618,23 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			} catch (Exception e) {
 				log.d(e, "unexpected error");
 			} finally {
-				if (reader != null) {
-					reader.killQuietly();
-				}
-
+				killReader();
 				log.d("AsyncTask has died");
 			}
 			
 			return null;
+		}
+
+		public void killReader() {
+			if (!killed) {
+				synchronized (lock) {
+					if (!killed && reader != null) {
+						reader.killQuietly();
+						killed = true;
+					}
+				}
+			}
+			
 		}
 
 		@Override

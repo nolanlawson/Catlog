@@ -39,9 +39,6 @@
 		android:alphabeticShortcut="@string/settings" android:icon="@android:drawable/ic_menu_preferences" />
 				
 	<item android:id="@+id/menu_crazy_logger_service" android:title="Crazy Logger"
-			android:alphabeticShortcut="Crazy Logger" />
-		
-	<item android:id="@+id/menu_process_report" android:title="Process Report"
-			android:alphabeticShortcut="Process Report" />			
+			android:alphabeticShortcut="Crazy Logger" />			
 		
 </menu>

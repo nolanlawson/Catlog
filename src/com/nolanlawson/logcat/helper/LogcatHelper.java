@@ -5,28 +5,22 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
-
-import android.text.TextUtils;
 
 import com.nolanlawson.logcat.util.UtilLogger;
 
 public class LogcatHelper {
-
-	private static final UtilLogger log = new UtilLogger(LogcatHelper.class);
 	
 	public static final String BUFFER_MAIN = "main";
 	public static final String BUFFER_EVENTS = "events";
 	public static final String BUFFER_RADIO = "radio";
+
+	private static UtilLogger log = new UtilLogger(LogcatHelper.class);
 	
 	public static Process getLogcatProcess(String buffer) throws IOException {
 		
-		
 		List<String> args = getLogcatArgs(buffer);
 		Process process = Runtime.getRuntime().exec(args.toArray(new String[args.size()]));
-		
-		ProcessHelper.incrementProcesses();
 		
 		return process;
 	}
@@ -54,7 +48,6 @@ public class LogcatHelper {
 			args.add("-d"); // -d just dumps the whole thing
 			
 			dumpLogcatProcess = Runtime.getRuntime().exec(args.toArray(new String[args.size()]));
-			ProcessHelper.incrementProcesses();
 			reader = new BufferedReader(new InputStreamReader(dumpLogcatProcess
 					.getInputStream()), 8192);
 			
@@ -75,38 +68,10 @@ public class LogcatHelper {
 			
 			if (dumpLogcatProcess != null) {
 				dumpLogcatProcess.destroy();
-				ProcessHelper.decrementProcesses();
+				log.d("destroyed 1 dump logcat process");
 			}
 		}
 		
 		return result;
-	}
-	
-	public static Comparator<String> getLogComparator() {
-
-		return new Comparator<String>(){
-
-			@Override
-			public int compare(String left, String right) {
-				
-				// timestamped logs need to go after non-timestamped logs, such as "start of dev/log/main"
-				
-				if (TextUtils.isEmpty(left) && TextUtils.isEmpty(right)) {
-					return 0;
-				} else if (TextUtils.isEmpty(left)) {
-					return -1;
-				} else if (TextUtils.isEmpty(right)) {
-					return 1;
-				} else if (Character.isDigit(left.charAt(0)) &&  Character.isDigit(right.charAt(0))) {
-					return left.compareTo(right);
-				} else if (Character.isDigit(left.charAt(0))) {
-					return 1; 
-				} else if (Character.isDigit(right.charAt(0))) {
-					return -1;
-				} else {
-					return left.compareTo(right);
-				}
-			}
-		};
 	}
 }

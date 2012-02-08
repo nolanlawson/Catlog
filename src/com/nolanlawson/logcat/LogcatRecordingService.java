@@ -22,7 +22,6 @@ import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
 import com.nolanlawson.logcat.helper.WidgetHelper;
-import com.nolanlawson.logcat.helper.ProcessHelper.ProcessType;
 import com.nolanlawson.logcat.reader.LogcatReader;
 import com.nolanlawson.logcat.reader.LogcatReaderLoader;
 import com.nolanlawson.logcat.util.UtilLogger;
@@ -53,6 +52,7 @@ public class LogcatRecordingService extends IntentService {
 	private Object[] mStartForegroundArgs = new Object[2];
 	private Object[] mStopForegroundArgs = new Object[1];
 	private boolean killed;
+	private final Object lock = new Object();
 	
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		
@@ -106,7 +106,7 @@ public class LogcatRecordingService extends IntentService {
 		try {
 			// use the "time" log so we can see what time the logs were logged at
 			LogcatReaderLoader loader = intent.getParcelableExtra("loader");
-			reader = loader.loadReader(ProcessType.Recording);
+			reader = loader.loadReader();
 		
 			while (!reader.readyToRecord() && !killed) {
 				reader.readLine();
@@ -265,10 +265,7 @@ public class LogcatRecordingService extends IntentService {
 		} catch (IOException e) {
 			log.e(e, "unexpected exception");
 		} finally {
-			if (reader != null) {
-				reader.killQuietly();
-			}
-
+			killProcess();
 			log.d("CatlogService ended");
 			
 			boolean logSaved = SaveLogHelper.saveLog(stringBuilder, filename);
@@ -310,11 +307,15 @@ public class LogcatRecordingService extends IntentService {
 	}
 	
 	private void killProcess() {
-		// kill the logcat process
-		if (reader != null) {
-			reader.killQuietly();
+		if (!killed) {
+			synchronized (lock) {
+				if (!killed && reader != null) {
+					// kill the logcat process
+					reader.killQuietly();
+					killed = true;
+				}
+			}
 		}
-		killed = true;
 	}
 	
 }
