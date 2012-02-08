@@ -25,11 +25,12 @@ import com.nolanlawson.logcat.util.UtilLogger;
 
 public class SaveLogHelper {
 
-	public static final String DEVICE_INFO_FILENAME = "device_info.txt";
+	public static final String TEMP_DEVICE_INFO_FILENAME = "device_info.txt";
+	public static final String TEMP_LOG_FILENAME = "logcat.txt";
 	
 	private static UtilLogger log = new UtilLogger(SaveLogHelper.class);
 	
-	public static File saveTemporaryFile(Context context, String filename, CharSequence text) {
+	public static File saveTemporaryFile(Context context, String filename, CharSequence text, List<CharSequence> lines) {
 		PrintStream out = null;
 		try {
 			
@@ -37,7 +38,13 @@ public class SaveLogHelper {
 			
 			// specifying 8192 gets rid of an annoying warning message
 			out = new PrintStream(new BufferedOutputStream(new FileOutputStream(tempFile, false), 8192));
-			out.print(text);
+			if (text != null) { // one big string
+				out.print(text);
+			} else { // multiple lines separated by newline
+				for (CharSequence line : lines) {
+					out.println(line);
+				}
+			}
 			
 			log.d("Saved temp file: %s", tempFile);
 			

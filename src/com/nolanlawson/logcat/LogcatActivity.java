@@ -684,7 +684,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			return;			
 		}
 		
-		final CharSequence[] filenameArray = filenames.toArray(new CharSequence[filenames.size()]);
+		final CharSequence[] filenameArray = ArrayUtil.toArray(filenames, CharSequence.class);
 		
 		final LogFileAdapter dropdownAdapter = new LogFileAdapter(
 				this, filenames, -1, true);
@@ -817,95 +817,98 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	
 	private void sendLog(final boolean asText, final boolean includeDeviceInfo) {
 
-		if (!asText && currentlyOpenLog == null) { // no filename
-			Toast.makeText(LogcatActivity.this, R.string.save_file_first, Toast.LENGTH_LONG).show();
-		} else {
+		String title = getString(asText ? R.string.send_as_text : R.string.send_as_attachment);
+		final SenderAppAdapter adapter = new SenderAppAdapter(LogcatActivity.this, asText);
+		
+		new AlertDialog.Builder(LogcatActivity.this)
+			.setTitle(title)
+			.setCancelable(true)
+			.setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener() {
 
-			String title = getString(asText ? R.string.send_as_text : R.string.send_as_attachment);
-			final SenderAppAdapter adapter = new SenderAppAdapter(LogcatActivity.this, asText);
-			
-			new AlertDialog.Builder(LogcatActivity.this)
-				.setTitle(title)
-				.setCancelable(true)
-				.setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener() {
-
-						public void onClick(final DialogInterface dialog, final int which) {
+					public void onClick(final DialogInterface dialog, final int which) {
+						
+						final ProgressDialog getBodyProgressDialog = new ProgressDialog(LogcatActivity.this);
+						getBodyProgressDialog.setCancelable(false);
+						
+						// do in the background to avoid jank
+						AsyncTask<Void, Void, SendLogDetails> getBodyTask = new AsyncTask<Void, Void, SendLogDetails>() {
 							
-							final ProgressDialog getBodyProgressDialog = new ProgressDialog(LogcatActivity.this);
-							getBodyProgressDialog.setCancelable(false);
-							
-							// do in the background to avoid jank
-							AsyncTask<Void, Void, SendLogDetails> getBodyTask = new AsyncTask<Void, Void, SendLogDetails>() {
+							@Override
+							protected void onPreExecute() {
+								super.onPreExecute();
 								
-								@Override
-								protected void onPreExecute() {
-									super.onPreExecute();
-									
-									dialog.dismiss();
-									
-									if (asText) {
-									
-										getBodyProgressDialog.setTitle(R.string.dialog_please_wait);
-										getBodyProgressDialog.setMessage(getString(R.string.dialog_compiling_log));
-										getBodyProgressDialog.show();
-									}
+								dialog.dismiss();
+								
+								if (asText || currentlyOpenLog == null || includeDeviceInfo) {
+								
+									getBodyProgressDialog.setTitle(R.string.dialog_please_wait);
+									getBodyProgressDialog.setMessage(getString(R.string.dialog_compiling_log));
+									getBodyProgressDialog.show();
 								}
+							}
 
-								@Override
-								protected SendLogDetails doInBackground(Void... params) {
-									
-									SendLogDetails sendLogDetails = new SendLogDetails();
-									StringBuilder body = new StringBuilder();
-									
-									if (!asText) {
-										final File logAttachment = asText ? null : SaveLogHelper.getFile(currentlyOpenLog);
-										sendLogDetails.addAttachments(logAttachment);
-									}
-									
-									if (includeDeviceInfo) {
-										// include device info
-										String deviceInfo = BuildHelper.getBuildInformationAsString();
-										if (asText || Build.VERSION.SDK_INT < 4) {
-											// API level 3 does not allow Intent.ACTION_SEND_MULTIPLE, so cannot attach >1 file, so just
-											// append to top of body
-											body.append(deviceInfo).append("\n\n");
-										} else {
-											// or create as separate file called device.txt
-											File tempFile = SaveLogHelper.saveTemporaryFile(LogcatActivity.this, 
-													SaveLogHelper.DEVICE_INFO_FILENAME, deviceInfo);
-											sendLogDetails.addAttachments(tempFile);
-										}
-									}
-									
-									if (asText) {
-										body.append(getCurrentLogAsCharSequence());
-									}
-									
-									sendLogDetails.setBody(body.toString());
-									sendLogDetails.setSubject(getString(R.string.subject_log_report));
-									
-									return sendLogDetails;
+							@Override
+							protected SendLogDetails doInBackground(Void... params) {
+								return getSendLogDetailsInBackground(asText, includeDeviceInfo);
+							}
+
+							@Override
+							protected void onPostExecute(SendLogDetails sendLogDetails) {
+								super.onPostExecute(sendLogDetails);
+								
+								File[] attachments = ArrayUtil.toArray(sendLogDetails.getAttachments(), File.class);
+								
+								adapter.respondToClick(which, sendLogDetails.getSubject(), sendLogDetails.getBody(), attachments);
+								if (getBodyProgressDialog != null && getBodyProgressDialog.isShowing()) {
+									getBodyProgressDialog.dismiss();
 								}
+							}
+						};
+						getBodyTask.execute((Void) null);
+					}
+				})
+				.show();
 
-								@Override
-								protected void onPostExecute(SendLogDetails sendLogDetails) {
-									super.onPostExecute(sendLogDetails);
-									
-									File[] attachments = sendLogDetails.getAttachments().toArray(
-											new File[sendLogDetails.getAttachments().size()]);
-									
-									adapter.respondToClick(which, sendLogDetails.getSubject(), sendLogDetails.getBody(), attachments);
-									if (getBodyProgressDialog != null && getBodyProgressDialog.isShowing()) {
-										getBodyProgressDialog.dismiss();
-									}
-								}
-							};
-							getBodyTask.execute((Void) null);
-						}
-					})
-					.show();
-
+		
+	}
+	
+	private SendLogDetails getSendLogDetailsInBackground(boolean asText, boolean includeDeviceInfo) {
+		SendLogDetails sendLogDetails = new SendLogDetails();
+		StringBuilder body = new StringBuilder();
+		
+		if (!asText) {
+			if (currentlyOpenLog != null) { // use saved log file
+				sendLogDetails.addAttachments(SaveLogHelper.getFile(currentlyOpenLog));
+			} else { // create a temp file to hold the current, unsaved log
+				File tempLogFile = SaveLogHelper.saveTemporaryFile(this, 
+						SaveLogHelper.TEMP_LOG_FILENAME, null, getCurrentLogAsListOfStrings());
+				sendLogDetails.addAttachments(tempLogFile);
+			}
 		}
+		
+		if (includeDeviceInfo) {
+			// include device info
+			String deviceInfo = BuildHelper.getBuildInformationAsString();
+			if (asText || Build.VERSION.SDK_INT < 4) {
+				// API level 3 does not allow Intent.ACTION_SEND_MULTIPLE, so cannot attach >1 file, so just
+				// append to top of body
+				body.append(deviceInfo).append("\n\n");
+			} else {
+				// or create as separate file called device.txt
+				File tempFile = SaveLogHelper.saveTemporaryFile(this, 
+						SaveLogHelper.TEMP_DEVICE_INFO_FILENAME, deviceInfo, null);
+				sendLogDetails.addAttachments(tempFile);
+			}
+		}
+		
+		if (asText) {
+			body.append(getCurrentLogAsCharSequence());
+		}
+		
+		sendLogDetails.setBody(body.toString());
+		sendLogDetails.setSubject(getString(R.string.subject_log_report));
+		
+		return sendLogDetails;
 	}
 	
 	private List<CharSequence> getCurrentLogAsListOfStrings() {
@@ -920,14 +923,13 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	}
 	
 	private CharSequence getCurrentLogAsCharSequence() {
-		StringBuilder result = new StringBuilder();
+		StringBuilder stringBuilder = new StringBuilder();
+		
 		for (int i = 0; i < adapter.getCount(); i ++) {
-			if (i > 0) {
-				result.append('\n');
-			}
-			result.append(adapter.getItem(i).getOriginalLine());
+			stringBuilder.append(adapter.getItem(i).getOriginalLine()).append('\n');
 		}
-		return result;
+		
+		return stringBuilder;
 	}
 
 	private void showSaveLogDialog() {

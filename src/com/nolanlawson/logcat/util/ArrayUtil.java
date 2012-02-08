@@ -1,6 +1,7 @@
 package com.nolanlawson.logcat.util;
 
 import java.lang.reflect.Array;
+import java.util.List;
 
 public class ArrayUtil {
 	
@@ -97,6 +98,16 @@ public class ArrayUtil {
     		}
     	}
     	return false;
+    }
+    
+    
+	public static <T> T[] toArray(List<T> list, Class<T> clazz) {
+		@SuppressWarnings("unchecked")
+		T[] result = (T[]) Array.newInstance(clazz, list.size());
+		for (int i = 0; i < list.size(); i++) {
+			result[i] = list.get(i);
+		}
+		return result;
     }
     
 }

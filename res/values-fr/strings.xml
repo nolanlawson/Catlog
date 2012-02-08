@@ -113,8 +113,6 @@ Téléchargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog
     
     <string name="settings">Paramètres</string>
     
-    <string name="save_file_first">Il faut sauvegarder le journal d\'avance.</string>
-    
     <string name="as_attachment">Pièce jointe</string>
     <string name="as_text">Texte</string>
     <string name="choose_format">Format</string>

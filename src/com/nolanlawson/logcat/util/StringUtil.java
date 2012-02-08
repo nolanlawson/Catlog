@@ -48,7 +48,7 @@ public class StringUtil {
         }
         result.add(str.substring(lastIndex, str.length()));
 
-        return result.toArray(new String[result.size()]);
+        return ArrayUtil.toArray(result, String.class);
     }
 
  /*

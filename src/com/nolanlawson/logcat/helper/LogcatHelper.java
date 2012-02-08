@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.nolanlawson.logcat.util.ArrayUtil;
 import com.nolanlawson.logcat.util.UtilLogger;
 
 public class LogcatHelper {
@@ -20,7 +21,7 @@ public class LogcatHelper {
 	public static Process getLogcatProcess(String buffer) throws IOException {
 		
 		List<String> args = getLogcatArgs(buffer);
-		Process process = Runtime.getRuntime().exec(args.toArray(new String[args.size()]));
+		Process process = Runtime.getRuntime().exec(ArrayUtil.toArray(args, String.class));
 		
 		return process;
 	}
@@ -47,7 +48,7 @@ public class LogcatHelper {
 			List<String> args = getLogcatArgs(buffer);
 			args.add("-d"); // -d just dumps the whole thing
 			
-			dumpLogcatProcess = Runtime.getRuntime().exec(args.toArray(new String[args.size()]));
+			dumpLogcatProcess = Runtime.getRuntime().exec(ArrayUtil.toArray(args, String.class));
 			reader = new BufferedReader(new InputStreamReader(dumpLogcatProcess
 					.getInputStream()), 8192);
 			

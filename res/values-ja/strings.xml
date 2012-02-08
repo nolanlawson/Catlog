@@ -112,8 +112,6 @@
     
     <string name="settings">設定</string>
     
-    <string name="save_file_first">ログを保存するのは必要です。</string>
-    
     <string name="as_attachment">添付</string>
     <string name="as_text">テクスト</string>
     <string name="choose_format">形</string>
