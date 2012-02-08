@@ -784,7 +784,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	
 	private void showSendLogDialog() {
 		
-		CharSequence[] items = new CharSequence[]{getText(R.string.as_text), getText(R.string.as_attachment)};
+		CharSequence[] items = new CharSequence[]{getText(R.string.as_attachment), getText(R.string.as_text)};
 		
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View includeDeviceInfoView = inflater.inflate(R.layout.include_device_info, null, false);
