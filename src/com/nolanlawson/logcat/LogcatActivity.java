@@ -807,7 +807,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					showSendLogToWhichAppDialogue(which == 0, includeDeviceInfoCheckBox.isChecked());
+					showSendLogToWhichAppDialogue(which == 1, includeDeviceInfoCheckBox.isChecked());
 					dialog.dismiss();
 				}
 			})
