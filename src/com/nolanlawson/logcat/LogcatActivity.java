@@ -350,7 +350,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	    	DialogHelper.stopRecordingLog(this);
 	    	return true;	    	
 	    case R.id.menu_send_log:
-	    	sendLog();
+	    	showSendLogDialog();
 	    	return true;
 	    case R.id.menu_main_log:
 	    	startUpMainLog();
@@ -782,7 +782,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 	}
 	
-	private void sendLog() {
+	private void showSendLogDialog() {
 		
 		CharSequence[] items = new CharSequence[]{getText(R.string.as_text), getText(R.string.as_attachment)};
 		
@@ -801,13 +801,13 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		});
 		
 		new AlertDialog.Builder(this)
-			.setTitle(R.string.choose_format)
+			.setTitle(R.string.send_log_title)
 			.setView(includeDeviceInfoView)
 			.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					sendLog(which == 0, includeDeviceInfoCheckBox.isChecked());
+					showSendLogToWhichAppDialogue(which == 0, includeDeviceInfoCheckBox.isChecked());
 					dialog.dismiss();
 				}
 			})
@@ -815,56 +815,20 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 	}
 	
-	private void sendLog(final boolean asText, final boolean includeDeviceInfo) {
+	private void showSendLogToWhichAppDialogue(final boolean asText, final boolean includeDeviceInfo) {
 
 		String title = getString(asText ? R.string.send_as_text : R.string.send_as_attachment);
-		final SenderAppAdapter adapter = new SenderAppAdapter(LogcatActivity.this, asText);
+		
+		final SenderAppAdapter senderAppAdapter = new SenderAppAdapter(this, asText);
 		
 		new AlertDialog.Builder(LogcatActivity.this)
 			.setTitle(title)
 			.setCancelable(true)
-			.setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener() {
+			.setSingleChoiceItems(senderAppAdapter, -1, new DialogInterface.OnClickListener() {
 
 					public void onClick(final DialogInterface dialog, final int which) {
-						
-						final ProgressDialog getBodyProgressDialog = new ProgressDialog(LogcatActivity.this);
-						getBodyProgressDialog.setCancelable(false);
-						
-						// do in the background to avoid jank
-						AsyncTask<Void, Void, SendLogDetails> getBodyTask = new AsyncTask<Void, Void, SendLogDetails>() {
-							
-							@Override
-							protected void onPreExecute() {
-								super.onPreExecute();
-								
-								dialog.dismiss();
-								
-								if (asText || currentlyOpenLog == null || includeDeviceInfo) {
-								
-									getBodyProgressDialog.setTitle(R.string.dialog_please_wait);
-									getBodyProgressDialog.setMessage(getString(R.string.dialog_compiling_log));
-									getBodyProgressDialog.show();
-								}
-							}
-
-							@Override
-							protected SendLogDetails doInBackground(Void... params) {
-								return getSendLogDetailsInBackground(asText, includeDeviceInfo);
-							}
-
-							@Override
-							protected void onPostExecute(SendLogDetails sendLogDetails) {
-								super.onPostExecute(sendLogDetails);
-								
-								File[] attachments = ArrayUtil.toArray(sendLogDetails.getAttachments(), File.class);
-								
-								adapter.respondToClick(which, sendLogDetails.getSubject(), sendLogDetails.getBody(), attachments);
-								if (getBodyProgressDialog != null && getBodyProgressDialog.isShowing()) {
-									getBodyProgressDialog.dismiss();
-								}
-							}
-						};
-						getBodyTask.execute((Void) null);
+						dialog.dismiss();
+						sendLogToTargetApp(asText, includeDeviceInfo, senderAppAdapter, which);
 					}
 				})
 				.show();
@@ -872,6 +836,48 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 	}
 	
+	protected void sendLogToTargetApp(final boolean asText, final boolean includeDeviceInfo, 
+			final SenderAppAdapter senderAppAdapter, final int which) {
+		
+		final ProgressDialog getBodyProgressDialog = new ProgressDialog(LogcatActivity.this);
+		getBodyProgressDialog.setCancelable(false);
+		
+		// do in the background to avoid jank
+		AsyncTask<Void, Void, SendLogDetails> getBodyTask = new AsyncTask<Void, Void, SendLogDetails>() {
+			
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+				
+				if (asText || currentlyOpenLog == null || includeDeviceInfo) {
+				
+					getBodyProgressDialog.setTitle(R.string.dialog_please_wait);
+					getBodyProgressDialog.setMessage(getString(R.string.dialog_compiling_log));
+					getBodyProgressDialog.show();
+				}
+			}
+
+			@Override
+			protected SendLogDetails doInBackground(Void... params) {
+				return getSendLogDetailsInBackground(asText, includeDeviceInfo);
+			}
+
+			@Override
+			protected void onPostExecute(SendLogDetails sendLogDetails) {
+				super.onPostExecute(sendLogDetails);
+				
+				File[] attachments = ArrayUtil.toArray(sendLogDetails.getAttachments(), File.class);
+				
+				senderAppAdapter.respondToClick(which, sendLogDetails.getSubject(), sendLogDetails.getBody(), attachments);
+				if (getBodyProgressDialog != null && getBodyProgressDialog.isShowing()) {
+					getBodyProgressDialog.dismiss();
+				}
+			}
+		};
+		getBodyTask.execute((Void) null);
+		
+	}
+
 	private SendLogDetails getSendLogDetailsInBackground(boolean asText, boolean includeDeviceInfo) {
 		SendLogDetails sendLogDetails = new SendLogDetails();
 		StringBuilder body = new StringBuilder();

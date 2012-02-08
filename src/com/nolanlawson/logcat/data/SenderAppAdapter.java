@@ -46,8 +46,8 @@ public class SenderAppAdapter extends ArrayAdapter<ResolveInfo> {
 	// only defined in api level 4 and up
 	private static final String ACTION_SEND_MULTIPLE = "android.intent.action.SEND_MULTIPLE";
 	
-	// facebook doesn't work with anything but URLs, so exclude it
-	public static final Set<String> FILTER_SET = new HashSet<String>(Arrays.asList("com.facebook.katana.ShareLinkActivity"));
+	// used to exclude facebook, but don't need to anymore because it works again
+	public static final Set<String> FILTER_SET = Collections.emptySet();
 	
 	private static UtilLogger log = new UtilLogger(SenderAppAdapter.class);
 	
@@ -71,11 +71,11 @@ public class SenderAppAdapter extends ArrayAdapter<ResolveInfo> {
 		if (launchable instanceof DummyClipboardLaunchable) {
 			ClipboardManager clipboard = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE); 
 			
-			 clipboard.setText(body);
-			 Toast.makeText(mContext, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
+			clipboard.setText(body);
+			Toast.makeText(mContext, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
 		} else {
 		
-			ComponentName name= new ComponentName(activity.applicationInfo.packageName,activity.name);
+			ComponentName name= new ComponentName(activity.applicationInfo.packageName, activity.name);
 			
 			Intent actionSendIntent= createSendIntent(subject, body, attachments);
 			actionSendIntent.setComponent(name);

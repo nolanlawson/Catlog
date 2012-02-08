@@ -24,6 +24,7 @@
     <string name="filter_choice_tag">Tag</string>
     <string name="filter_choice_pid">Process id</string>
     
+    <string name="send_log_title">Send Log</string>
     <string name="send_as_text">Send as Text</string>
     <string name="send_as_attachment">Send as Attachment</string>
     <string name="save">Save</string>
@@ -162,7 +163,6 @@
     
     <string name="as_attachment">As Attachment</string>
     <string name="as_text">As Text</string>
-    <string name="choose_format">Choose Format</string>
     
     <string name="title_filters">Filters</string>
     <string name="add_filter_ellipsis">Add Filter&#8230;</string>

@@ -21,8 +21,9 @@
     <string name="filter_choice_tag">タグ</string>
     <string name="filter_choice_pid">プロセスID</string>
     
-    <string name="send_as_text">テクストとして送る</string>
-    <string name="send_as_attachment">添付として送る</string>
+    <string name="send_log_title">ログを送信</string>
+    <string name="send_as_text">テクストとして送信</string>
+    <string name="send_as_attachment">添付として送信</string>
     <string name="save">保存</string>
 	<string name="save_as">保存&#8230;</string>
 	<string name="save_log">ログを保存</string>
@@ -112,9 +113,8 @@
     
     <string name="settings">設定</string>
     
-    <string name="as_attachment">添付</string>
-    <string name="as_text">テクスト</string>
-    <string name="choose_format">形</string>
+    <string name="as_attachment">添付として</string>
+    <string name="as_text">テクストとして</string>
     
     <string name="title_filters">フィルター</string>
     <string name="add_filter_ellipsis">フィルターを作る&#8230;</string>  

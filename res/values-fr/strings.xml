@@ -23,6 +23,7 @@ Téléchargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog
     <string name="filter_choice_tag">Tag</string>
     <string name="filter_choice_pid">Pid</string>
     
+    <string name="send_log_title">Envoyer le Journal</string>
     <string name="send_as_text">Envoyer comme texte</string>
     <string name="send_as_attachment">Envoyer comme pièce jointe</string>
     <string name="save">Sauvegarder</string>
@@ -113,9 +114,8 @@ Téléchargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog
     
     <string name="settings">Paramètres</string>
     
-    <string name="as_attachment">Pièce jointe</string>
-    <string name="as_text">Texte</string>
-    <string name="choose_format">Format</string>
+    <string name="as_attachment">Comme Pièce Jointe</string>
+    <string name="as_text">Comme Texte</string>
     
     <string name="title_filters">Filtres</string>
     <string name="add_filter_ellipsis">Ajouter Filtre&#8230;</string> 
