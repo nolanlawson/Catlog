@@ -292,4 +292,18 @@ public class PreferenceHelper {
 		
 		editor.commit();
 	}
+	
+	public static boolean getIncludeDeviceInfoPreference(Context context) {
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+		
+		return sharedPrefs.getBoolean(context.getString(R.string.pref_include_device_info), true);
+	}
+	
+	public static void setIncludeDeviceInfoPreference(Context context, boolean value) {
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+		
+		Editor editor = sharedPrefs.edit();
+		editor.putBoolean(context.getString(R.string.pref_include_device_info), value);
+		editor.commit();
+	}
 }

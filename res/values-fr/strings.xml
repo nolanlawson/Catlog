@@ -124,7 +124,9 @@ Téléchargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog
     <string name="add_filter">Ajouter Filtre</string>    
     
     <string name="toast_invalid_level">Nom de niveau invalable: %s</string>
-        
+    
+    <string name="text_include_device_info">Inclure les informations sur le système</string>
+    
     <string name="widget_start_recording">Enregistrer</string>
     <string name="widget_recording_in_progress">En cours…</string>
     <string name="first_run_pref_title">Réinitialiser l\'introduction</string>

@@ -16,9 +16,9 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.graphics.Bitmap.Config;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.ClipboardManager;
@@ -33,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nolanlawson.logcat.R;
+import com.nolanlawson.logcat.util.UtilLogger;
 
 /**
  * Adapter that shows any apps in the system that respond to Intent.ACTION_SEND intents.  Filters out any apps in
@@ -42,8 +43,13 @@ import com.nolanlawson.logcat.R;
  */
 public class SenderAppAdapter extends ArrayAdapter<ResolveInfo> {
 	
+	// only defined in api level 4 and up
+	private static final String ACTION_SEND_MULTIPLE = "android.intent.action.SEND_MULTIPLE";
+	
 	// facebook doesn't work with anything but URLs, so exclude it
 	public static final Set<String> FILTER_SET = new HashSet<String>(Arrays.asList("com.facebook.katana.ShareLinkActivity"));
+	
+	private static UtilLogger log = new UtilLogger(SenderAppAdapter.class);
 	
 	private Context mContext;
 	
@@ -57,7 +63,7 @@ public class SenderAppAdapter extends ArrayAdapter<ResolveInfo> {
 		}
 	}
 
-	public void respondToClick(int position, final String subject, final String body, final File attachment) {
+	public void respondToClick(int position, final String subject, final String body, final File... attachments) {
 
 		ResolveInfo launchable = getItem(position);
 		ActivityInfo activity=launchable.activityInfo;
@@ -71,7 +77,7 @@ public class SenderAppAdapter extends ArrayAdapter<ResolveInfo> {
 		
 			ComponentName name= new ComponentName(activity.applicationInfo.packageName,activity.name);
 			
-			Intent actionSendIntent= createSendIntent(subject, body, attachment);
+			Intent actionSendIntent= createSendIntent(subject, body, attachments);
 			actionSendIntent.setComponent(name);
 	 
 			mContext.startActivity(actionSendIntent);	
@@ -80,7 +86,7 @@ public class SenderAppAdapter extends ArrayAdapter<ResolveInfo> {
 	
 	private List<ResolveInfo> createItems(boolean addClipboard) {
 		
-		List<ResolveInfo> items = mContext.getPackageManager().queryIntentActivities(createSendIntent("", "", null), 0);
+		List<ResolveInfo> items = mContext.getPackageManager().queryIntentActivities(createSendIntent("", ""), 0);
 		
 		Log.d("TAG", "items are: " + items);
 		
@@ -149,18 +155,29 @@ public class SenderAppAdapter extends ArrayAdapter<ResolveInfo> {
 		}
 	}	
 	
-	private static Intent createSendIntent(String subject, String body, File attachment) {
+	private static Intent createSendIntent(String subject, String body, File... attachments) {
 		
-		Intent actionSendIntent=new Intent(android.content.Intent.ACTION_SEND);
+		String action = attachments.length > 1 ? ACTION_SEND_MULTIPLE : android.content.Intent.ACTION_SEND;
+		Intent actionSendIntent = new Intent(action);
 
 		actionSendIntent.setType("text/plain");
 		actionSendIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
 		if (!TextUtils.isEmpty(body)) {
 			actionSendIntent.putExtra(Intent.EXTRA_TEXT, body);
 		}
-		if (attachment != null) {
-			Uri uri = Uri.fromFile(attachment);
+		if (attachments.length == 1) { // single attachment
+			Uri uri = Uri.fromFile(attachments[0]);
+			log.d("uri is: %s", uri);
 			actionSendIntent.putExtra(Intent.EXTRA_STREAM, uri);
+		} else if (attachments.length > 1) { // more than one attachment
+			// add attachments
+			ArrayList<Uri> uris = new ArrayList<Uri>();
+			for (File attachment : attachments) {
+				Uri uri = Uri.fromFile(attachment);
+				uris.add(uri);
+				log.d("uri is: %s", uri);
+			}
+			actionSendIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
 		}
 		
 		return actionSendIntent;

@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -45,6 +46,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filter.FilterListener;
@@ -60,11 +62,13 @@ import com.nolanlawson.logcat.data.FilterAdapter;
 import com.nolanlawson.logcat.data.LogFileAdapter;
 import com.nolanlawson.logcat.data.LogLine;
 import com.nolanlawson.logcat.data.LogLineAdapter;
+import com.nolanlawson.logcat.data.SendLogDetails;
 import com.nolanlawson.logcat.data.SenderAppAdapter;
 import com.nolanlawson.logcat.data.SortedFilterArrayAdapter;
 import com.nolanlawson.logcat.data.TagAndProcessIdAdapter;
 import com.nolanlawson.logcat.db.CatlogDBHelper;
 import com.nolanlawson.logcat.db.FilterItem;
+import com.nolanlawson.logcat.helper.BuildHelper;
 import com.nolanlawson.logcat.helper.DialogHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
@@ -139,11 +143,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         }
         
         showInitialMessage();
-        
     }
-    
-    
-    
     
     private void addFiltersToSuggestions() {
     	CatlogDBHelper dbHelper = null;
@@ -786,13 +786,28 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		CharSequence[] items = new CharSequence[]{getText(R.string.as_text), getText(R.string.as_attachment)};
 		
+		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View includeDeviceInfoView = inflater.inflate(R.layout.include_device_info, null, false);
+		final CheckBox includeDeviceInfoCheckBox = (CheckBox) includeDeviceInfoView.findViewById(android.R.id.checkbox);
+		
+		// allow user to choose whether or not to include device info in report, use preferences for persistence
+		includeDeviceInfoCheckBox.setChecked(PreferenceHelper.getIncludeDeviceInfoPreference(this));
+		includeDeviceInfoCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				PreferenceHelper.setIncludeDeviceInfoPreference(LogcatActivity.this, isChecked);
+			}
+		});
+		
 		new AlertDialog.Builder(this)
 			.setTitle(R.string.choose_format)
+			.setView(includeDeviceInfoView)
 			.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
 				
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					sendLog(which == 0);
+					sendLog(which == 0, includeDeviceInfoCheckBox.isChecked());
 					dialog.dismiss();
 				}
 			})
@@ -800,19 +815,19 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 	}
 	
-	private void sendLog(final boolean asText) {
+	private void sendLog(final boolean asText, final boolean includeDeviceInfo) {
 
 		if (!asText && currentlyOpenLog == null) { // no filename
 			Toast.makeText(LogcatActivity.this, R.string.save_file_first, Toast.LENGTH_LONG).show();
 		} else {
 
 			String title = getString(asText ? R.string.send_as_text : R.string.send_as_attachment);
-			final File attachment = asText ? null : SaveLogHelper.getFile(currentlyOpenLog);
-			final String subject = getString(R.string.subject_log_report);
 			final SenderAppAdapter adapter = new SenderAppAdapter(LogcatActivity.this, asText);
-
-			new AlertDialog.Builder(LogcatActivity.this).setTitle(title).setCancelable(true)
-					.setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener() {
+			
+			new AlertDialog.Builder(LogcatActivity.this)
+				.setTitle(title)
+				.setCancelable(true)
+				.setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener() {
 
 						public void onClick(final DialogInterface dialog, final int which) {
 							
@@ -820,7 +835,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 							getBodyProgressDialog.setCancelable(false);
 							
 							// do in the background to avoid jank
-							AsyncTask<Void, Void, String> getBodyTask = new AsyncTask<Void, Void, String>() {
+							AsyncTask<Void, Void, SendLogDetails> getBodyTask = new AsyncTask<Void, Void, SendLogDetails>() {
 								
 								@Override
 								protected void onPreExecute() {
@@ -837,16 +852,49 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 								}
 
 								@Override
-								protected String doInBackground(Void... params) {
-
-									return asText ? getCurrentLogAsCharSequence().toString() : null;
+								protected SendLogDetails doInBackground(Void... params) {
+									
+									SendLogDetails sendLogDetails = new SendLogDetails();
+									StringBuilder body = new StringBuilder();
+									
+									if (!asText) {
+										final File logAttachment = asText ? null : SaveLogHelper.getFile(currentlyOpenLog);
+										sendLogDetails.addAttachments(logAttachment);
+									}
+									
+									if (includeDeviceInfo) {
+										// include device info
+										String deviceInfo = BuildHelper.getBuildInformationAsString();
+										if (asText || Build.VERSION.SDK_INT < 4) {
+											// API level 3 does not allow Intent.ACTION_SEND_MULTIPLE, so cannot attach >1 file, so just
+											// append to top of body
+											body.append(deviceInfo).append("\n\n");
+										} else {
+											// or create as separate file called device.txt
+											File tempFile = SaveLogHelper.saveTemporaryFile(LogcatActivity.this, 
+													SaveLogHelper.DEVICE_INFO_FILENAME, deviceInfo);
+											sendLogDetails.addAttachments(tempFile);
+										}
+									}
+									
+									if (asText) {
+										body.append(getCurrentLogAsCharSequence());
+									}
+									
+									sendLogDetails.setBody(body.toString());
+									sendLogDetails.setSubject(getString(R.string.subject_log_report));
+									
+									return sendLogDetails;
 								}
 
 								@Override
-								protected void onPostExecute(String body) {
-									super.onPostExecute(body);
-
-									adapter.respondToClick(which, subject, body, attachment);
+								protected void onPostExecute(SendLogDetails sendLogDetails) {
+									super.onPostExecute(sendLogDetails);
+									
+									File[] attachments = sendLogDetails.getAttachments().toArray(
+											new File[sendLogDetails.getAttachments().size()]);
+									
+									adapter.respondToClick(which, sendLogDetails.getSubject(), sendLogDetails.getBody(), attachments);
 									if (getBodyProgressDialog != null && getBodyProgressDialog.isShowing()) {
 										getBodyProgressDialog.dismiss();
 									}
@@ -854,7 +902,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 							};
 							getBodyTask.execute((Void) null);
 						}
-					}).show();
+					})
+					.show();
 
 		}
 	}

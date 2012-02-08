@@ -144,6 +144,8 @@
 	<string name="pref_cat_configuration">Configuration</string>
 	<string name="pref_cat_advanced">Advanced</string>
 
+	<string name="pref_include_device_info">device_info</string>
+	
 	<string name="text_size_xsmall_value">XS</string>
 	<string name="text_size_small_value">S</string>
     <string name="text_size_medium_value">M</string>
@@ -169,7 +171,9 @@
     <string name="add_filter">Add Filter</string>
     
     <string name="toast_invalid_level">Invalid level name: %s</string>
-        
+    
+    <string name="text_include_device_info">Include device information</string>
+    
     <string name="widget_start_recording">Record Log</string>
     <string name="widget_recording_in_progress">Recording…</string>
     <string name="first_run">first_run20</string>

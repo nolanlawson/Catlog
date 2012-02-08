@@ -25,7 +25,33 @@ import com.nolanlawson.logcat.util.UtilLogger;
 
 public class SaveLogHelper {
 
+	public static final String DEVICE_INFO_FILENAME = "device_info.txt";
+	
 	private static UtilLogger log = new UtilLogger(SaveLogHelper.class);
+	
+	public static File saveTemporaryFile(Context context, String filename, CharSequence text) {
+		PrintStream out = null;
+		try {
+			
+			File tempFile = new File(context.getCacheDir(), filename);
+			
+			// specifying 8192 gets rid of an annoying warning message
+			out = new PrintStream(new BufferedOutputStream(new FileOutputStream(tempFile, false), 8192));
+			out.print(text);
+			
+			log.d("Saved temp file: %s", tempFile);
+			
+			return tempFile;
+			
+		} catch (FileNotFoundException ex) {
+			log.e(ex,"unexpected exception");
+			return null;
+		} finally {
+			if (out != null) {
+				out.close();
+			}
+		}
+	}
 	
 	public static boolean checkSdCard(Context context) {
 		
