@@ -1597,7 +1597,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			
 			try {
 						
-				LogcatReaderLoader loader = LogcatReaderLoader.create(LogcatActivity.this);
+				LogcatReaderLoader loader = LogcatReaderLoader.create(LogcatActivity.this, false);
 				reader = loader.loadReader();
 
 				String line;

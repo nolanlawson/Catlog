@@ -60,7 +60,7 @@ public class SingleLogcatReader extends AbsLogcatReader {
 	public String readLine() throws IOException {
 		String line = bufferedReader.readLine();
 		
-		if (recordingMode && lastLine != null) {
+		if (recordingMode && lastLine != null) { // still skipping past the 'last line'
 			if (lastLine.equals(line) || isAfterLastTime(line)) {
 				lastLine = null; // indicates we've passed the last line
 			}

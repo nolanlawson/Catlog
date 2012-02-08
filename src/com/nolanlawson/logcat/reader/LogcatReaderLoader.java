@@ -32,10 +32,10 @@ public class LogcatReaderLoader implements Parcelable {
 	private LogcatReaderLoader(List<String> buffers, boolean recordingMode) {
 		this.recordingMode = recordingMode;
 		this.multiple = buffers.size() > 1;
-		if (recordingMode) {
-			for (String buffer: buffers) {
-				lastLines.put(buffer, LogcatHelper.getLastLogLine(buffer));
-			}
+		for (String buffer : buffers) {
+			// no need to grab the last line if this isn't recording mode
+			String lastLine = recordingMode ? LogcatHelper.getLastLogLine(buffer) : null;
+			lastLines.put(buffer, lastLine);
 		}
 	}
 	
@@ -54,9 +54,9 @@ public class LogcatReaderLoader implements Parcelable {
 		return reader;
 	}
 	
-	public static LogcatReaderLoader create(Context context) {
+	public static LogcatReaderLoader create(Context context, boolean recordingMode) {
 		List<String> buffers = PreferenceHelper.getBuffers(context);
-		LogcatReaderLoader loader = new LogcatReaderLoader(buffers, true);
+		LogcatReaderLoader loader = new LogcatReaderLoader(buffers, recordingMode);
 		return loader;
 	}
 	

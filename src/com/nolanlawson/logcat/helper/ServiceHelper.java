@@ -56,7 +56,7 @@ public class ServiceHelper {
 			intent.putExtra("filename", filename);
 			
 			// load "lastLine" in the background
-			LogcatReaderLoader loader = LogcatReaderLoader.create(context);
+			LogcatReaderLoader loader = LogcatReaderLoader.create(context, true);
 			intent.putExtra("loader", loader);
 			
 			context.startService(intent);
