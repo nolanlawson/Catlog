@@ -59,17 +59,16 @@ public class LogcatHelper {
 		} catch (IOException e) {
 			log.e(e, "unexpected exception");
 		} finally {		
+			if (dumpLogcatProcess != null) {
+				dumpLogcatProcess.destroy();
+				log.d("destroyed 1 dump logcat process");
+			}
 			if (reader != null) {
 				try {
 					reader.close();
 				} catch (IOException e) {
 					log.e(e, "unexpected exception");
 				}
-			}
-			
-			if (dumpLogcatProcess != null) {
-				dumpLogcatProcess.destroy();
-				log.d("destroyed 1 dump logcat process");
 			}
 		}
 		
