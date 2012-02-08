@@ -817,6 +817,11 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	
 	private void showSendLogToWhichAppDialogue(final boolean asText, final boolean includeDeviceInfo) {
 
+		if (!(currentlyOpenLog == null && asText) && !SaveLogHelper.checkSdCard(this)) {
+			// if asText is false, then we need to check to make sure we can access the 
+			return;
+		}
+		
 		String title = getString(asText ? R.string.send_as_text : R.string.send_as_attachment);
 		
 		final SenderAppAdapter senderAppAdapter = new SenderAppAdapter(this, asText);
