@@ -51,11 +51,11 @@ public class SenderAppAdapter extends ArrayAdapter<ResolveInfo> {
 	
 	private Context mContext;
 	
-	public SenderAppAdapter(Context context, boolean addClipboard) {
+	public SenderAppAdapter(Context context, boolean addClipboard, boolean moreThanOneAttachment) {
 		super(context, R.layout.chooser_row, new ArrayList<ResolveInfo>());
 		
 		mContext = getContext();		
-		List<ResolveInfo> items = createItems(addClipboard);
+		List<ResolveInfo> items = createItems(addClipboard, moreThanOneAttachment);
 		for (ResolveInfo item : items) {
 			add(item);
 		}
@@ -82,9 +82,9 @@ public class SenderAppAdapter extends ArrayAdapter<ResolveInfo> {
 		}
 	}
 	
-	private List<ResolveInfo> createItems(boolean addClipboard) {
+	private List<ResolveInfo> createItems(boolean addClipboard, boolean moreThanOneAttachment) {
 		
-		List<ResolveInfo> items = mContext.getPackageManager().queryIntentActivities(createSendIntent("", ""), 0);
+		List<ResolveInfo> items = mContext.getPackageManager().queryIntentActivities(createDummyIntent(moreThanOneAttachment), 0);
 		
 		Log.d("TAG", "items are: " + items);
 		
@@ -152,6 +152,19 @@ public class SenderAppAdapter extends ArrayAdapter<ResolveInfo> {
 			} 	
 		}
 	}	
+	
+	/**
+	 * Create an intent just for querying available apps.
+	 * @param moreThanOneAttachment
+	 * @return
+	 */
+	private static Intent createDummyIntent(boolean moreThanOneAttachment) {
+		String action = moreThanOneAttachment ? ACTION_SEND_MULTIPLE : android.content.Intent.ACTION_SEND;
+		Intent actionSendIntent = new Intent(action);
+		actionSendIntent.setType("text/plain");
+		
+		return actionSendIntent;
+	}
 	
 	private static Intent createSendIntent(String subject, String body, File... attachments) {
 		

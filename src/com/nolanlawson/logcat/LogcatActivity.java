@@ -818,13 +818,18 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	private void showSendLogToWhichAppDialogue(final boolean asText, final boolean includeDeviceInfo) {
 
 		if (!(currentlyOpenLog == null && asText) && !SaveLogHelper.checkSdCard(this)) {
-			// if asText is false, then we need to check to make sure we can access the 
+			// if asText is false, then we need to check to make sure we can access the sdcard
 			return;
 		}
 		
 		String title = getString(asText ? R.string.send_as_text : R.string.send_as_attachment);
 		
-		final SenderAppAdapter senderAppAdapter = new SenderAppAdapter(this, asText);
+		boolean moreThanOneAttachment = 
+				Build.VERSION.SDK_INT >= 4 && // Cupcake doesn't support >1 attachment
+				!asText
+				&& includeDeviceInfo;
+		
+		final SenderAppAdapter senderAppAdapter = new SenderAppAdapter(this, asText, moreThanOneAttachment);
 		
 		new AlertDialog.Builder(LogcatActivity.this)
 			.setTitle(title)
