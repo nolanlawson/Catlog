@@ -125,8 +125,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         
         log.d("initial collapsed mode is %s", collapsedMode);
         
-        UpdateHelper.runUpdatesIfNecessary(LogcatActivity.this);
-        
         setUpWidgets();
         
         setUpAdapter();
@@ -142,10 +140,44 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         	openLog(filename);
         }
         
-        showInitialMessage();
+        runUpdatesIfNecessaryAndShowInitialMessage();
     }
     
-    private void addFiltersToSuggestions() {
+    private void runUpdatesIfNecessaryAndShowInitialMessage() {
+		
+    	if (UpdateHelper.areUpdatesNecessary(this)) {
+    		// show progress dialog while updates are running
+    		final ProgressDialog dialog = new ProgressDialog(this);
+    		dialog.setMessage(getString(R.string.dialog_loading_updates));
+    		dialog.show();
+    		
+    		new AsyncTask<Void, Void, Void>(){
+
+				@Override
+				protected Void doInBackground(Void... params) {
+					UpdateHelper.runUpdatesIfNecessary(LogcatActivity.this);
+					return null;
+				}
+
+				@Override
+				protected void onPostExecute(Void result) {
+					super.onPostExecute(result);
+					if (dialog != null && dialog.isShowing()) {
+						dialog.dismiss();
+					}
+					showInitialMessage();
+				}
+				
+				
+			}.execute((Void)null);
+    		
+    	} else {
+    		showInitialMessage();
+    	}
+		
+	}
+
+	private void addFiltersToSuggestions() {
     	CatlogDBHelper dbHelper = null;
     	try {
     		dbHelper = new CatlogDBHelper(this);

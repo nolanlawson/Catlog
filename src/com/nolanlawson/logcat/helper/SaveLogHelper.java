@@ -254,8 +254,6 @@ public class SaveLogHelper {
 			savedLogsDir.mkdir();
 		}
 		
-		moveLogsFromLegacyDirIfNecessary(savedLogsDir);
-		
 		return savedLogsDir;
 		
 	}
@@ -278,15 +276,24 @@ public class SaveLogHelper {
 	 * @param sdcardDir
 	 * @param savedLogsDir
 	 */
-	private static synchronized void moveLogsFromLegacyDirIfNecessary(File savedLogsDir) {
+	public static synchronized void moveLogsFromLegacyDirIfNecessary() {
 		File sdcardDir = Environment.getExternalStorageDirectory();
 		File legacyDir = new File(sdcardDir, LEGACY_SAVED_LOGS_DIR);
 		
+		
 		if (legacyDir.exists() && legacyDir.isDirectory()) {
+			File savedLogsDir = getSavedLogsDirectory();
 			for (File file : legacyDir.listFiles()) {
 				file.renameTo(new File(savedLogsDir, file.getName()));
 			}
 			legacyDir.delete();
 		}
+	}
+	
+	public static boolean legacySavedLogsDirExists() {
+		File sdcardDir = Environment.getExternalStorageDirectory();
+		File legacyDir = new File(sdcardDir, LEGACY_SAVED_LOGS_DIR);
+		
+		return legacyDir.exists() && legacyDir.isDirectory();
 	}
 }
