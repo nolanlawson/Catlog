@@ -28,13 +28,18 @@ public class SaveLogHelper {
 	public static final String TEMP_DEVICE_INFO_FILENAME = "device_info.txt";
 	public static final String TEMP_LOG_FILENAME = "logcat.txt";
 	
+	private static final String LEGACY_SAVED_LOGS_DIR = "catlog_saved_logs";
+	private static final String CATLOG_DIR = "catlog";
+	private static final String SAVED_LOGS_DIR = "saved_logs";
+	private static final String TMP_DIR = "tmp";
+	
 	private static UtilLogger log = new UtilLogger(SaveLogHelper.class);
 	
 	public static File saveTemporaryFile(Context context, String filename, CharSequence text, List<CharSequence> lines) {
 		PrintStream out = null;
 		try {
 			
-			File tempFile = new File(context.getCacheDir(), filename);
+			File tempFile = new File(getTempDirectory(), filename);
 			
 			// specifying 8192 gets rid of an annoying warning message
 			out = new PrintStream(new BufferedOutputStream(new FileOutputStream(tempFile, false), 8192));
@@ -79,7 +84,7 @@ public class SaveLogHelper {
 	
 	public static File getFile(String filename) {
 		
-		File catlogDir = getCatlogDirectory();
+		File catlogDir = getSavedLogsDirectory();
 		
 		File file = new File(catlogDir, filename);
 	
@@ -88,7 +93,7 @@ public class SaveLogHelper {
 	
 	public static void deleteLogIfExists(String filename) {
 		
-		File catlogDir = getCatlogDirectory();
+		File catlogDir = getSavedLogsDirectory();
 		
 		File file = new File(catlogDir, filename);
 		
@@ -100,7 +105,7 @@ public class SaveLogHelper {
 	
 	public static Date getLastModifiedDate(String filename) {
 		
-		File catlogDir = getCatlogDirectory();
+		File catlogDir = getSavedLogsDirectory();
 		
 		File file = new File(catlogDir, filename);
 		
@@ -119,7 +124,7 @@ public class SaveLogHelper {
 	 */
 	public static List<String> getLogFilenames() {
 		
-		File catlogDir = getCatlogDirectory();
+		File catlogDir = getSavedLogsDirectory();
 		
 		File[] filesArray = catlogDir.listFiles();
 		
@@ -148,7 +153,7 @@ public class SaveLogHelper {
 	
 	public static List<String> openLog(String filename) {
 		
-		File catlogDir = getCatlogDirectory();
+		File catlogDir = getSavedLogsDirectory();
 		File logFile = new File(catlogDir, filename);	
 		
 		List<String> result = new ArrayList<String>();
@@ -188,7 +193,7 @@ public class SaveLogHelper {
 	
 	private static boolean saveLog(List<CharSequence> logLines, CharSequence logString, String filename) {
 		
-		File catlogDir = getCatlogDirectory();
+		File catlogDir = getSavedLogsDirectory();
 		
 		File newFile = new File(catlogDir, filename);
 		try {
@@ -228,17 +233,60 @@ public class SaveLogHelper {
 		
 	}
 	
+	private static File getTempDirectory() {
+		File catlogDir = getCatlogDirectory();
+		
+		File tmpDir = new File(catlogDir, TMP_DIR);
+		
+		if (!tmpDir.exists()) {
+			tmpDir.mkdir();
+		}
+		
+		return tmpDir;
+	}
+	
+	private static File getSavedLogsDirectory() {
+		File catlogDir = getCatlogDirectory();
+		
+		File savedLogsDir = new File(catlogDir, SAVED_LOGS_DIR);
+		
+		if (!savedLogsDir.exists()) {
+			savedLogsDir.mkdir();
+		}
+		
+		moveLogsFromLegacyDirIfNecessary(savedLogsDir);
+		
+		return savedLogsDir;
+		
+	}
+
 	private static File getCatlogDirectory() {
 		File sdcardDir = Environment.getExternalStorageDirectory();
 		
-		File catlogDir = new File(sdcardDir, "catlog_saved_logs");
+		File catlogDir = new File(sdcardDir, CATLOG_DIR);
 		
 		if (!catlogDir.exists()) {
 			catlogDir.mkdir();
 		}
-		
 		return catlogDir;
-		
 	}
-	
+
+	/**
+	 * I used to save logs to /sdcard/catlog_saved_logs.  Now it's /sdcard/catlog/saved_logs.  Move any files that
+	 * need to be moved to the new directory.
+	 * 
+	 * @param sdcardDir
+	 * @param savedLogsDir
+	 */
+	private static synchronized void moveLogsFromLegacyDirIfNecessary(File savedLogsDir) {
+		File sdcardDir = Environment.getExternalStorageDirectory();
+		File legacyDir = new File(sdcardDir, LEGACY_SAVED_LOGS_DIR);
+		
+		if (legacyDir.exists() && legacyDir.isDirectory()) {
+			for (File file : legacyDir.listFiles()) {
+				file.renameTo(new File(savedLogsDir, file.getName()));
+			}
+			legacyDir.delete();
+		}
+	}
 }
