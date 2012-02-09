@@ -36,9 +36,6 @@ public class BuildHelper {
 		for (Entry<String, String> entry : keysToValues.entrySet()) {
 			stringBuilder.append(entry.getKey()).append(": ").append(entry.getValue()).append('\n');
 		}
-		if (stringBuilder.length() > 0) {
-			return stringBuilder.substring(0, stringBuilder.length() - 1); // cut off final newline
-		}
 		return stringBuilder.toString();
 	}
 

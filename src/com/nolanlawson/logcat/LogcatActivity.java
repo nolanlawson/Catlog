@@ -908,7 +908,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			if (asText || Build.VERSION.SDK_INT < 4) {
 				// API level 3 does not allow Intent.ACTION_SEND_MULTIPLE, so cannot attach >1 file, so just
 				// append to top of body
-				body.append(deviceInfo).append("\n\n");
+				body.append(deviceInfo).append('\n');
 			} else {
 				// or create as separate file called device.txt
 				File tempFile = SaveLogHelper.saveTemporaryFile(this, 
