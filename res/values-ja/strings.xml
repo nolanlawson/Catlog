@@ -49,7 +49,7 @@
 	<string name="log_saved">保存完了。</string>
     <string name="copy_to_clipboard">クリップボードにこピーする</string>
 	<string name="copied_to_clipboard">クリップボードコピー完了。</string>
-	<string name="enter_filename">SDカードに保存するファイル名：</string>
+	<string name="enter_filename">保存するファイル名：</string>
 	<string name="select_logs_to_delete">削除したいと思うログを選んでください。</string>
 	<string name="files_deleted">ファイルは%dつ削除されました。</string>
 	<string name="delete_all">全部削除</string>

@@ -50,7 +50,7 @@ Téléchargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog
 	<string name="log_saved">Journal sauvegardé.</string>
     <string name="copy_to_clipboard">Copier au presse-papiers</string>
 	<string name="copied_to_clipboard">Copié au presse-papiers.</string>
-	<string name="enter_filename">Entrez le nom du fichier à sauvegarder à la carte SD：</string>
+	<string name="enter_filename">Entrez le nom du fichier à sauvegarder：</string>
 	<string name="select_logs_to_delete">Sélectionnez les journaux à supprimer.</string>
 	<string name="files_deleted">%d fichiers supprimés.</string>
 	<string name="delete_all">Tout supprimer</string>
