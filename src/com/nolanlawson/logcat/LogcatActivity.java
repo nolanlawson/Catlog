@@ -131,15 +131,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         
         updateBackgroundColor();
         
-        Intent intent = getIntent();
-        
-        if (intent == null || !intent.hasExtra("filename")) {
-        	startUpMainLog();
-        } else {
-        	String filename = intent.getStringExtra("filename");
-        	openLog(filename);
-        }
-        
         runUpdatesIfNecessaryAndShowInitialMessage();
     }
     
@@ -165,14 +156,14 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 					if (dialog != null && dialog.isShowing()) {
 						dialog.dismiss();
 					}
-					showInitialMessage();
+					showInitialMessageAndStartupLog();
 				}
 				
 				
 			}.execute((Void)null);
     		
     	} else {
-    		showInitialMessage();
+    		showInitialMessageAndStartupLog();
     	}
 		
 	}
@@ -193,8 +184,17 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 	}
 
-	private void showInitialMessage() {
+	private void showInitialMessageAndStartupLog() {
 
+        Intent intent = getIntent();
+        
+        if (intent == null || !intent.hasExtra("filename")) {
+        	startUpMainLog();
+        } else {
+        	String filename = intent.getStringExtra("filename");
+        	openLog(filename);
+        }
+		
 		boolean isFirstRun = PreferenceHelper.getFirstRunPreference(getApplicationContext());
 		if (isFirstRun) {
 			
@@ -252,7 +252,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				
 			}
 		}
-		
 	}
 
 

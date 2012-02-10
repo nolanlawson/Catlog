@@ -67,11 +67,12 @@
 
 	<ProgressBar android:id="@+id/main_dark_progress_bar"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:indeterminate="true"/>
+		android:indeterminate="true" android:visibility="gone"/>
 
 	<ProgressBar android:id="@+id/main_light_progress_bar"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:indeterminate="true" style="@android:style/Widget.ProgressBar.Inverse"/>    
+		android:indeterminate="true" android:visibility="gone"
+		style="@android:style/Widget.ProgressBar.Inverse"/>    
 	    
 	<com.nolanlawson.logcat.widget.ExceptionCatchingListView android:layout_width="fill_parent"
 		android:layout_height="0px" android:layout_weight="1.0" android:id="@android:id/list"
