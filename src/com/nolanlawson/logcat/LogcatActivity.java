@@ -856,12 +856,14 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		String title = getString(asText ? R.string.send_as_text : R.string.send_as_attachment);
 		
-		boolean moreThanOneAttachment = 
-				Build.VERSION.SDK_INT >= 4 && // Cupcake doesn't support >1 attachment
-				!asText
-				&& includeDeviceInfo;
+		// determine the attachment type
+		SendLogDetails.AttachmentType attachmentType = asText 
+				? SendLogDetails.AttachmentType.None 
+				: (includeDeviceInfo 
+						? SendLogDetails.AttachmentType.Zip 
+						: SendLogDetails.AttachmentType.Text);
 		
-		final SenderAppAdapter senderAppAdapter = new SenderAppAdapter(this, asText, moreThanOneAttachment);
+		final SenderAppAdapter senderAppAdapter = new SenderAppAdapter(this, asText, attachmentType);
 		
 		new AlertDialog.Builder(LogcatActivity.this)
 			.setTitle(title)
@@ -908,9 +910,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			protected void onPostExecute(SendLogDetails sendLogDetails) {
 				super.onPostExecute(sendLogDetails);
 				
-				File[] attachments = ArrayUtil.toArray(sendLogDetails.getAttachments(), File.class);
-				
-				senderAppAdapter.respondToClick(which, sendLogDetails.getSubject(), sendLogDetails.getBody(), attachments);
+				senderAppAdapter.respondToClick(which, sendLogDetails.getSubject(), sendLogDetails.getBody(), 
+						sendLogDetails.getAttachmentType(), sendLogDetails.getAttachment());
 				if (getBodyProgressDialog != null && getBodyProgressDialog.isShowing()) {
 					getBodyProgressDialog.dismiss();
 				}
@@ -924,13 +925,15 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		SendLogDetails sendLogDetails = new SendLogDetails();
 		StringBuilder body = new StringBuilder();
 		
+		List<File> files = new ArrayList<File>();
+		
 		if (!asText) {
 			if (currentlyOpenLog != null) { // use saved log file
-				sendLogDetails.addAttachments(SaveLogHelper.getFile(currentlyOpenLog));
+				files.add(SaveLogHelper.getFile(currentlyOpenLog));
 			} else { // create a temp file to hold the current, unsaved log
 				File tempLogFile = SaveLogHelper.saveTemporaryFile(this, 
 						SaveLogHelper.TEMP_LOG_FILENAME, null, getCurrentLogAsListOfStrings());
-				sendLogDetails.addAttachments(tempLogFile);
+				files.add(tempLogFile);
 			}
 		}
 		
@@ -945,7 +948,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				// or create as separate file called device.txt
 				File tempFile = SaveLogHelper.saveTemporaryFile(this, 
 						SaveLogHelper.TEMP_DEVICE_INFO_FILENAME, deviceInfo, null);
-				sendLogDetails.addAttachments(tempFile);
+				files.add(tempFile);
 			}
 		}
 		
@@ -955,6 +958,26 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		sendLogDetails.setBody(body.toString());
 		sendLogDetails.setSubject(getString(R.string.subject_log_report));
+		
+		// either zip up multiple files or just attach the one file
+		switch (files.size()) {
+		case 0: // no attachments
+			sendLogDetails.setAttachmentType(SendLogDetails.AttachmentType.None);
+			break;
+		case 1: // one plaintext file attachment
+			sendLogDetails.setAttachmentType(SendLogDetails.AttachmentType.Text);
+			sendLogDetails.setAttachment(files.get(0));
+			break;
+		default: // 2 files - need to zip them up
+			File zipFile = SaveLogHelper.saveTemporaryZipFile(SaveLogHelper.TEMP_ZIP_FILENAME, files);
+			for (File file : files) {
+				// delete original files
+				file.delete();
+			}
+			sendLogDetails.setAttachmentType(SendLogDetails.AttachmentType.Zip);
+			sendLogDetails.setAttachment(zipFile);
+			break;
+		}
 		
 		return sendLogDetails;
 	}

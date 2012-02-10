@@ -41,9 +41,6 @@ import com.nolanlawson.logcat.util.UtilLogger;
  */
 public class SenderAppAdapter extends ArrayAdapter<ResolveInfo> {
 	
-	// only defined in api level 4 and up
-	private static final String ACTION_SEND_MULTIPLE = "android.intent.action.SEND_MULTIPLE";
-	
 	// used to exclude facebook, but don't need to anymore because it works again
 	public static final Set<String> FILTER_SET = Collections.emptySet();
 	
@@ -51,17 +48,17 @@ public class SenderAppAdapter extends ArrayAdapter<ResolveInfo> {
 	
 	private Context mContext;
 	
-	public SenderAppAdapter(Context context, boolean addClipboard, boolean moreThanOneAttachment) {
+	public SenderAppAdapter(Context context, boolean addClipboard, SendLogDetails.AttachmentType attachmentType) {
 		super(context, R.layout.chooser_row, new ArrayList<ResolveInfo>());
 		
 		mContext = getContext();		
-		List<ResolveInfo> items = createItems(addClipboard, moreThanOneAttachment);
+		List<ResolveInfo> items = createItems(addClipboard, attachmentType);
 		for (ResolveInfo item : items) {
 			add(item);
 		}
 	}
 
-	public void respondToClick(int position, final String subject, final String body, final File... attachments) {
+	public void respondToClick(int position, String subject, String body, SendLogDetails.AttachmentType attachmentType, File attachment) {
 
 		ResolveInfo launchable = getItem(position);
 		ActivityInfo activity=launchable.activityInfo;
@@ -75,16 +72,16 @@ public class SenderAppAdapter extends ArrayAdapter<ResolveInfo> {
 		
 			ComponentName name= new ComponentName(activity.applicationInfo.packageName, activity.name);
 			
-			Intent actionSendIntent= createSendIntent(subject, body, attachments);
+			Intent actionSendIntent= createSendIntent(subject, body, attachmentType, attachment);
 			actionSendIntent.setComponent(name);
 	 
 			mContext.startActivity(actionSendIntent);	
 		}
 	}
 	
-	private List<ResolveInfo> createItems(boolean addClipboard, boolean moreThanOneAttachment) {
+	private List<ResolveInfo> createItems(boolean addClipboard, SendLogDetails.AttachmentType attachmentType) {
 		
-		List<ResolveInfo> items = mContext.getPackageManager().queryIntentActivities(createDummyIntent(moreThanOneAttachment), 0);
+		List<ResolveInfo> items = mContext.getPackageManager().queryIntentActivities(createDummyIntent(attachmentType), 0);
 		
 		Log.d("TAG", "items are: " + items);
 		
@@ -158,37 +155,27 @@ public class SenderAppAdapter extends ArrayAdapter<ResolveInfo> {
 	 * @param moreThanOneAttachment
 	 * @return
 	 */
-	private static Intent createDummyIntent(boolean moreThanOneAttachment) {
-		String action = moreThanOneAttachment ? ACTION_SEND_MULTIPLE : android.content.Intent.ACTION_SEND;
-		Intent actionSendIntent = new Intent(action);
-		actionSendIntent.setType("text/plain");
+	private static Intent createDummyIntent(SendLogDetails.AttachmentType attachmentType) {
+		Intent actionSendIntent = new Intent(android.content.Intent.ACTION_SEND);
+		actionSendIntent.setType(attachmentType.getMimeType());
 		
 		return actionSendIntent;
 	}
 	
-	private static Intent createSendIntent(String subject, String body, File... attachments) {
+	private static Intent createSendIntent(String subject, String body, SendLogDetails.AttachmentType attachmentType, File attachment) {
 		
-		String action = attachments.length > 1 ? ACTION_SEND_MULTIPLE : android.content.Intent.ACTION_SEND;
+		String action = android.content.Intent.ACTION_SEND;
 		Intent actionSendIntent = new Intent(action);
 
-		actionSendIntent.setType("text/plain");
+		actionSendIntent.setType(attachmentType.getMimeType());
 		actionSendIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
 		if (!TextUtils.isEmpty(body)) {
 			actionSendIntent.putExtra(Intent.EXTRA_TEXT, body);
 		}
-		if (attachments.length == 1) { // single attachment
-			Uri uri = Uri.fromFile(attachments[0]);
+		if (attachment != null) {
+			Uri uri = Uri.fromFile(attachment);
 			log.d("uri is: %s", uri);
 			actionSendIntent.putExtra(Intent.EXTRA_STREAM, uri);
-		} else if (attachments.length > 1) { // more than one attachment
-			// add attachments
-			ArrayList<Uri> uris = new ArrayList<Uri>();
-			for (File attachment : attachments) {
-				Uri uri = Uri.fromFile(attachment);
-				uris.add(uri);
-				log.d("uri is: %s", uri);
-			}
-			actionSendIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
 		}
 		
 		return actionSendIntent;

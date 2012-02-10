@@ -1,14 +1,30 @@
 package com.nolanlawson.logcat.data;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SendLogDetails {
 
+	public static enum AttachmentType {
+		None ("text/plain"),
+		Zip ("application/zip"),
+		Text ("application/*");
+		
+		private String mimeType;
+		
+		private AttachmentType(String mimeType) {
+			this.mimeType = mimeType;
+		}
+		
+		public String getMimeType() {
+			return this.mimeType;
+		}
+	}
+	
 	private String subject;
 	private String body;
-	private List<File> attachments = new ArrayList<File>();
+	private File attachment;
+	private SendLogDetails.AttachmentType attachmentType;
+	
 	public String getSubject() {
 		return subject;
 	}
@@ -21,10 +37,16 @@ public class SendLogDetails {
 	public void setBody(String body) {
 		this.body = body;
 	}
-	public List<File> getAttachments() {
-		return attachments;
+	public File getAttachment() {
+		return attachment;
 	}
-	public void addAttachments(File attachment) {
-		this.attachments.add(attachment);
+	public void setAttachment(File attachment) {
+		this.attachment = attachment;
+	}
+	public SendLogDetails.AttachmentType getAttachmentType() {
+		return attachmentType;
+	}
+	public void setAttachmentType(SendLogDetails.AttachmentType attachmentType) {
+		this.attachmentType = attachmentType;
 	}
 }

@@ -1,5 +1,6 @@
 package com.nolanlawson.logcat.helper;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,7 +8,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +18,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import android.content.Context;
 import android.os.Environment;
@@ -25,8 +30,11 @@ import com.nolanlawson.logcat.util.UtilLogger;
 
 public class SaveLogHelper {
 
+	private static final int BUFFER = 0x1000; // 4K
+	
 	public static final String TEMP_DEVICE_INFO_FILENAME = "device_info.txt";
 	public static final String TEMP_LOG_FILENAME = "logcat.txt";
+	public static final String TEMP_ZIP_FILENAME = "logcat_and_device_info.zip";
 	
 	private static final String LEGACY_SAVED_LOGS_DIR = "catlog_saved_logs";
 	private static final String CATLOG_DIR = "catlog";
@@ -41,8 +49,8 @@ public class SaveLogHelper {
 			
 			File tempFile = new File(getTempDirectory(), filename);
 			
-			// specifying 8192 gets rid of an annoying warning message
-			out = new PrintStream(new BufferedOutputStream(new FileOutputStream(tempFile, false), 8192));
+			// specifying BUFFER gets rid of an annoying warning message
+			out = new PrintStream(new BufferedOutputStream(new FileOutputStream(tempFile, false), BUFFER));
 			if (text != null) { // one big string
 				out.print(text);
 			} else { // multiple lines separated by newline
@@ -162,7 +170,7 @@ public class SaveLogHelper {
 		
 		try {
 			
-			bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(logFile)), 8192);
+			bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(logFile)), BUFFER);
 			
 			while (bufferedReader.ready()) {
 				result.add(bufferedReader.readLine());
@@ -206,8 +214,8 @@ public class SaveLogHelper {
 		}
 		PrintStream out = null;
 		try {
-			// specifying 8192 gets rid of an annoying warning message
-			out = new PrintStream(new BufferedOutputStream(new FileOutputStream(newFile, true), 8192));
+			// specifying BUFFER gets rid of an annoying warning message
+			out = new PrintStream(new BufferedOutputStream(new FileOutputStream(newFile, true), BUFFER));
 			
 			// save a log as either a list of strings or as a charsequence
 			if (logLines != null) {
@@ -295,5 +303,73 @@ public class SaveLogHelper {
 		File legacyDir = new File(sdcardDir, LEGACY_SAVED_LOGS_DIR);
 		
 		return legacyDir.exists() && legacyDir.isDirectory();
+	}
+	
+	public static File saveTemporaryZipFile(String filename, List<File> files) {
+		try {
+			return saveTemporaryZipFileAndThrow(filename, files);
+		} catch (IOException e) {
+			log.e(e, "unexpected error");
+		}
+		return null;
+	}
+	
+	private static File saveTemporaryZipFileAndThrow(String filename, List<File> files) throws IOException {
+		File zipFile = new File(getTempDirectory(), filename);
+
+		ZipOutputStream output = null;
+		try {
+			output = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(zipFile), BUFFER));
+
+			for (File file : files) {
+				FileInputStream fi = new FileInputStream(file);
+				BufferedInputStream input = null;
+				try {
+					input = new BufferedInputStream(fi, BUFFER);
+					
+					ZipEntry entry = new ZipEntry(file.getName());
+					output.putNextEntry(entry);
+					copy(input, output);
+				} finally {
+					if (input != null) {
+						input.close();
+					}
+				}
+	
+			}
+		} finally {
+			if (output != null) {
+				output.close();
+			}
+		}
+		return zipFile;
+	}
+	
+	/**
+	 * Copies all bytes from the input stream to the output stream. Does not
+	 * close or flush either stream.
+	 * 
+	 * Taken from Google Guava ByteStreams.java
+	 * 
+	 * @param from
+	 *            the input stream to read from
+	 * @param to
+	 *            the output stream to write to
+	 * @return the number of bytes copied
+	 * @throws IOException
+	 *             if an I/O error occurs
+	 */
+	private static long copy(InputStream from, OutputStream to)	throws IOException {
+		byte[] buf = new byte[BUFFER];
+		long total = 0;
+		while (true) {
+			int r = from.read(buf);
+			if (r == -1) {
+				break;
+			}
+			to.write(buf, 0, r);
+			total += r;
+		}
+		return total;
 	}
 }
