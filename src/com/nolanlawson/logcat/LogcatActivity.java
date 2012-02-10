@@ -1270,7 +1270,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		adapter.setLogLevelLimit(logLevelLimit);
 		logLevelChanged();
 		
-		// silently change edit text
+		// silently change edit text without invoking filtering
 		searchEditText.removeTextChangedListener(this);
 		searchEditText.setText("");
 		searchEditText.addTextChangedListener(this);
@@ -1583,11 +1583,11 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				}
 				break;
 			case R.id.main_clear_button:
-				if (searchEditText != null) {
-					searchEditText.setText("");
-				}
 				if (adapter != null) {
 					adapter.clear();
+				}
+				if (searchEditText != null) {
+					searchEditText.setText("");
 				}
 				Toast.makeText(this, R.string.log_cleared, Toast.LENGTH_LONG).show();
 				break;
