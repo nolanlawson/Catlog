@@ -181,6 +181,7 @@
     <string name="first_run_title">Welcome to CatLog!</string>
     <string name="first_run_message">\
 <b>New in 1.3.3!</b>\n\
+&#160;&#160;&#160;&#160;- Include device info with log report.\n\
 &#160;&#160;&#160;&#160;- New \"Log Display Limit\" setting.\n\
 &#160;&#160;&#160;&#160;- Fix \"kill failed\" message in ICS.\n\
 &#160;&#160;&#160;&#160;- Performance improvements.\

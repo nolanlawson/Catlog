@@ -133,8 +133,9 @@ Téléchargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog
     <string name="first_run_title">Bienvenue à CatLog!</string>
     <string name="first_run_message">\
 <b>Nouveautés en 1.3.3!</b>\n\
+&#160;&#160;&#160;&#160;- Informations sur le système peuvent être envoyées avec le journal.\n\
 &#160;&#160;&#160;&#160;- Nouvelle paramètre: \"Limite d\'Affichage.\"\n\
-&#160;&#160;&#160;&#160;- Message "kill failed" d\'ICS supprimé.\n\
+&#160;&#160;&#160;&#160;- Message \"kill failed\" d\'ICS supprimé.\n\
 &#160;&#160;&#160;&#160;- Amélioration de la performance.\
 </string>     
     
