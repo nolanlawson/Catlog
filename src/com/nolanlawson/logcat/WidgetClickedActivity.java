@@ -3,6 +3,7 @@ package com.nolanlawson.logcat;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -23,6 +24,8 @@ public class WidgetClickedActivity extends Activity {
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         
 		setContentView(R.layout.record_log_dialog);
+		
+		getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 		
 		// ask the user the save a file to record the log
 		
