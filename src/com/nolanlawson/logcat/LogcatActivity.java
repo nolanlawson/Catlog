@@ -18,7 +18,6 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -939,8 +938,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		if (includeDeviceInfo) {
 			// include device info
 			String deviceInfo = BuildHelper.getBuildInformationAsString();
-			if (asText || Build.VERSION.SDK_INT < 4) {
-				// API level 3 does not allow Intent.ACTION_SEND_MULTIPLE, so cannot attach >1 file, so just
+			if (asText) {
 				// append to top of body
 				body.append(deviceInfo).append('\n');
 			} else {
