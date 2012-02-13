@@ -23,7 +23,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +31,8 @@ import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
+
+import com.nolanlawson.logcat.util.UtilLogger;
 
 /**
  * 
@@ -53,6 +54,8 @@ import android.widget.TextView;
  * override {@link #getView(int, View, ViewGroup)} to return the type of view you want.
  */
 public class SortedFilterArrayAdapter<T> extends BaseAdapter implements Filterable {
+	
+	private static UtilLogger log = new UtilLogger(SortedFilterArrayAdapter.class);
 	
 	private Comparator<T> stringComparator = new Comparator<T>(){
 
@@ -350,7 +353,7 @@ public class SortedFilterArrayAdapter<T> extends BaseAdapter implements Filterab
                 text = (TextView) view.findViewById(mFieldId);
             }
         } catch (ClassCastException e) {
-            Log.e("ArrayAdapter", "You must supply a resource ID for a TextView");
+            log.e("You must supply a resource ID for a TextView");
             throw new IllegalStateException(
                     "ArrayAdapter requires the resource ID to be a TextView", e);
         }

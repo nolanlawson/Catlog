@@ -967,9 +967,12 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			break;
 		default: // 2 files - need to zip them up
 			File zipFile = SaveLogHelper.saveTemporaryZipFile(SaveLogHelper.TEMP_ZIP_FILENAME, files);
+			File tmpDirectory = SaveLogHelper.getTempDirectory();
 			for (File file : files) {
 				// delete original files
-				file.delete();
+				if (file.getParentFile().equals(tmpDirectory)) { // only delete temporary files
+					file.delete();
+				}
 			}
 			sendLogDetails.setAttachmentType(SendLogDetails.AttachmentType.Zip);
 			sendLogDetails.setAttachment(zipFile);

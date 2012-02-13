@@ -21,7 +21,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.ClipboardManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,7 +82,7 @@ public class SenderAppAdapter extends ArrayAdapter<ResolveInfo> {
 		
 		List<ResolveInfo> items = mContext.getPackageManager().queryIntentActivities(createDummyIntent(attachmentType), 0);
 		
-		Log.d("TAG", "items are: " + items);
+		log.d("items are: %s", items);
 		
 		filter(items);
 		Collections.sort(items, new ResolveInfo.DisplayNameComparator(mContext.getPackageManager())); 
@@ -93,7 +92,7 @@ public class SenderAppAdapter extends ArrayAdapter<ResolveInfo> {
 		}
 		
 		
-		Log.d("TAG", "items are: " + items);
+		log.d("items are: %s", items);
 		
 		return items;
 	}

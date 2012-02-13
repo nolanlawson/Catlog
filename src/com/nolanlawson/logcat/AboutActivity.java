@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -88,7 +87,7 @@ public class AboutActivity extends Activity implements OnClickListener {
 				sb.append(buff.readLine()).append("\n");
 			}
 		} catch (IOException e) {
-			Log.e("AboutActivity","This should not happen",e);
+			log.e(e, "This should not happen");
 		}
 		
 		return sb.toString();

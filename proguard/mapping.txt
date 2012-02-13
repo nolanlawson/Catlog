@@ -26,7 +26,8 @@ com.nolanlawson.logcat.AboutActivity$AboutWebClient$2 -> com.nolanlawson.logcat.
     com.nolanlawson.logcat.AboutActivity$AboutWebClient this$1 -> a
     void run() -> run
 com.nolanlawson.logcat.CrazyLoggerService -> com.nolanlawson.logcat.CrazyLoggerService:
-    boolean kill -> a
+    com.nolanlawson.logcat.util.UtilLogger log -> a
+    boolean kill -> b
     void onHandleIntent(android.content.Intent) -> onHandleIntent
     void onStart(android.content.Intent,int) -> onStart
     android.os.IBinder onBind(android.content.Intent) -> onBind
@@ -514,17 +515,18 @@ com.nolanlawson.logcat.data.SenderAppAdapter$DummyClipboardLaunchable -> com.nol
     java.lang.CharSequence loadLabel(android.content.pm.PackageManager) -> loadLabel
     java.lang.String toString() -> toString
 com.nolanlawson.logcat.data.SortedFilterArrayAdapter -> com.nolanlawson.logcat.data.g:
-    java.util.Comparator stringComparator -> a
-    java.util.List mObjects -> b
-    java.lang.Object mLock -> c
-    int mResource -> d
-    int mDropDownResource -> e
-    int mFieldId -> f
-    boolean mNotifyOnChange -> g
-    android.content.Context mContext -> h
-    java.util.ArrayList mOriginalValues -> i
-    com.nolanlawson.logcat.data.SortedFilterArrayAdapter$ArrayFilter mFilter -> j
-    android.view.LayoutInflater mInflater -> k
+    com.nolanlawson.logcat.util.UtilLogger log -> a
+    java.util.Comparator stringComparator -> b
+    java.util.List mObjects -> c
+    java.lang.Object mLock -> d
+    int mResource -> e
+    int mDropDownResource -> f
+    int mFieldId -> g
+    boolean mNotifyOnChange -> h
+    android.content.Context mContext -> i
+    java.util.ArrayList mOriginalValues -> j
+    com.nolanlawson.logcat.data.SortedFilterArrayAdapter$ArrayFilter mFilter -> k
+    android.view.LayoutInflater mInflater -> l
     void add(java.lang.Object) -> a
     void clear() -> a
     void notifyDataSetChanged() -> notifyDataSetChanged
@@ -658,11 +660,11 @@ com.nolanlawson.logcat.helper.SaveLogHelper -> com.nolanlawson.logcat.b.t:
     boolean saveLog(java.lang.CharSequence,java.lang.String) -> a
     boolean saveLog(java.util.List,java.lang.String) -> a
     boolean saveLog(java.util.List,java.lang.CharSequence,java.lang.String) -> a
-    java.io.File getTempDirectory() -> e
+    java.io.File getTempDirectory() -> c
     java.io.File getSavedLogsDirectory() -> f
     java.io.File getCatlogDirectory() -> g
-    void moveLogsFromLegacyDirIfNecessary() -> c
-    boolean legacySavedLogsDirExists() -> d
+    void moveLogsFromLegacyDirIfNecessary() -> d
+    boolean legacySavedLogsDirExists() -> e
     java.io.File saveTemporaryZipFile(java.lang.String,java.util.List) -> a
     java.io.File saveTemporaryZipFileAndThrow(java.lang.String,java.util.List) -> b
     long copy(java.io.InputStream,java.io.OutputStream) -> a
@@ -764,7 +766,8 @@ com.nolanlawson.logcat.util.StringUtil -> com.nolanlawson.logcat.a.a:
     java.lang.String[] split(java.lang.String,java.lang.String) -> a
 com.nolanlawson.logcat.util.UtilLogger -> com.nolanlawson.logcat.a.f:
     java.lang.String tag -> a
-    void e(java.lang.String,java.lang.Object[]) -> a
+    void i(java.lang.String,java.lang.Object[]) -> a
+    void e(java.lang.String,java.lang.Object[]) -> b
     void e(java.lang.Exception,java.lang.String,java.lang.Object[]) -> a
 com.nolanlawson.logcat.widget.ExceptionCatchingListView -> com.nolanlawson.logcat.widget.ExceptionCatchingListView:
     com.nolanlawson.logcat.util.UtilLogger log -> a

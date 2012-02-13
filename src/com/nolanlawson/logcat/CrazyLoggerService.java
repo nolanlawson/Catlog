@@ -5,7 +5,8 @@ import java.util.Date;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.IBinder;
-import android.util.Log;
+
+import com.nolanlawson.logcat.util.UtilLogger;
 
 /**
  * just writes a bunch of logs.  to be used during debugging and testing.
@@ -16,6 +17,8 @@ public class CrazyLoggerService extends IntentService {
 	
 	private static final long INTERVAL = 300;
 	
+	private static UtilLogger log = new UtilLogger(CrazyLoggerService.class);
+	
 	private boolean kill = false;
 
 	public CrazyLoggerService() {
@@ -24,17 +27,17 @@ public class CrazyLoggerService extends IntentService {
 
 	protected void onHandleIntent(Intent intent) {
 	
-		Log.d("CrazyLoggerService", "onHandleIntent()");
+		log.d("onHandleIntent()");
 		
 		while (!kill) {
 		
 			try {
 				Thread.sleep(INTERVAL);
 			} catch (InterruptedException e) {
-				Log.e("CrazyLoggerService", "error", e);
+				log.e(e, "error");
 			}
 			Date date = new Date();
-			Log.i("CrazyLoggerService", "Log message " + date + " " + (date.getTime() % 1000));
+			log.i("Log message " + date + " " + (date.getTime() % 1000));
 		
 		}
 	

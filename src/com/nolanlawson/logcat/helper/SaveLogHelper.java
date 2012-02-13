@@ -241,7 +241,7 @@ public class SaveLogHelper {
 		
 	}
 	
-	private static File getTempDirectory() {
+	public static File getTempDirectory() {
 		File catlogDir = getCatlogDirectory();
 		
 		File tmpDir = new File(catlogDir, TMP_DIR);
