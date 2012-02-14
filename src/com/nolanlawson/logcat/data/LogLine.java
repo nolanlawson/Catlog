@@ -14,6 +14,8 @@ public class LogLine {
 
 	public static final String LOGCAT_DATE_FORMAT = "MM-dd HH:mm:ss.SSS";
 	
+	private static final int TIMESTAMP_LENGTH = 19;
+	
 	private static Pattern logPattern = Pattern.compile(
 			// log level
 			"(\\w)" +
@@ -25,9 +27,7 @@ public class LogLine {
 			"(\\d+)" +
 			// optional weird number that only occurs on ZTE blade
 			"(?:\\*\\s*\\d+)?" +
-			"\\): " +
-			// log output
-			"(.*)");
+			"\\): ");
 	
 	private static UtilLogger log = new UtilLogger(LogLine.class);
 	
@@ -81,15 +81,12 @@ public class LogLine {
 		this.logOutput = logOutput;
 	}
 	
-	
 	public int getProcessId() {
 		return processId;
 	}
 	public void setProcessId(int processId) {
 		this.processId = processId;
 	}
-	
-	
 	
 	public String getTimestamp() {
 		return timestamp;
@@ -117,29 +114,31 @@ public class LogLine {
 		LogLine logLine = new LogLine();
 		logLine.setExpanded(expanded);
 		
+		int startIdx = 0;
+		
 		// if the first char is a digit, then this starts out with a timestamp
 		// otherwise, it's a legacy log or the beginning of the log output or something
 		if (!TextUtils.isEmpty(originalLine) 
-				&& TextUtils.isDigitsOnly(Character.toString(originalLine.charAt(0)))
-				&& originalLine.length() >= 19) {
-			String timestamp = originalLine.substring(0,18);
+				&& Character.isDigit(originalLine.charAt(0))
+				&& originalLine.length() >= TIMESTAMP_LENGTH) {
+			String timestamp = originalLine.substring(0, TIMESTAMP_LENGTH - 1);
 			logLine.setTimestamp(timestamp);
-			originalLine = originalLine.substring(19); // cut off timestamp
+			startIdx = TIMESTAMP_LENGTH; // cut off timestamp
 		}
 		
 		Matcher matcher = logPattern.matcher(originalLine);
 		
-		if (matcher.matches()) {
+		if (matcher.find(startIdx)) {
 			char logLevelChar = matcher.group(1).charAt(0);
 			
 			logLine.setLogLevel(convertCharToLogLevel(logLevelChar));
 			logLine.setTag(matcher.group(2));
 			logLine.setProcessId(Integer.parseInt(matcher.group(3)));
-			logLine.setLogOutput(matcher.group(4));
 			
+			logLine.setLogOutput(originalLine.substring(matcher.end()));
 			
 		} else {
-			log.d("Line doesn't match pattern: " + originalLine);
+			log.d("Line doesn't match pattern: %s", originalLine);
 			logLine.setLogOutput(originalLine);
 			logLine.setLogLevel(-1);
 		}
