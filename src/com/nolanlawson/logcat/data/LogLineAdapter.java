@@ -149,7 +149,8 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
             
             if (mFilter == null) {
             	mFilter = new ArrayFilter();
-            }        	
+            }
+            
             List<LogLine> filteredObjects = mFilter.performFilteringOnList(inputList, text);
         	
             synchronized (mLock) {
@@ -556,8 +557,9 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
             return results;
         }
         
-        public ArrayList<LogLine> performFilteringOnList(List<LogLine> inputList, CharSequence prefix) {
+        public ArrayList<LogLine> performFilteringOnList(List<LogLine> inputList, CharSequence query) {
             
+        	SearchCriteria searchCriteria = new SearchCriteria(query);
             
             // search by log level
             ArrayList<LogLine> allValues = new ArrayList<LogLine>();
@@ -575,13 +577,8 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
             }
             ArrayList<LogLine> finalValues = allValues;
             
-            // search by prefix
-            if (!TextUtils.isEmpty(prefix)) {
-                String prefixString = prefix.toString().toLowerCase();
-                int prefixInt = -1;
-                try {
-                	prefixInt = Integer.parseInt(prefixString);
-                } catch (NumberFormatException ignore) { }
+            // search by criteria
+            if (!searchCriteria.isEmpty()) {
 
                 final ArrayList<LogLine> values = allValues;
                 final int count = values.size();
@@ -590,13 +587,8 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
 
                 for (int i = 0; i < count; i++) {
                     final LogLine value = values.get(i);
-                    // search the tag and the log output
-                    if ((value.getTag() != null 
-                    		&& value.getTag().toLowerCase().contains(prefixString))
-                    		|| (value.getLogOutput() != null 
-                    		&& value.getLogOutput().toLowerCase().contains(prefixString))
-                    		|| (prefixInt != -1
-                    		&& prefixInt == value.getProcessId())) {
+                    // search the logline based on the criteria
+                    if (searchCriteria.matches(value)) {
                         newValues.add(value);
                     }
                 }

@@ -61,6 +61,7 @@ import com.nolanlawson.logcat.data.FilterAdapter;
 import com.nolanlawson.logcat.data.LogFileAdapter;
 import com.nolanlawson.logcat.data.LogLine;
 import com.nolanlawson.logcat.data.LogLineAdapter;
+import com.nolanlawson.logcat.data.SearchCriteria;
 import com.nolanlawson.logcat.data.SendLogDetails;
 import com.nolanlawson.logcat.data.SenderAppAdapter;
 import com.nolanlawson.logcat.data.SortedFilterArrayAdapter;
@@ -1488,9 +1489,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				public void onClick(DialogInterface dialog, int which) {
 
 					if (which == 0) { // tag
-						silentlySetSearchText(logLine.getTag());
+						silentlySetSearchText(SearchCriteria.TAG_KEYWORD + logLine.getTag());
 					} else { // which == 1, i.e. process id
-						silentlySetSearchText(Integer.toString(logLine.getProcessId()));
+						silentlySetSearchText(SearchCriteria.PID_KEYWORD + logLine.getProcessId());
 					}
 					
 					// put the cursor at the end

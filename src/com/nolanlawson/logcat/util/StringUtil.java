@@ -186,8 +186,8 @@ public class StringUtil {
     	return sb.toString();	
     }
     
-    public static String nullToEmpty(String str) {
-    	return str == null ? "" : str;
+    public static String nullToEmpty(CharSequence str) {
+    	return str == null ? "" : str.toString();
     }
     
     public static boolean isEmptyOrWhitespaceOnly(String str) {
@@ -201,4 +201,32 @@ public class StringUtil {
     	}
     	return true;
     }
+    
+    /**
+     * same as String.contains, but ignores case.
+     * @param str
+     * @param query
+     * @return
+     */
+    public static boolean containsIgnoreCase(String str, String query) {
+    	if (str != null && query != null) {
+    		int limit = str.length() - query.length() + 1;
+    		for (int i = 0; i < limit; i++) {
+    			if (matchesIgnoreCase(str, query, i)) {
+    				return true;
+    			}
+    		}
+    	}
+    	return false;
+    }
+
+	private static boolean matchesIgnoreCase(String str, String query, int startingAt) {
+		int len = query.length();
+		for (int i = 0; i < len; i++) {
+			if (Character.toUpperCase(query.charAt(i)) != Character.toUpperCase(str.charAt(startingAt + i))) {
+				return false;
+			}
+		}
+		return true;
+	}
 }
