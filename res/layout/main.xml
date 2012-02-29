@@ -9,24 +9,25 @@
 		android:gravity="center_vertical" android:paddingLeft="1dp"
 		android:paddingRight="1dp" android:paddingTop="1dp">
 
-		<AutoCompleteTextView android:layout_height="wrap_content" android:id="@+id/main_edit_text"
+		<AutoCompleteTextView android:layout_height="@dimen/main_button_height" android:id="@+id/main_edit_text"
 			android:singleLine="true" android:imeOptions="actionSearch"
 			android:inputType="textFilter" 
 			android:drawableLeft="@drawable/ic_btn_search"
 			android:drawablePadding="4dp"
 			android:layout_width="0px"	android:layout_weight="1"
+			android:gravity="left|center_vertical"
 			android:hint="@string/main_edit_text_hint" android:completionThreshold="1"/>
 		
 		<Button android:drawableLeft="@drawable/ic_media_pause"
-			android:layout_height="wrap_content" android:layout_width="wrap_content"
+			android:layout_height="@dimen/main_button_height" android:layout_width="@dimen/main_button_width"
 			android:id="@+id/main_pause_button"/>		
 		
 		<Button android:drawableLeft="@drawable/ic_menu_more_32"
-			android:layout_height="wrap_content" android:layout_width="wrap_content"
+			android:layout_height="@dimen/main_button_height" android:layout_width="@dimen/main_button_width"
 			android:id="@+id/main_more_button"/>
 									
 		<Button android:drawableLeft="@drawable/ic_menu_close_clear_cancel_32"
-			android:layout_height="wrap_content" android:layout_width="wrap_content"
+			android:layout_height="@dimen/main_button_height" android:layout_width="@dimen/main_button_width"
 			android:id="@+id/main_clear_button"/>
 
 	</LinearLayout>
