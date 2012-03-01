@@ -10,5 +10,5 @@
 	<dimen name="pid_width">85dp</dimen>
 	
 	<dimen name="main_button_height">47dp</dimen>
-	<dimen name="main_button_width">55dp</dimen>
+	<dimen name="main_button_width">52dp</dimen>
 </resources>

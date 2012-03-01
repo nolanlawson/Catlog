@@ -1516,7 +1516,12 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		searchEditText.setFocusableInTouchMode(true);		
 	}
 	
-	
+	private void unfocusEditText() {
+		searchEditText.setFocusable(false);
+		searchEditText.setFocusableInTouchMode(false);
+		searchEditText.setFocusable(true);
+		searchEditText.setFocusableInTouchMode(true);	
+	}
 
 	@Override
 	public void afterTextChanged(Editable s) {
@@ -1585,6 +1590,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				}
 				break;
 			case R.id.main_clear_button:
+				unfocusEditText();
 				if (adapter != null) {
 					adapter.clear();
 				}
@@ -1594,9 +1600,11 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				Toast.makeText(this, R.string.log_cleared, Toast.LENGTH_LONG).show();
 				break;
 			case R.id.main_more_button:
+				unfocusEditText();
 				expandOrCollapseAll(true);
 				break;
 			case R.id.main_pause_button:
+				unfocusEditText();
 				pauseOrUnpause();
 				break;
 		}
@@ -1661,6 +1669,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		if (event != null && event.getAction() == KeyEvent.ACTION_DOWN) {
 			dismissSoftKeyboard();
+			unfocusEditText();
 			return true;
 		}
 		
