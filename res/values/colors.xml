@@ -8,6 +8,9 @@
     <color name="yellow1">#FFfbad00</color>
     <color name="yellow2">#FFffc600</color>	
 
+    <color name="action_bar_start">#FFFBFBFB</color>
+	<color name="action_bar_end">#FFCCCCCC</color>	
+    
 	<color name="linkColorBlue">#0099dd</color>
 
 	<color name="background_wtf">#FF999900</color>

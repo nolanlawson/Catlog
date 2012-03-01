@@ -5,39 +5,80 @@
 	android:id="@+id/main_background">
 
 	<LinearLayout android:orientation="horizontal"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:gravity="center_vertical" android:paddingLeft="1dp"
-		android:paddingRight="1dp" android:paddingTop="1dp">
+		android:layout_width="fill_parent"
+		android:gravity="center_vertical|right" android:background="@drawable/action_bar"
+		android:layout_height="@dimen/main_button_height">
 
-		<AutoCompleteTextView android:layout_height="@dimen/main_button_height" android:id="@+id/main_edit_text"
-			android:singleLine="true" android:imeOptions="actionSearch"
-			android:inputType="textFilter" 
-			android:drawableLeft="@drawable/ic_btn_search"
-			android:drawablePadding="4dp"
-			android:layout_width="0px"	android:layout_weight="1"
-			android:gravity="left|center_vertical"
-			android:hint="@string/main_edit_text_hint" android:completionThreshold="1"/>
-		
-		<Button android:drawableLeft="@drawable/ic_media_pause"
-			android:layout_height="@dimen/main_button_height" android:layout_width="@dimen/main_button_width"
-			android:id="@+id/main_pause_button"/>		
-		
-		<Button android:drawableLeft="@drawable/ic_menu_more_32"
-			android:layout_height="@dimen/main_button_height" android:layout_width="@dimen/main_button_width"
-			android:id="@+id/main_more_button"/>
-									
-		<Button android:drawableLeft="@drawable/ic_menu_close_clear_cancel_32"
-			android:layout_height="@dimen/main_button_height" android:layout_width="@dimen/main_button_width"
-			android:id="@+id/main_clear_button"/>
+	    <LinearLayout 
+			android:paddingTop="3dp" android:paddingLeft="1dp"
+			android:layout_width="0px" android:layout_weight="1"
+			android:layout_height="fill_parent"
+			android:gravity="center_vertical|center_horizontal">
+			
+	 		<AutoCompleteTextView android:layout_height="wrap_content" android:id="@+id/main_edit_text"
+				android:singleLine="true" android:imeOptions="actionSearch"
+				android:inputType="textFilter" 
+				android:drawableLeft="@drawable/ic_btn_search"
+				android:drawablePadding="4dp"
+				android:layout_width="fill_parent"
+				android:gravity="center_vertical|left"
+				android:hint="@string/main_edit_text_hint" android:completionThreshold="1"/>
+		</LinearLayout>
 
+		
+		<LinearLayout
+    		android:layout_height="fill_parent"
+    		android:layout_width="@dimen/main_button_width"
+    		android:orientation="horizontal"
+    		style="@android:style/Widget.Button"
+    		android:id="@+id/main_pause_button" android:background="@drawable/app_selector"
+			android:gravity="center_vertical|left">
+			
+    				<View android:layout_height="fill_parent" android:layout_width="1dp" 
+		    android:background="@android:color/darker_gray"/>
+    		<ImageView android:src="@drawable/ic_media_pause" android:layout_width="0px" android:layout_weight="1"
+    		    android:layout_height="wrap_content" android:id="@+id/main_pause_button_image"/>
+		</LinearLayout>
+		    
+		<LinearLayout
+    		android:layout_height="fill_parent"
+    		android:layout_width="@dimen/main_button_width"
+    		android:orientation="horizontal"
+    		style="@android:style/Widget.Button"
+    		android:id="@+id/main_more_button" android:background="@drawable/app_selector"
+			android:gravity="center_vertical|left">
+    		
+		    		<View android:layout_height="fill_parent" android:layout_width="1dp" 
+		    android:background="@android:color/darker_gray"/>
+		    
+    		<ImageView android:src="@drawable/ic_menu_more_32" android:layout_width="0px" android:layout_weight="1"
+    		    android:layout_height="wrap_content" android:id="@+id/main_expand_button_image"/>
+		</LinearLayout>
+		
+		<LinearLayout
+    		android:layout_height="fill_parent"
+    		android:layout_width="@dimen/main_button_width"
+    		android:orientation="horizontal"
+    		style="@android:style/Widget.Button"
+    		android:id="@+id/main_clear_button" android:background="@drawable/app_selector"
+			android:gravity="center_vertical|left">
+    				<View android:layout_height="fill_parent" android:layout_width="1dp" 
+		    android:background="@android:color/darker_gray"/>
+		        		
+    		<ImageView android:src="@drawable/ic_menu_close_clear_cancel_32" android:layout_width="0px" android:layout_weight="1"
+    		    android:layout_height="wrap_content" android:id="@+id/main_clear_button_image"/>
+		    
+    	</LinearLayout>
+		
 	</LinearLayout>
 
 	<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:gravity="center_horizontal|center_vertical" android:id="@+id/main_filename_linear_layout"
-		android:orientation="vertical" android:paddingRight="5dp" android:paddingLeft="5dp" paddingBottom="1dp">
+		android:gravity="center_horizontal|center_vertical"
+		android:orientation="vertical" android:paddingRight="5dp" android:paddingLeft="5dp"
+		android:paddingTop="3dp" android:paddingBottom="1dp">
 		
 		<LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:orientation="vertical">
+			android:orientation="vertical" android:id="@+id/main_filename_linear_layout">
 			
 			<View android:layout_height="1dp" android:id="@+id/main_border_view_1"
 				android:layout_width="fill_parent"/>

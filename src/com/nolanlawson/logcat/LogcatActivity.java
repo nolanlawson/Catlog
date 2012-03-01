@@ -43,12 +43,12 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filter.FilterListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -92,12 +92,12 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	
 	private static UtilLogger log = new UtilLogger(LogcatActivity.class);
 	
-	private LinearLayout backgroundLinearLayout, mainFilenameLinearLayout;
+	private LinearLayout backgroundLinearLayout, mainFilenameLinearLayout, clearButton, expandButton, pauseButton;;
 	private AutoCompleteTextView searchEditText;
 	private ProgressBar darkProgressBar, lightProgressBar;
 	private LogLineAdapter adapter;
 	private LogReaderAsyncTask task;
-	private Button clearButton, expandButton, pauseButton;
+	private ImageView expandButtonImage, pauseButtonImage;
 	private TextView filenameTextView;
 	private View borderView1, borderView2, borderView3, borderView4;
 	
@@ -679,8 +679,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			}
 		}
 		
-		expandButton.setCompoundDrawablesWithIntrinsicBounds(
-				collapsedMode ? R.drawable.ic_menu_more_32 : R.drawable.ic_menu_less_32, 0, 0, 0);
+		expandButtonImage.setImageResource(
+				collapsedMode ? R.drawable.ic_menu_more_32 : R.drawable.ic_menu_less_32);
 		
 		adapter.notifyDataSetChanged();
 		
@@ -1236,9 +1236,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		collapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(getApplicationContext());
 		clearButton.setVisibility(filename == null? View.VISIBLE : View.GONE);
 		pauseButton.setVisibility(filename == null? View.VISIBLE : View.GONE);
-		pauseButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_media_pause, 0, 0, 0);
-		expandButton.setCompoundDrawablesWithIntrinsicBounds(
-				collapsedMode ? R.drawable.ic_menu_more_32 : R.drawable.ic_menu_less_32, 0, 0, 0);
+		pauseButtonImage.setImageResource(R.drawable.ic_media_pause);
+		expandButtonImage.setImageResource(
+				collapsedMode ? R.drawable.ic_menu_more_32 : R.drawable.ic_menu_less_32);
 		searchSuggestionsAdapter.clear();
 		searchSuggestionsSet.clear();
 		addFiltersToSuggestions(); // filters are what initial populate the suggestions
@@ -1323,12 +1323,15 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		backgroundLinearLayout = (LinearLayout) findViewById(R.id.main_background);
 		
-		clearButton = (Button) findViewById(R.id.main_clear_button);
-		expandButton = (Button) findViewById(R.id.main_more_button);
-		pauseButton = (Button) findViewById(R.id.main_pause_button);
+		clearButton = (LinearLayout) findViewById(R.id.main_clear_button);
+		expandButton = (LinearLayout) findViewById(R.id.main_more_button);
+		pauseButton = (LinearLayout) findViewById(R.id.main_pause_button);
+		expandButtonImage = (ImageView) findViewById(R.id.main_expand_button_image);
+		pauseButtonImage = (ImageView) findViewById(R.id.main_pause_button_image);
 		
-		for (Button button : new Button[]{clearButton, expandButton, pauseButton}) {
-			button.setOnClickListener(this);
+		
+		for (View view : new View[]{clearButton, expandButton, pauseButton}) {
+			view.setOnClickListener(this);
 		}
 		clearButton.setOnLongClickListener(this);
 		
@@ -1613,8 +1616,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				currentTask.pause();
 			}
 		
-			pauseButton.setCompoundDrawablesWithIntrinsicBounds(
-					currentTask.isPaused() ? R.drawable.ic_media_play : R.drawable.ic_media_pause, 0, 0, 0);
+			pauseButtonImage.setImageResource(
+					currentTask.isPaused() ? R.drawable.ic_media_play : R.drawable.ic_media_pause);
 		}
 	}
 
