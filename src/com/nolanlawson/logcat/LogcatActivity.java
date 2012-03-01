@@ -558,7 +558,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			.create();
 		
 		// ensures that the soft keyboard doesn't weirdly pop up at startup
-		alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		//alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		
 		// when 'Done' is clicked (i.e. enter button), do the same as when "OK" is clicked
 		editText.setOnEditorActionListener(new OnEditorActionListener() {

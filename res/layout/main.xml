@@ -9,6 +9,11 @@
 		android:gravity="center_vertical|right" android:background="@drawable/action_bar"
 		android:layout_height="@dimen/main_button_height">
 
+	    <!-- Dummy item to prevent AutoCompleteTextView from receiving focus -->
+		<LinearLayout
+    		android:focusable="true" android:focusableInTouchMode="true"
+    		android:layout_width="0px" android:layout_height="0px"/>
+	    
 	    <LinearLayout 
 			android:paddingTop="3dp" android:paddingLeft="1dp"
 			android:layout_width="0px" android:layout_weight="1"
@@ -22,7 +27,9 @@
 				android:drawablePadding="4dp"
 				android:layout_width="fill_parent"
 				android:gravity="center_vertical|left"
-				android:hint="@string/main_edit_text_hint" android:completionThreshold="1"/>
+				android:hint="@string/main_edit_text_hint" android:completionThreshold="1"
+				android:nextFocusLeft="@+id/main_edit_text"
+				android:nextFocusUp="@+id/main_edit_text"/>
 		</LinearLayout>
 
 		
