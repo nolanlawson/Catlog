@@ -321,6 +321,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	private void startUpMainLog() {
     	
     	if (task != null && !task.isCancelled()) {
+    		task.killReader();
     		task.cancel(true);
     	}
     	
@@ -344,6 +345,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     	log.d("onDestroy() called");
     	
     	if (task != null && !task.isCancelled()) {
+    		task.killReader();
     		task.cancel(true);
     	}
     }
@@ -1164,14 +1166,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	}	
 	private void openLog(final String filename) {
 		
-		if (task != null && !task.isCancelled()) {
-			task.cancel(true);
-			task = null;
-		}
-		
 		// do in background to avoid jank
 		
-		AsyncTask<Void, Void, List<LogLine>> openFileTask = new AsyncTask<Void, Void, List<LogLine>>(){
+		final AsyncTask<Void, Void, List<LogLine>> openFileTask = new AsyncTask<Void, Void, List<LogLine>>(){
 
 			@Override
 			protected void onPreExecute() {
@@ -1208,7 +1205,25 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			}
 		};
 		
-		openFileTask.execute((Void)null);
+		// if the main log task is running, we can only run AFTER it's been canceled
+		
+		if (task != null && !task.isCancelled()) {
+			task.setOnFinished(new Runnable(){
+
+				@Override
+				public void run() {
+					openFileTask.execute((Void)null);
+					
+				}});
+			task.killReader();
+			task.cancel(true);
+			task = null;
+		} else {
+			// main log not running; just open in this thread
+			openFileTask.execute((Void)null);
+		}
+		
+		
 		
 	}
 	
@@ -1722,6 +1737,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		private boolean firstLineReceived;
 		private boolean killed;
 		private LogcatReader reader;
+		private Runnable onFinished;
 		
 		@Override
 		protected Void doInBackground(Void... params) {
@@ -1773,6 +1789,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
 			log.d("onPostExecute()");
+			doWhenFinished();
 		}
 
 		@Override
@@ -1820,11 +1837,18 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		protected void onCancelled() {
 			super.onCancelled();
 			log.d("onCancelled()");
+			doWhenFinished();
+		}
+		
+		private void doWhenFinished() {
 			if (paused) {
 				unpause();
 			}
+			if (onFinished != null) {
+				onFinished.run();
+			}			
 		}
-		
+
 		public void pause() {
 			synchronized (lock) {
 				paused = true;
@@ -1841,5 +1865,11 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		public boolean isPaused() {
 			return paused;
 		}
+		
+		public void setOnFinished(Runnable onFinished) {
+			this.onFinished = onFinished;
+		}
+		
+		
 	}
 }
