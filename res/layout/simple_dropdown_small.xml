@@ -25,5 +25,6 @@
     android:layout_height="wrap_content"
     android:ellipsize="marquee"
     android:textSize="18sp"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"/>
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
+    />

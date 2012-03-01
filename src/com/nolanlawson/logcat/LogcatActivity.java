@@ -537,7 +537,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		// show suggestions as the user types
 		List<String> suggestions = new ArrayList<String>(searchSuggestionsSet);
 		SortedFilterArrayAdapter<String> suggestionAdapter = new SortedFilterArrayAdapter<String>(
-				this, R.layout.simple_list_item_small, suggestions);
+				this, R.layout.simple_dropdown_small, suggestions);
 		editText.setAdapter(suggestionAdapter);
 				
 		final AlertDialog alertDialog = new AlertDialog.Builder(this)
@@ -1329,7 +1329,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		searchEditText.setOnClickListener(this);
 		
 		searchSuggestionsAdapter = new SortedFilterArrayAdapter<String>(
-				this, R.layout.simple_list_item_small, new ArrayList<String>());
+				this, R.layout.simple_dropdown_small, new ArrayList<String>());
 		searchEditText.setAdapter(searchSuggestionsAdapter);
 		
 		darkProgressBar = (ProgressBar) findViewById(R.id.main_dark_progress_bar);
