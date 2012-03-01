@@ -320,9 +320,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 
 	private void startUpMainLog() {
     	
-    	if (task != null && !task.isCancelled()) {
+    	if (task != null) {
+    		task.unpause();
     		task.killReader();
-    		task.cancel(true);
+    		task = null;
     	}
     	
     	task = new LogReaderAsyncTask();
@@ -344,9 +345,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     	super.onDestroy();
     	log.d("onDestroy() called");
     	
-    	if (task != null && !task.isCancelled()) {
+    	if (task != null) {
+    		task.unpause();
     		task.killReader();
-    		task.cancel(true);
+    		task = null;
     	}
     }
     
@@ -407,7 +409,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		
-		boolean showingMainLog = (task != null && !task.isCancelled());
+		boolean showingMainLog = (task != null);
 		
 		MenuItem mainLogMenuItem = menu.findItem(R.id.menu_main_log);
 		MenuItem saveLogMenuItem = menu.findItem(R.id.menu_save_log);
@@ -1207,7 +1209,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		// if the main log task is running, we can only run AFTER it's been canceled
 		
-		if (task != null && !task.isCancelled()) {
+		if (task != null) {
 			task.setOnFinished(new Runnable(){
 
 				@Override
@@ -1215,8 +1217,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 					openFileTask.execute((Void)null);
 					
 				}});
+			task.unpause();
 			task.killReader();
-			task.cancel(true);
 			task = null;
 		} else {
 			// main log not running; just open in this thread
@@ -1750,7 +1752,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 
 				String line;
 				
-				while ((line = reader.readLine()) != null && !isCancelled()) {
+				while ((line = reader.readLine()) != null) {
 					if (paused) {
 						synchronized (lock) {
 							if (paused) {
@@ -1831,13 +1833,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				getListView().setSelection(getListView().getCount());
 			}
 			
-		}
-
-		@Override
-		protected void onCancelled() {
-			super.onCancelled();
-			log.d("onCancelled()");
-			doWhenFinished();
 		}
 		
 		private void doWhenFinished() {
