@@ -93,10 +93,11 @@ public class DialogHelper {
 		
 		// add suggestions to autocompletetextview
 		final AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) filterView.findViewById(android.R.id.edit);
+		autoCompleteTextView.setText(queryFilterText);            
+
 		SortedFilterArrayAdapter<String> suggestionAdapter = new SortedFilterArrayAdapter<String>(
 				context, R.layout.simple_dropdown_small, filterQuerySuggestions);
 		autoCompleteTextView.setAdapter(suggestionAdapter);
-		autoCompleteTextView.setText(queryFilterText);
 		
 		// set values on spinner to be the log levels
 		final Spinner spinner = (Spinner) filterView.findViewById(R.id.spinner);
