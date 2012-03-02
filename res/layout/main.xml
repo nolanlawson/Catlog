@@ -38,7 +38,8 @@
     		android:layout_width="@dimen/main_button_width"
     		android:orientation="horizontal"
     		style="@android:style/Widget.Button"
-    		android:id="@+id/main_pause_button" android:background="@drawable/app_selector"
+    		android:id="@+id/main_pause_button" 
+    		android:background="@android:drawable/list_selector_background"
 			android:gravity="center_vertical|left">
 			
     				<View android:layout_height="fill_parent" android:layout_width="1dp" 
@@ -52,7 +53,8 @@
     		android:layout_width="@dimen/main_button_width"
     		android:orientation="horizontal"
     		style="@android:style/Widget.Button"
-    		android:id="@+id/main_more_button" android:background="@drawable/app_selector"
+    		android:id="@+id/main_more_button" 
+    		android:background="@android:drawable/list_selector_background"
 			android:gravity="center_vertical|left">
     		
 		    		<View android:layout_height="fill_parent" android:layout_width="1dp" 
@@ -67,7 +69,8 @@
     		android:layout_width="@dimen/main_button_width"
     		android:orientation="horizontal"
     		style="@android:style/Widget.Button"
-    		android:id="@+id/main_clear_button" android:background="@drawable/app_selector"
+    		android:id="@+id/main_clear_button" 
+    		android:background="@android:drawable/list_selector_background"
 			android:gravity="center_vertical|left">
     				<View android:layout_height="fill_parent" android:layout_width="1dp" 
 		    android:background="@android:color/darker_gray"/>
