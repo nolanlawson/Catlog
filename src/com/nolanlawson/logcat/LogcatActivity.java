@@ -89,6 +89,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	// how often to check to see if we've gone over the max size
 	private static final int UPDATE_CHECK_INTERVAL = 200;
 	
+	// how many suggestions to keep in the autosuggestions text
+	private static final int MAX_NUM_SUGGESTIONS = 1000;
+	
 	private static UtilLogger log = new UtilLogger(LogcatActivity.class);
 	
 	private LinearLayout backgroundLinearLayout, mainFilenameLinearLayout, clearButton, expandButton, pauseButton;;
@@ -1264,8 +1267,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		pauseButtonImage.setImageResource(R.drawable.ic_media_pause);
 		expandButtonImage.setImageResource(
 				collapsedMode ? R.drawable.ic_menu_more_32 : R.drawable.ic_menu_less_32);
-		searchSuggestionsAdapter.clear();
-		searchSuggestionsSet.clear();
 		addFiltersToSuggestions(); // filters are what initial populate the suggestions
 		updateDisplayedFilename();
 		resetFilter();
@@ -1736,7 +1737,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	}
 	
 	private void addToAutocompleteSuggestions(String trimmed) {
-		if (!searchSuggestionsSet.contains(trimmed)) {
+		if (searchSuggestionsSet.size() < MAX_NUM_SUGGESTIONS 
+				&& !searchSuggestionsSet.contains(trimmed)) {
 			searchSuggestionsSet.add(trimmed);
 			searchSuggestionsAdapter.add(trimmed);
 		}
