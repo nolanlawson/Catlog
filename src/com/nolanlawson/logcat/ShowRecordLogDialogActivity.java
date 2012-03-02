@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.nolanlawson.logcat.data.FilterQueryWithLevel;
 import com.nolanlawson.logcat.helper.DialogHelper;
+import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.helper.WidgetHelper;
 import com.nolanlawson.logcat.util.Callback;
 
@@ -53,8 +54,11 @@ public class ShowRecordLogDialogActivity extends Activity {
 		Button filterButton = (Button) findViewById(android.R.id.button2);
 		Button cancelButton = (Button) findViewById(android.R.id.button3);
 		
+		
+		String defaultLogLevel = Character.toString(PreferenceHelper.getDefaultLogLevelPreference(this));
+		
 		final StringBuilder queryFilterText = new StringBuilder();
-		final StringBuilder logLevelText = new StringBuilder(getString(R.string.log_level_value_verbose));
+		final StringBuilder logLevelText = new StringBuilder(defaultLogLevel);
 		
 		filterButton.setOnClickListener(new View.OnClickListener() {
 			

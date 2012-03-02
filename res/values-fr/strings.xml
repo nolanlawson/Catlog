@@ -78,7 +78,7 @@ Téléchargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog
 	<string name="pref_log_line_period_summary" formatted="false">Pendant l\'enregistrement, écrire à la carte SD tous les %d lignes. (Défault: %s)</string>
 	<string name="pref_log_line_period_error">Veuillez entrer un nombre entier entre 1 et 1000.</string>
 
-	<string name="pref_buffer_title">Buffers de journal</string>
+	<string name="pref_buffer_title">Buffer(s) de journal</string>
 	<string name="pref_buffer_choice_main">Main</string>
 	<string name="pref_buffer_choice_events">Events</string>
 	<string name="pref_buffer_choice_radio">Radio</string>
@@ -94,11 +94,11 @@ Téléchargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog
 	<string name="pref_theme_choice_sprint_name">Big Yellow</string>
 	<string name="pref_theme_choice_tmobile_name">T-Mo</string>
 	
-	<string name="pref_default_log_level_title">Niveau de Défaut</string>
-	<string name="pref_default_log_level_summary">Niveau au démarrage et à l\'ouverture d\'un fichier (%s)</string>
+	<string name="pref_default_log_level_title">Niveau de défaut</string>
+	<string name="pref_default_log_level_summary">Niveau au démarrage, à l\'ouverture d\'un fichier, et à l\'enregistration (%s)</string>
 	<string name="default_in_parens">(Défaut)</string>
 
-	<string name="pref_display_limit_title">Limite d\'Affichage</string>
+	<string name="pref_display_limit_title">Limite d\'affichage</string>
 	<string name="pref_display_limit_summary" formatted="false">Afficher les %d derniers logs seulement, pour éviter des OutOfMemoryErrors. (Défaut: %s)</string>
 	<string name="toast_invalid_display_limit" formatted="false">Veuillez entrer un nombre entier entre %d et %d.</string>
 	<string name="toast_pref_changed_restart_required">Paramètre changée. Un redémarrage de CatLog est nécessaire pour effectuer les changements.</string>

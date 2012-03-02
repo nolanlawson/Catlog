@@ -101,8 +101,15 @@ public class DialogHelper {
 		
 		// set values on spinner to be the log levels
 		final Spinner spinner = (Spinner) filterView.findViewById(R.id.spinner);
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-		            context, R.array.log_levels, android.R.layout.simple_spinner_item);
+		
+		// put the word "default" after whatever the default log level is
+		CharSequence[] logLevels = context.getResources().getStringArray(R.array.log_levels);
+		String defaultLogLevel = Character.toString(PreferenceHelper.getDefaultLogLevelPreference(context));
+		int index = ArrayUtil.indexOf(context.getResources().getStringArray(R.array.log_levels_values), defaultLogLevel);
+		logLevels[index] = logLevels[index].toString() + " " + context.getString(R.string.default_in_parens);
+		
+		ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(
+		            context, android.R.layout.simple_spinner_item, logLevels);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
 		

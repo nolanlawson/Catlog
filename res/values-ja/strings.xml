@@ -94,7 +94,7 @@
 	<string name="pref_theme_choice_tmobile_name">T-Mo</string>
 
 	<string name="pref_default_log_level_title">デフォルトなレベル</string>
-	<string name="pref_default_log_level_summary">スタートアップとファイルを開ける時のレベル　（%s）</string>
+	<string name="pref_default_log_level_summary">スタートアップしたり、ファイルを開けたり、記録したりの時のレベル　（%s）</string>
 	<string name="default_in_parens">(デフォルト）</string>    
 	
 	<string name="pref_display_limit_title">ログの表示限界</string>
