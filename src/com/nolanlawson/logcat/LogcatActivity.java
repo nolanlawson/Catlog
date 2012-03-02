@@ -656,6 +656,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				.setTitle(R.string.menu_title_partial_select)
 				.setCancelable(true)
 				.setView(helpView)
+				.setNegativeButton(android.R.string.cancel, null)
 				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 					
 					@Override
