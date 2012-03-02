@@ -16,14 +16,18 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.nolanlawson.logcat.data.LogLine;
+import com.nolanlawson.logcat.data.SearchCriteria;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.helper.SaveLogHelper;
 import com.nolanlawson.logcat.helper.ServiceHelper;
 import com.nolanlawson.logcat.helper.WidgetHelper;
 import com.nolanlawson.logcat.reader.LogcatReader;
 import com.nolanlawson.logcat.reader.LogcatReaderLoader;
+import com.nolanlawson.logcat.util.LogLineAdapterUtil;
 import com.nolanlawson.logcat.util.UtilLogger;
 
 /**
@@ -36,6 +40,12 @@ public class LogcatRecordingService extends IntentService {
 
 	private static final String ACTION_STOP_RECORDING = "com.nolanlawson.catlog.action.STOP_RECORDING";
 	public static final String URI_SCHEME = "catlog_recording_service";
+
+	public static final String EXTRA_FILENAME = "filename";
+	public static final String EXTRA_LOADER = "loader";
+	public static final String EXTRA_QUERY_FILTER = "filter";
+	public static final String EXTRA_LEVEL = "level";
+	
 	
 	private static UtilLogger log = new UtilLogger(LogcatRecordingService.class);
 
@@ -104,7 +114,7 @@ public class LogcatRecordingService extends IntentService {
 	private void initializeReader(Intent intent) {
 		try {
 			// use the "time" log so we can see what time the logs were logged at
-			LogcatReaderLoader loader = intent.getParcelableExtra("loader");
+			LogcatReaderLoader loader = intent.getParcelableExtra(EXTRA_LOADER);
 			reader = loader.loadReader();
 		
 			while (!reader.readyToRecord() && !killed) {
@@ -255,7 +265,14 @@ public class LogcatRecordingService extends IntentService {
 		
 		log.d("Starting up %s now with intent: %s", LogcatRecordingService.class.getSimpleName(), intent);
 		
-		String filename = intent.getStringExtra("filename");
+		String filename = intent.getStringExtra(EXTRA_FILENAME);
+		String queryText = intent.getStringExtra(EXTRA_QUERY_FILTER);
+		String logLevel = intent.getStringExtra(EXTRA_LEVEL);
+		
+		SearchCriteria searchCriteria = new SearchCriteria(queryText);
+		int logLevelLimit = LogLine.convertCharToLogLevel(logLevel.charAt(0));
+		boolean searchCriteriaWillAlwaysMatch = searchCriteria.isEmpty();
+		boolean logLevelAcceptsEverything = logLevelLimit == Log.VERBOSE;
 		
 		SaveLogHelper.deleteLogIfExists(filename);
 		
@@ -269,6 +286,13 @@ public class LogcatRecordingService extends IntentService {
 			int lineCount = 0;
 			int logLinePeriod = PreferenceHelper.getLogLinePeriodPreference(getApplicationContext());
 			while ((line = reader.readLine()) != null && !killed) {
+				
+				// filter
+				if (!searchCriteriaWillAlwaysMatch || !logLevelAcceptsEverything) {
+					if (!checkLogLine(line, searchCriteria, logLevelLimit)) {
+						continue;
+					}
+				}
 				
 				stringBuilder.append(line).append("\n");
 				
@@ -294,6 +318,13 @@ public class LogcatRecordingService extends IntentService {
 			}
 		}
 	}
+
+	private boolean checkLogLine(String line, SearchCriteria searchCriteria, int logLevelLimit) {
+		LogLine logLine = LogLine.newLogLine(line, false);
+		return searchCriteria.matches(logLine) 
+				&& LogLineAdapterUtil.logLevelIsAcceptableGivenLogLevelLimit(logLine.getLogLevel(), logLevelLimit);
+	}
+
 
 	private void startLogcatActivityToViewSavedFile(String filename) {
 		

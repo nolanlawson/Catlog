@@ -125,6 +125,9 @@
     
     <string name="text_include_device_info">デバイス情報を添付します</string>
     
+    <string name="title_filter">フィルタ</string>
+    <string name="text_filter_ellipsis">フィルタ&#8230;</string>
+    
     <string name="widget_start_recording">ログを記録</string>
     <string name="widget_recording_in_progress">記録中&#8230;</string>
     <string name="first_run_pref_title">紹介リセット</string>

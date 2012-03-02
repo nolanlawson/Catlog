@@ -173,6 +173,9 @@
     
     <string name="text_include_device_info">Include device information</string>
     
+    <string name="title_filter">Filter</string>
+    <string name="text_filter_ellipsis">Filter&#8230;</string>
+    
     <string name="widget_start_recording">Record Log</string>
     <string name="widget_recording_in_progress">Recording…</string>
     <string name="first_run">first_run20</string>

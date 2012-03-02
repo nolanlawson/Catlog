@@ -4,9 +4,11 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
-import android.app.ProgressDialog;
+import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -14,18 +16,27 @@ import android.os.AsyncTask;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.nolanlawson.logcat.R;
+import com.nolanlawson.logcat.data.FilterQueryWithLevel;
+import com.nolanlawson.logcat.data.SortedFilterArrayAdapter;
+import com.nolanlawson.logcat.util.Callback;
 
 public class DialogHelper {
 	
-	public static void startRecordingWithProgressDialog(final String filename, final Runnable onPostExecute, final Context context) {
+	public static void startRecordingWithProgressDialog(final String filename, 
+			final String filterQuery, final String logLevel, final Runnable onPostExecute, final Context context) {
 		
 		final ProgressDialog progressDialog = new ProgressDialog(context);
 		progressDialog.setTitle(context.getString(R.string.dialog_please_wait));
@@ -42,7 +53,7 @@ public class DialogHelper {
 
 			@Override
 			protected Void doInBackground(Void... params) {
-				ServiceHelper.startBackgroundServiceIfNotAlreadyRunning(context, filename);
+				ServiceHelper.startBackgroundServiceIfNotAlreadyRunning(context, filename, filterQuery, logLevel);
 				return null;
 			}
 			
@@ -72,15 +83,37 @@ public class DialogHelper {
 				|| !filenameAsString.endsWith(".txt");
 				
 	}
-	public static void startRecordingLog(final Context context) {
+	public static void startRecordingLog(final Context context, final List<String> filterQuerySuggestions) {
 		
 		if (!SaveLogHelper.checkSdCard(context)) {
 			return;
 		}
 		
+		// use as atomic strings so other listener can pick them up
+		final StringBuilder filterQueryString = new StringBuilder();
+		final StringBuilder levelString = new StringBuilder();
+		
+		OnClickListener onNeutralListener = new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				
+				showFilterDialogForRecording(context, filterQuerySuggestions, new Callback<FilterQueryWithLevel>() {
+
+					@Override
+					public void onCallback(FilterQueryWithLevel result) {
+						
+						filterQueryString.replace(0, filterQueryString.length(), result.getFilterQuery());
+						levelString.replace(0, levelString.length(), result.getLogLevel());
+						
+					}
+				});
+			}
+		};
+		
 		final EditText editText = DialogHelper.createEditTextForFilenameSuggestingDialog(context);
 		
-		OnClickListener onClickListener = new OnClickListener() {
+		OnClickListener onOkClickListener = new OnClickListener() {
 			
 			@Override
 			public void onClick(final DialogInterface dialog, int which) {
@@ -98,17 +131,60 @@ public class DialogHelper {
 							dialog.dismiss();
 						}
 					};
-					startRecordingWithProgressDialog(filename, runnable, context);
+					startRecordingWithProgressDialog(filename, filterQueryString.toString(), levelString.toString(), runnable, context);
 					
 				}
 				
 			}
 		};		
 		
-		DialogHelper.showFilenameSuggestingDialog(context, editText, onClickListener, null, R.string.record_log);
+		DialogHelper.showFilenameSuggestingDialog(context, editText, onOkClickListener, onNeutralListener, null, R.string.record_log);
 		
 	}
 	
+	public static void showFilterDialogForRecording(final Context context, final List<String> filterQuerySuggestions,
+			final Callback<FilterQueryWithLevel> callback) {
+
+		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View filterView = inflater.inflate(R.layout.filter_query_for_recording, null, false);
+		
+		// add suggestions to autocompletetextview
+		final AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) filterView.findViewById(android.R.id.edit);
+		SortedFilterArrayAdapter<String> suggestionAdapter = new SortedFilterArrayAdapter<String>(
+				context, R.layout.simple_dropdown_small, filterQuerySuggestions);
+		autoCompleteTextView.setAdapter(suggestionAdapter);
+		
+		// set values on spinner to be the log levels
+		final Spinner spinner = (Spinner) filterView.findViewById(R.id.spinner);
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+		            context, R.array.log_levels, android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinner.setAdapter(adapter);
+		
+		// create alertdialog for the "Filter..." button
+		new AlertDialog.Builder(context)
+			.setCancelable(true)
+			.setTitle(R.string.title_filter)
+			.setView(filterView)
+			.setNegativeButton(android.R.string.cancel, null)
+			.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					
+					// get the true log level value, as opposed to the display string
+					int logLevelIdx = spinner.getSelectedItemPosition();
+					String[] logLevelValues = context.getResources().getStringArray(logLevelIdx);
+					String logLevelValue = logLevelValues[logLevelIdx];
+					
+					String filterQuery = autoCompleteTextView.getText().toString();
+					
+					callback.onCallback(new FilterQueryWithLevel(filterQuery, logLevelValue));
+				}
+			}).show();
+		
+	}
+
 	public static void stopRecordingLog(Context context) {
 		
 		ServiceHelper.stopBackgroundServiceIfRunning(context);
@@ -151,16 +227,22 @@ public class DialogHelper {
 	
 	
 	public static void showFilenameSuggestingDialog(Context context, EditText editText, 
-			OnClickListener onClickListener, OnClickListener onCancelListener, int titleResId) {
+			OnClickListener onOkClickListener, OnClickListener onNeutralListener, 
+			OnClickListener onCancelListener, int titleResId) {
 		
 		Builder builder = new Builder(context);
 		
 		builder.setTitle(titleResId)
 			.setCancelable(true)
 			.setNegativeButton(android.R.string.cancel, onCancelListener)
-			.setPositiveButton(android.R.string.ok, onClickListener)
+			.setPositiveButton(android.R.string.ok, onOkClickListener)
 			.setMessage(R.string.enter_filename)
 			.setView(editText);
+		
+		if (onNeutralListener != null) {
+
+			builder.setNeutralButton(R.string.text_filter_ellipsis, onNeutralListener);
+		}
 		
 		builder.show();
 		

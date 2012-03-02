@@ -50,10 +50,14 @@
 
 		<Button android:text="@android:string/ok" android:layout_width="0px"
 			android:layout_height="wrap_content" android:id="@android:id/button1"
-			android:layout_weight="0.5" android:minWidth="50dp" />
+			android:layout_weight="0.3" android:minWidth="50dp" />
+		<Button android:text="@string/text_filter_ellipsis"
+			android:layout_width="0px" android:layout_height="wrap_content"
+			android:id="@android:id/button2" android:layout_weight="0.3"
+			android:minWidth="50dp" />
 		<Button android:text="@android:string/cancel"
 			android:layout_width="0px" android:layout_height="wrap_content"
-			android:id="@android:id/button2" android:layout_weight="0.5"
+			android:id="@android:id/button3" android:layout_weight="0.3"
 			android:minWidth="50dp" />
 	</LinearLayout>
 

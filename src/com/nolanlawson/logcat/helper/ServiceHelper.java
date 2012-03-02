@@ -44,7 +44,7 @@ public class ServiceHelper {
 	}
 	
 	public static synchronized void startBackgroundServiceIfNotAlreadyRunning(
-			Context context, String filename) {
+			Context context, String filename, String queryFilter, String level) {
 		
 		boolean alreadyRunning = ServiceHelper.checkIfServiceIsRunning(context, LogcatRecordingService.class);
 		
@@ -53,11 +53,15 @@ public class ServiceHelper {
 		if (!alreadyRunning) {
 			
 			Intent intent = new Intent(context, LogcatRecordingService.class);
-			intent.putExtra("filename", filename);
+			intent.putExtra(LogcatRecordingService.EXTRA_FILENAME, filename);
 			
 			// load "lastLine" in the background
 			LogcatReaderLoader loader = LogcatReaderLoader.create(context, true);
-			intent.putExtra("loader", loader);
+			intent.putExtra(LogcatRecordingService.EXTRA_LOADER, loader);
+			
+			// add query text and log level
+			intent.putExtra(LogcatRecordingService.EXTRA_QUERY_FILTER, queryFilter);
+			intent.putExtra(LogcatRecordingService.EXTRA_LEVEL, level);
 			
 			context.startService(intent);
 		}

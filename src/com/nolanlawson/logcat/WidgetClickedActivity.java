@@ -1,5 +1,7 @@
 package com.nolanlawson.logcat;
 
+import java.util.Collections;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -11,8 +13,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.nolanlawson.logcat.data.FilterQueryWithLevel;
 import com.nolanlawson.logcat.helper.DialogHelper;
 import com.nolanlawson.logcat.helper.WidgetHelper;
+import com.nolanlawson.logcat.util.Callback;
 
 public class WidgetClickedActivity extends Activity {
 	
@@ -37,7 +41,28 @@ public class WidgetClickedActivity extends Activity {
 		linearLayout.addView(editText, 2);
 		
 		Button okButton = (Button) findViewById(android.R.id.button1);
-		Button cancelButton = (Button) findViewById(android.R.id.button2);
+		Button filterButton = (Button) findViewById(android.R.id.button2);
+		Button cancelButton = (Button) findViewById(android.R.id.button3);
+		
+		final StringBuilder queryFilterText = new StringBuilder();
+		final StringBuilder logLevelText = new StringBuilder();
+		
+		filterButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				DialogHelper.showFilterDialogForRecording(WidgetClickedActivity.this, Collections.<String>emptyList(), 
+						new Callback<FilterQueryWithLevel>() {
+
+							@Override
+							public void onCallback(FilterQueryWithLevel result) {
+								queryFilterText.replace(0, queryFilterText.length(), result.getFilterQuery());
+								logLevelText.replace(0, logLevelText.length(), result.getLogLevel());
+							}
+				});
+				
+			}
+		});
 		
 		okButton.setOnClickListener(new View.OnClickListener() {
 			
@@ -58,7 +83,8 @@ public class WidgetClickedActivity extends Activity {
 						}
 					};
 					
-					DialogHelper.startRecordingWithProgressDialog(filename, runnable, WidgetClickedActivity.this);
+					DialogHelper.startRecordingWithProgressDialog(filename, 
+							queryFilterText.toString(), logLevelText.toString(), runnable, WidgetClickedActivity.this);
 				}
 			}
 		});

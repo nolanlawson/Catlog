@@ -376,7 +376,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	    	showSaveLogDialog();
 	    	return true;
 	    case R.id.menu_record_log:
-	    	DialogHelper.startRecordingLog(this);
+	    	DialogHelper.startRecordingLog(this, new ArrayList<String>(searchSuggestionsSet));
 	    	return true;
 	    case R.id.menu_stop_recording_log:
 	    	DialogHelper.stopRecordingLog(this);
@@ -1032,7 +1032,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			}
 		};
 		
-		DialogHelper.showFilenameSuggestingDialog(this, editText, onClickListener, null, R.string.save_log);
+		DialogHelper.showFilenameSuggestingDialog(this, editText, onClickListener, null, null, R.string.save_log);
 	}
 	
 	private void savePartialLog(final String filename, LogLine first, LogLine last) {
@@ -1452,7 +1452,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			}
 		};
 		
-		DialogHelper.showFilenameSuggestingDialog(this, editText, onClickListener, onCancelListener, R.string.save_log);
+		DialogHelper.showFilenameSuggestingDialog(this, editText, onClickListener, null, onCancelListener, R.string.save_log);
 		
 	}
 	
