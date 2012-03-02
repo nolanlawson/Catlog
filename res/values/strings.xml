@@ -175,6 +175,9 @@
     
     <string name="title_filter">Filter</string>
     <string name="text_filter_ellipsis">Filter&#8230;</string>
+    <string name="text_filter_text">Filter text</string>
+    <string name="log_level_colon">Log level:</string>
+    <string name="filter_text_colon">Filter text:</string>
     
     <string name="widget_start_recording">Record Log</string>
     <string name="widget_recording_in_progress">Recording…</string>

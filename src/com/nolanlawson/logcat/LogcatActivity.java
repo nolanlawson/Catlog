@@ -376,7 +376,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	    	showSaveLogDialog();
 	    	return true;
 	    case R.id.menu_record_log:
-	    	DialogHelper.startRecordingLog(this, new ArrayList<String>(searchSuggestionsSet));
+	    	showRecordLogDialog();
 	    	return true;
 	    case R.id.menu_stop_recording_log:
 	    	DialogHelper.stopRecordingLog(this);
@@ -465,6 +465,17 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		return super.onPrepareOptionsMenu(menu);
 	}
 
+
+	private void showRecordLogDialog() {
+		
+		// start up the dialog-like activity
+		String[] suggestions = ArrayUtil.toArray(new ArrayList<String>(searchSuggestionsSet), String.class);
+    	
+		Intent intent = new Intent(LogcatActivity.this, ShowRecordLogDialogActivity.class);
+		intent.putExtra(ShowRecordLogDialogActivity.EXTRA_QUERY_SUGGESTIONS, suggestions);
+		
+		startActivity(intent);
+	}
 
 	private void showFiltersDialog() {
 		

@@ -20,7 +20,7 @@
 		<activity android:name=".AboutActivity" android:theme="@android:style/Theme.Dialog" />
 	
 		
-		<activity android:name=".WidgetClickedActivity" android:theme="@android:style/Theme.Dialog" />
+		<activity android:name=".ShowRecordLogDialogActivity" android:theme="@android:style/Theme.Dialog" />
 		
 
 		<activity android:name=".SettingsActivity" />

@@ -26,11 +26,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.Toast;
 
 import com.nolanlawson.logcat.R;
 import com.nolanlawson.logcat.data.FilterQueryWithLevel;
 import com.nolanlawson.logcat.data.SortedFilterArrayAdapter;
+import com.nolanlawson.logcat.util.ArrayUtil;
 import com.nolanlawson.logcat.util.Callback;
 
 public class DialogHelper {
@@ -83,66 +83,9 @@ public class DialogHelper {
 				|| !filenameAsString.endsWith(".txt");
 				
 	}
-	public static void startRecordingLog(final Context context, final List<String> filterQuerySuggestions) {
 		
-		if (!SaveLogHelper.checkSdCard(context)) {
-			return;
-		}
-		
-		// use as atomic strings so other listener can pick them up
-		final StringBuilder filterQueryString = new StringBuilder();
-		final StringBuilder levelString = new StringBuilder();
-		
-		OnClickListener onNeutralListener = new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				
-				showFilterDialogForRecording(context, filterQuerySuggestions, new Callback<FilterQueryWithLevel>() {
-
-					@Override
-					public void onCallback(FilterQueryWithLevel result) {
-						
-						filterQueryString.replace(0, filterQueryString.length(), result.getFilterQuery());
-						levelString.replace(0, levelString.length(), result.getLogLevel());
-						
-					}
-				});
-			}
-		};
-		
-		final EditText editText = DialogHelper.createEditTextForFilenameSuggestingDialog(context);
-		
-		OnClickListener onOkClickListener = new OnClickListener() {
-			
-			@Override
-			public void onClick(final DialogInterface dialog, int which) {
-				
-				if (DialogHelper.isInvalidFilename(editText.getText())) {
-					
-					Toast.makeText(context, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
-				} else {
-					
-					String filename = editText.getText().toString();
-					Runnable runnable = new Runnable(){
-
-						@Override
-						public void run() {
-							dialog.dismiss();
-						}
-					};
-					startRecordingWithProgressDialog(filename, filterQueryString.toString(), levelString.toString(), runnable, context);
-					
-				}
-				
-			}
-		};		
-		
-		DialogHelper.showFilenameSuggestingDialog(context, editText, onOkClickListener, onNeutralListener, null, R.string.record_log);
-		
-	}
-	
-	public static void showFilterDialogForRecording(final Context context, final List<String> filterQuerySuggestions,
+	public static void showFilterDialogForRecording(final Context context, final String queryFilterText, 
+			final String logLevelText, final List<String> filterQuerySuggestions, 
 			final Callback<FilterQueryWithLevel> callback) {
 
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -153,6 +96,7 @@ public class DialogHelper {
 		SortedFilterArrayAdapter<String> suggestionAdapter = new SortedFilterArrayAdapter<String>(
 				context, R.layout.simple_dropdown_small, filterQuerySuggestions);
 		autoCompleteTextView.setAdapter(suggestionAdapter);
+		autoCompleteTextView.setText(queryFilterText);
 		
 		// set values on spinner to be the log levels
 		final Spinner spinner = (Spinner) filterView.findViewById(R.id.spinner);
@@ -160,6 +104,10 @@ public class DialogHelper {
 		            context, R.array.log_levels, android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
+		
+		// in case the user has changed it, choose the pre-selected log level
+		spinner.setSelection(ArrayUtil.indexOf(context.getResources().getStringArray(R.array.log_levels_values), 
+				logLevelText));
 		
 		// create alertdialog for the "Filter..." button
 		new AlertDialog.Builder(context)
@@ -174,7 +122,7 @@ public class DialogHelper {
 					
 					// get the true log level value, as opposed to the display string
 					int logLevelIdx = spinner.getSelectedItemPosition();
-					String[] logLevelValues = context.getResources().getStringArray(logLevelIdx);
+					String[] logLevelValues = context.getResources().getStringArray(R.array.log_levels_values);
 					String logLevelValue = logLevelValues[logLevelIdx];
 					
 					String filterQuery = autoCompleteTextView.getText().toString();

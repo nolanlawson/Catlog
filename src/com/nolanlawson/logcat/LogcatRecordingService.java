@@ -16,7 +16,6 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.nolanlawson.logcat.data.LogLine;
@@ -27,6 +26,7 @@ import com.nolanlawson.logcat.helper.ServiceHelper;
 import com.nolanlawson.logcat.helper.WidgetHelper;
 import com.nolanlawson.logcat.reader.LogcatReader;
 import com.nolanlawson.logcat.reader.LogcatReaderLoader;
+import com.nolanlawson.logcat.util.ArrayUtil;
 import com.nolanlawson.logcat.util.LogLineAdapterUtil;
 import com.nolanlawson.logcat.util.UtilLogger;
 
@@ -270,9 +270,12 @@ public class LogcatRecordingService extends IntentService {
 		String logLevel = intent.getStringExtra(EXTRA_LEVEL);
 		
 		SearchCriteria searchCriteria = new SearchCriteria(queryText);
-		int logLevelLimit = LogLine.convertCharToLogLevel(logLevel.charAt(0));
+		
+		CharSequence[] logLevels = getResources().getStringArray(R.array.log_levels_values);
+		int logLevelLimit = ArrayUtil.indexOf(logLevels, logLevel);
+		
 		boolean searchCriteriaWillAlwaysMatch = searchCriteria.isEmpty();
-		boolean logLevelAcceptsEverything = logLevelLimit == Log.VERBOSE;
+		boolean logLevelAcceptsEverything = logLevelLimit == 0;
 		
 		SaveLogHelper.deleteLogIfExists(filename);
 		

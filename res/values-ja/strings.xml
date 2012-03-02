@@ -127,6 +127,9 @@
     
     <string name="title_filter">フィルタ</string>
     <string name="text_filter_ellipsis">フィルタ&#8230;</string>
+    <string name="text_filter_text">フィルタテクスト</string>
+    <string name="log_level_colon">レベル：</string>
+    <string name="filter_text_colon">フィルタテクスト：</string>
     
     <string name="widget_start_recording">ログを記録</string>
     <string name="widget_recording_in_progress">記録中&#8230;</string>

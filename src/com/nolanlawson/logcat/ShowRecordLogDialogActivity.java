@@ -1,6 +1,8 @@
 package com.nolanlawson.logcat;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -18,7 +20,9 @@ import com.nolanlawson.logcat.helper.DialogHelper;
 import com.nolanlawson.logcat.helper.WidgetHelper;
 import com.nolanlawson.logcat.util.Callback;
 
-public class WidgetClickedActivity extends Activity {
+public class ShowRecordLogDialogActivity extends Activity {
+	
+	public static final String EXTRA_QUERY_SUGGESTIONS = "suggestions";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +34,11 @@ public class WidgetClickedActivity extends Activity {
 		setContentView(R.layout.record_log_dialog);
 		
 		getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+		
+		// grab the search suggestions, if any
+		final List<String> suggestions = (getIntent() != null && getIntent().hasExtra(EXTRA_QUERY_SUGGESTIONS))
+				? Arrays.asList(getIntent().getStringArrayExtra(EXTRA_QUERY_SUGGESTIONS))
+				: Collections.<String>emptyList();
 		
 		// ask the user the save a file to record the log
 		
@@ -45,13 +54,14 @@ public class WidgetClickedActivity extends Activity {
 		Button cancelButton = (Button) findViewById(android.R.id.button3);
 		
 		final StringBuilder queryFilterText = new StringBuilder();
-		final StringBuilder logLevelText = new StringBuilder();
+		final StringBuilder logLevelText = new StringBuilder(getString(R.string.log_level_value_verbose));
 		
 		filterButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				DialogHelper.showFilterDialogForRecording(WidgetClickedActivity.this, Collections.<String>emptyList(), 
+				DialogHelper.showFilterDialogForRecording(ShowRecordLogDialogActivity.this, queryFilterText.toString(), 
+						logLevelText.toString(), suggestions, 
 						new Callback<FilterQueryWithLevel>() {
 
 							@Override
@@ -70,7 +80,7 @@ public class WidgetClickedActivity extends Activity {
 			public void onClick(View v) {
 				if (DialogHelper.isInvalidFilename(editText.getText())) {
 					
-					Toast.makeText(WidgetClickedActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
+					Toast.makeText(ShowRecordLogDialogActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
 				} else {
 					
 					String filename = editText.getText().toString();
@@ -84,7 +94,7 @@ public class WidgetClickedActivity extends Activity {
 					};
 					
 					DialogHelper.startRecordingWithProgressDialog(filename, 
-							queryFilterText.toString(), logLevelText.toString(), runnable, WidgetClickedActivity.this);
+							queryFilterText.toString(), logLevelText.toString(), runnable, ShowRecordLogDialogActivity.this);
 				}
 			}
 		});
