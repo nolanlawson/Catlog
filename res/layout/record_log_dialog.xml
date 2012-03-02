@@ -8,7 +8,7 @@
         android:layout_height="wrap_content"
         android:minHeight="@android:dimen/app_icon_size"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:paddingTop="7dp" android:paddingBottom="10dp">
         <LinearLayout android:id="@+id/title_template"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,15 +26,13 @@
                 android:layout_height="wrap_content" 
                 android:text="@string/record_log"/>
         </LinearLayout>
-        <ImageView 
+        <View 
             android:layout_width="fill_parent"
             android:layout_height="1dip"
             android:visibility="visible"
             android:scaleType="fitXY"
             android:gravity="fill_horizontal"
-            android:src="@drawable/dialog_divider_horizontal_light"
-            android:layout_marginLeft="10dip"
-            android:layout_marginRight="10dip"/>
+            android:background="@color/dark_divider"/>
         <!-- If the client uses a customTitle, it will be added here. -->
     </LinearLayout>
 	
