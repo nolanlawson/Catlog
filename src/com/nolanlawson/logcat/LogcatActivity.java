@@ -48,7 +48,6 @@ import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filter.FilterListener;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -94,7 +93,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	
 	private static UtilLogger log = new UtilLogger(LogcatActivity.class);
 	
-	private LinearLayout backgroundLinearLayout, mainFilenameLinearLayout, clearButton, expandButton, pauseButton;;
+	private View backgroundLayout, mainFilenameLayout, clearButton, expandButton, pauseButton;
 	private AutoCompleteTextView searchEditText;
 	private ProgressBar darkProgressBar, lightProgressBar;
 	private LogLineAdapter adapter;
@@ -1291,7 +1290,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	}
 
 	private void updateDisplayedFilename() {
-		mainFilenameLinearLayout.setVisibility(currentlyOpenLog != null ? View.VISIBLE : View.GONE);
+		mainFilenameLayout.setVisibility(currentlyOpenLog != null ? View.VISIBLE : View.GONE);
 		if (currentlyOpenLog != null) {
 			
 			filenameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, PreferenceHelper.getTextSizePreference(this) + 2);
@@ -1364,11 +1363,11 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		darkProgressBar = (ProgressBar) findViewById(R.id.main_dark_progress_bar);
 		lightProgressBar = (ProgressBar) findViewById(R.id.main_light_progress_bar);
 		
-		backgroundLinearLayout = (LinearLayout) findViewById(R.id.main_background);
+		backgroundLayout = findViewById(R.id.main_background);
 		
-		clearButton = (LinearLayout) findViewById(R.id.main_clear_button);
-		expandButton = (LinearLayout) findViewById(R.id.main_more_button);
-		pauseButton = (LinearLayout) findViewById(R.id.main_pause_button);
+		clearButton = findViewById(R.id.main_clear_button);
+		expandButton = findViewById(R.id.main_more_button);
+		pauseButton = findViewById(R.id.main_pause_button);
 		expandButtonImage = (ImageView) findViewById(R.id.main_expand_button_image);
 		pauseButtonImage = (ImageView) findViewById(R.id.main_pause_button_image);
 		
@@ -1379,7 +1378,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		clearButton.setOnLongClickListener(this);
 		
 		filenameTextView = (TextView) findViewById(R.id.main_filename_text_view);
-		mainFilenameLinearLayout = (LinearLayout) findViewById(R.id.main_filename_linear_layout);
+		mainFilenameLayout = findViewById(R.id.main_filename_linear_layout);
 		borderView1 = findViewById(R.id.main_border_view_1);
 		borderView2 = findViewById(R.id.main_border_view_2);
 		borderView3 = findViewById(R.id.main_border_view_3);
@@ -1734,7 +1733,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 		handler.post(new Runnable() {
 			public void run() {
-				backgroundLinearLayout.setBackgroundColor(color);
+				backgroundLayout.setBackgroundColor(color);
 			}
 		});
 		

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical" android:layout_width="fill_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
 	android:layout_height="fill_parent" android:gravity="center_horizontal"
 	android:id="@+id/main_background">
 
 	<LinearLayout android:orientation="horizontal"
+	    android:layout_alignParentTop="true"
 		android:layout_width="fill_parent"
 		android:gravity="center_vertical|right" android:background="@drawable/action_bar"
-		android:layout_height="@dimen/main_button_height">
+		android:layout_height="@dimen/main_button_height" android:id="@+id/action_bar">
 
 	    <!-- Dummy item to prevent AutoCompleteTextView from receiving focus -->
 		<LinearLayout
@@ -85,7 +86,8 @@
 	<LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:gravity="center_horizontal|center_vertical"
 		android:orientation="vertical" android:paddingRight="5dp" android:paddingLeft="5dp"
-		android:paddingTop="3dp" android:paddingBottom="1dp">
+		android:paddingTop="3dp" android:paddingBottom="1dp" android:layout_below="@+id/action_bar"
+		android:id="@+id/main_filename_outer_layout">
 		
 		<LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:orientation="vertical" android:id="@+id/main_filename_linear_layout">
@@ -119,16 +121,21 @@
 
 	<ProgressBar android:id="@+id/main_dark_progress_bar"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:indeterminate="true" android:visibility="gone"/>
+		android:indeterminate="true" android:visibility="gone"
+		android:layout_below="@+id/main_filename_outer_layout"
+		android:layout_centerHorizontal="true"/>
 
 	<ProgressBar android:id="@+id/main_light_progress_bar"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:indeterminate="true" android:visibility="gone"
-		style="@android:style/Widget.ProgressBar.Inverse"/>    
+		style="@android:style/Widget.ProgressBar.Inverse"
+		android:layout_below="@+id/main_dark_progress_bar"
+		android:layout_centerHorizontal="true"/>    
 	    
 	<com.nolanlawson.logcat.widget.ExceptionCatchingListView android:layout_width="fill_parent"
-		android:layout_height="0px" android:layout_weight="1.0" android:id="@android:id/list"
+		android:layout_height="fill_parent" android:id="@android:id/list"
 		android:paddingBottom="2dp" android:paddingTop="1dp"
-		android:dividerHeight="0px"/>
+		android:dividerHeight="0px" android:scrollbars="none"
+		android:layout_below="@+id/main_light_progress_bar"/>
 
-</LinearLayout>
+</RelativeLayout>

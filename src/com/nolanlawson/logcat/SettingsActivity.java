@@ -9,14 +9,13 @@ import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceActivity;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
-import com.nolanlawson.logcat.helper.DonateHelper;
 import com.nolanlawson.logcat.helper.PackageHelper;
 import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.util.ArrayUtil;
@@ -83,7 +82,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 		bufferPreference.setOnPreferenceChangeListener(this);
 		setBufferPreferenceSummary(bufferPreference.getValue());
 		
-		boolean donateInstalled = DonateHelper.isDonateVersionInstalled(this) ;
+		boolean donateInstalled = PackageHelper.isCatlogDonateInstalled(this);
 		
 		String themeSummary = donateInstalled 
 				? PreferenceHelper.getColorScheme(this).getDisplayableName(this)

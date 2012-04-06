@@ -229,7 +229,7 @@ public class PreferenceHelper {
 		
 		if (colorScheme == null) {
 		
-			if (!DonateHelper.isDonateVersionInstalled(context)) {
+			if (!PackageHelper.isCatlogDonateInstalled(context)) {
 				colorScheme = ColorScheme.Dark; // hard-coded in free version
 			} else {
 				SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);

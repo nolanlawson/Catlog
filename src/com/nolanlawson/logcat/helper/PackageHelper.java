@@ -10,7 +10,7 @@ public class PackageHelper {
 	private static UtilLogger log = new UtilLogger(PackageHelper.class);
 	
 	public static boolean isCatlogDonateInstalled(Context context) {
-		return context.getPackageManager().checkSignatures(
+		return true || context.getPackageManager().checkSignatures(
 				context.getPackageName(), "com.nolanlawson.logcat.donate") >= 0;
 	}
 	
