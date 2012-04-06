@@ -286,7 +286,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		log.d("onActivityResult()");
 		
@@ -297,42 +297,58 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		
 
 		if (requestCode == REQUEST_CODE_SETTINGS && resultCode == RESULT_OK) {
-			handler.post(new Runnable(){
-
-				@Override
-				public void run() {
-					
-					updateBackgroundColor();
-					
-					if (data.hasExtra("bufferChanged") && data.getBooleanExtra("bufferChanged", false)
-							&& currentlyOpenLog == null) {
-						// log buffer changed, so update list
-						restartMainLog();
-					} else {
-						// settings activity returned - text size might have changed, so update list
-						expandOrCollapseAll(false);
-						adapter.notifyDataSetChanged();
-					}
-				}
-			});
+			onSettingsActivityResult(data);
 		}
 		adapter.notifyDataSetChanged();
 		updateBackgroundColor();
 		updateDisplayedFilename();
 	}
 
+	private void onSettingsActivityResult(final Intent data) {
+		handler.post(new Runnable(){
+
+			@Override
+			public void run() {
+				
+				updateBackgroundColor();
+				
+				if (data.hasExtra("bufferChanged") && data.getBooleanExtra("bufferChanged", false)
+						&& currentlyOpenLog == null) {
+					// log buffer changed, so update list
+					restartMainLog();
+				} else {
+					// settings activity returned - text size might have changed, so update list
+					expandOrCollapseAll(false);
+					adapter.notifyDataSetChanged();
+				}
+			}
+		});
+		
+	}
+
 	private void startUpMainLog() {
     	
+		Runnable mainLogRunnable = new Runnable(){
+
+			@Override
+			public void run() {
+				adapter.clear();
+		    	task = new LogReaderAsyncTask();
+		    	task.execute((Void)null);
+			}
+		};
+		
     	if (task != null) {
+    		// do only after current log is depleted, to avoid splicing the streams together
+    		// (Don't cross the streams!)
     		task.unpause();
+    		task.setOnFinished(mainLogRunnable);
     		task.killReader();
     		task = null;
+    	} else {
+    		// no main log currently running; just start up the main log now
+    		mainLogRunnable.run();
     	}
-    	
-    	task = new LogReaderAsyncTask();
-    	
-    	task.execute((Void)null);
-		
 	}
 
 	@Override
