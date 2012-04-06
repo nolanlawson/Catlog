@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_background"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:gravity="center_horizontal" >
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
 
     <LinearLayout
         android:id="@+id/action_bar"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/main_button_height"
-        android:layout_alignParentTop="true"
         android:background="@drawable/action_bar"
         android:gravity="center_vertical|right"
         android:orientation="horizontal" >
@@ -111,7 +111,6 @@
         android:id="@+id/main_filename_outer_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/action_bar"
         android:gravity="center_horizontal|center_vertical"
         android:orientation="vertical"
         android:paddingBottom="1dp"
@@ -173,8 +172,6 @@
         android:id="@+id/main_dark_progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/main_filename_outer_layout"
-        android:layout_centerHorizontal="true"
         android:indeterminate="true"
         android:visibility="gone" />
 
@@ -183,19 +180,18 @@
         style="@android:style/Widget.ProgressBar.Inverse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/main_dark_progress_bar"
-        android:layout_centerHorizontal="true"
         android:indeterminate="true"
         android:visibility="gone" />
 
     <com.nolanlawson.logcat.widget.ExceptionCatchingListView
         android:id="@android:id/list"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="0px"
+        android:layout_weight="1"
         android:layout_below="@+id/main_light_progress_bar"
         android:dividerHeight="0px"
         android:paddingBottom="2dp"
         android:paddingTop="1dp"
         android:scrollbars="none" />
 
-</RelativeLayout>
+</LinearLayout>
