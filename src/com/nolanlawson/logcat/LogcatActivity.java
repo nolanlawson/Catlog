@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -1775,12 +1776,13 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			log.d("doInBackground()");
 			
 			try {
-						
-				LogcatReaderLoader loader = LogcatReaderLoader.create(LogcatActivity.this, false);
+				// use "recordingMode" because we want to load all the existing lines at once
+				// for a performance boost
+				LogcatReaderLoader loader = LogcatReaderLoader.create(LogcatActivity.this, true);
 				reader = loader.loadReader();
-
-				String line;
 				
+				String line;
+				List<LogLine> initialLines = new LinkedList<LogLine>();
 				while ((line = reader.readLine()) != null) {
 					if (paused) {
 						synchronized (lock) {
@@ -1790,7 +1792,18 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 						}
 					}
 					LogLine logLine = LogLine.newLogLine(line, !collapsedMode);
-					publishProgress(logLine);
+					if (!reader.readyToRecord()) {
+						// "ready to record" in this case means all the initial lines have been flushed from the reader
+						initialLines.add(logLine);
+					} else if (!initialLines.isEmpty()) {
+						// flush all the initial lines we've loaded
+						initialLines.add(logLine);
+						publishProgress(ArrayUtil.toArray(initialLines, LogLine.class));
+						initialLines.clear();
+					} else {
+						// just proceed as normal
+						publishProgress(logLine);
+					}
 				} 
 			} catch (InterruptedException e) {
 				log.d(e, "expected error");
@@ -1837,15 +1850,14 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 		protected void onProgressUpdate(LogLine... values) {
 			super.onProgressUpdate(values);
 
-			LogLine logLine = values[0];
-			
 			if (!firstLineReceived) {
 				firstLineReceived = true;
 				hideProgressBar();
 			}
-			
-			adapter.addWithFilter(logLine, searchEditText.getText());
-			addToAutocompleteSuggestions(logLine);
+			for (LogLine logLine : values) {
+				adapter.addWithFilter(logLine, searchEditText.getText());
+				addToAutocompleteSuggestions(logLine);
+			}
 			
 			// how many logs to keep in memory?  this avoids OutOfMemoryErrors
 			int maxNumLogLines = PreferenceHelper.getDisplayLimitPreference(LogcatActivity.this);
