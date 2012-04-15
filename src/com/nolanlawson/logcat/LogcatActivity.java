@@ -332,7 +332,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 
 			@Override
 			public void run() {
-				adapter.clear();
+				if (adapter != null) {
+					adapter.clear();
+				}
 		    	task = new LogReaderAsyncTask();
 		    	task.execute((Void)null);
 			}
