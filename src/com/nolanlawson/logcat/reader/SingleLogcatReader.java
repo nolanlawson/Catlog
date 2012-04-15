@@ -6,8 +6,6 @@ import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.List;
 
-import android.text.TextUtils;
-
 import com.nolanlawson.logcat.helper.LogcatHelper;
 import com.nolanlawson.logcat.util.UtilLogger;
 
@@ -61,7 +59,7 @@ public class SingleLogcatReader extends AbsLogcatReader {
 		String line = bufferedReader.readLine();
 		
 		if (recordingMode && lastLine != null) { // still skipping past the 'last line'
-			if (lastLine.equals(line) || isAfterLastTime(line)) {
+			if (lastLine.equals(line)) {
 				lastLine = null; // indicates we've passed the last line
 			}
 		}
@@ -69,20 +67,6 @@ public class SingleLogcatReader extends AbsLogcatReader {
 		return line;
 		
 	}
-	
-	private boolean isAfterLastTime(String line) {
-		// doing a string comparison is sufficient to determine whether this line is chronologically
-		// after the last line, because the format they use is exactly the same and 
-		// lists larger time period before smaller ones
-		return isDatedLogLine(lastLine) && isDatedLogLine(line) && line.compareTo(lastLine) > 0;
-		
-	}
-	
-	private boolean isDatedLogLine(String line) {
-		// 18 is the size of the logcat timestamp
-		return (!TextUtils.isEmpty(line) && line.length() >= 18 && Character.isDigit(line.charAt(0)));
-	}
-
 
 	@Override
 	public boolean readyToRecord() {
