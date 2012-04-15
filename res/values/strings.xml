@@ -19,6 +19,7 @@
     <string name="checkbox_never_show_partial_select_help">Don\'t show again</string>
     <string name="pref_hide_partial_select_help">pref_hide_partial_select_help</string>
     <string name="toast_started_select_partial">Select Partial mode enabled</string>
+    <string name="toast_log_truncated">Log too large; showing last %d lines.</string>
     
     <string name="log_cleared">Logs cleared. Long-press to reload.</string>
     <string name="filter_choice">Search by</string>

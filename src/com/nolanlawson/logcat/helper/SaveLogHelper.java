@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -26,6 +27,7 @@ import android.os.Environment;
 import android.widget.Toast;
 
 import com.nolanlawson.logcat.R;
+import com.nolanlawson.logcat.data.SavedLog;
 import com.nolanlawson.logcat.util.UtilLogger;
 
 public class SaveLogHelper {
@@ -159,12 +161,13 @@ public class SaveLogHelper {
 		
 	}
 	
-	public static List<String> openLog(String filename) {
+	public static SavedLog openLog(String filename, int maxLines) {
 		
 		File catlogDir = getSavedLogsDirectory();
 		File logFile = new File(catlogDir, filename);	
 		
-		List<String> result = new ArrayList<String>();
+		LinkedList<String> logLines = new LinkedList<String>();
+		boolean truncated = false;
 		
 		BufferedReader bufferedReader = null;
 		
@@ -173,7 +176,11 @@ public class SaveLogHelper {
 			bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(logFile)), BUFFER);
 			
 			while (bufferedReader.ready()) {
-				result.add(bufferedReader.readLine());
+				logLines.add(bufferedReader.readLine());
+				if (logLines.size() > maxLines) {
+					logLines.removeFirst();
+					truncated = true;
+				}
 			}
 		} catch (IOException ex) {
 			log.e(ex, "couldn't read file");
@@ -187,6 +194,10 @@ public class SaveLogHelper {
 				}
 			}
 		}
+		
+		SavedLog result = new SavedLog();
+		result.setLogLines(logLines);
+		result.setTruncated(truncated);
 		
 		return result;
 	}

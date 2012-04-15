@@ -16,6 +16,7 @@
     <string name="toast_invalid_selection">無効なセレクション。もう一度やってみてください。</string>
     <string name="checkbox_never_show_partial_select_help">もう見せない。</string>
     <string name="toast_started_select_partial">部分セレクションモード開始。</string>
+    <string name="toast_log_truncated">ログは長すぎる。最終の%dのログを表示します。</string>
     
     <string name="log_cleared">ログ空けた。押し続けたら、リロードできます。</string>
     <string name="filter_choice">検索</string>

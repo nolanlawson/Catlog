@@ -18,6 +18,7 @@ Téléchargez <a href='market://details?id=com.nolanlawson.logcat.donate'>CatLog
     <string name="toast_invalid_selection">Sélection pas valable. Veuillez réessayer.</string>
     <string name="checkbox_never_show_partial_select_help">Ne plus afficher.</string>
     <string name="toast_started_select_partial">Commencement du mode "sélection partielle."</string>
+    <string name="toast_log_truncated">Le journal est trop long; les derniers %d lignes sont affichés.</string>
     
     <string name="log_cleared">Journaux nettoyés. Pour afficher de nouveau, appuyez et maintenez.</string>
     <string name="filter_choice">Rechercher par…</string>

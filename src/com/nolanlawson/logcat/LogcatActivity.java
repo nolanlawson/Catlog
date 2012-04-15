@@ -60,6 +60,7 @@ import com.nolanlawson.logcat.data.FilterAdapter;
 import com.nolanlawson.logcat.data.LogFileAdapter;
 import com.nolanlawson.logcat.data.LogLine;
 import com.nolanlawson.logcat.data.LogLineAdapter;
+import com.nolanlawson.logcat.data.SavedLog;
 import com.nolanlawson.logcat.data.SearchCriteria;
 import com.nolanlawson.logcat.data.SendLogDetails;
 import com.nolanlawson.logcat.data.SenderAppAdapter;
@@ -1216,11 +1217,25 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 			@Override
 			protected List<LogLine> doInBackground(Void... params) {
 
-				List<String> lines = SaveLogHelper.openLog(filename);
+				// remove any lines at the beginning if necessary
+				final int maxLines = PreferenceHelper.getDisplayLimitPreference(LogcatActivity.this);
+				SavedLog savedLog = SaveLogHelper.openLog(filename, maxLines);
+				List<String> lines = savedLog.getLogLines();
 				List<LogLine> logLines = new ArrayList<LogLine>();
 				for (String line : lines) {
 					logLines.add(LogLine.newLogLine(line, !collapsedMode));
 				}
+				
+				// notify the user if the saved file was truncated
+				if (savedLog.isTruncated()) {
+					handler.post(new Runnable() {
+						public void run() {
+							String toastText = String.format(getString(R.string.toast_log_truncated), maxLines);
+							Toast.makeText(LogcatActivity.this, toastText, Toast.LENGTH_LONG).show();
+						}
+					});
+				}
+				
 				return logLines;
 			}
 
