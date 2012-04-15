@@ -14,7 +14,7 @@ com.nolanlawson.logcat.AboutActivity -> com.nolanlawson.logcat.AboutActivity:
     android.webkit.WebView access$4(com.nolanlawson.logcat.AboutActivity) -> c
     android.view.View access$5(com.nolanlawson.logcat.AboutActivity) -> d
     android.widget.Button access$6(com.nolanlawson.logcat.AboutActivity) -> e
-com.nolanlawson.logcat.AboutActivity$AboutWebClient -> com.nolanlawson.logcat.h:
+com.nolanlawson.logcat.AboutActivity$AboutWebClient -> com.nolanlawson.logcat.i:
     com.nolanlawson.logcat.AboutActivity this$0 -> a
     boolean shouldOverrideUrlLoading(android.webkit.WebView,java.lang.String) -> shouldOverrideUrlLoading
     void onPageFinished(android.webkit.WebView,java.lang.String) -> onPageFinished
@@ -22,7 +22,7 @@ com.nolanlawson.logcat.AboutActivity$AboutWebClient$1 -> com.nolanlawson.logcat.
     com.nolanlawson.logcat.AboutActivity$AboutWebClient this$1 -> a
     java.lang.String val$url -> b
     void run() -> run
-com.nolanlawson.logcat.AboutActivity$AboutWebClient$2 -> com.nolanlawson.logcat.ac:
+com.nolanlawson.logcat.AboutActivity$AboutWebClient$2 -> com.nolanlawson.logcat.ad:
     com.nolanlawson.logcat.AboutActivity$AboutWebClient this$1 -> a
     void run() -> run
 com.nolanlawson.logcat.CrazyLoggerService -> com.nolanlawson.logcat.CrazyLoggerService:
@@ -34,11 +34,11 @@ com.nolanlawson.logcat.CrazyLoggerService -> com.nolanlawson.logcat.CrazyLoggerS
     void onDestroy() -> onDestroy
 com.nolanlawson.logcat.LogcatActivity -> com.nolanlawson.logcat.LogcatActivity:
     com.nolanlawson.logcat.util.UtilLogger log -> a
-    android.widget.LinearLayout backgroundLinearLayout -> b
-    android.widget.LinearLayout mainFilenameLinearLayout -> c
-    android.widget.LinearLayout clearButton -> d
-    android.widget.LinearLayout expandButton -> e
-    android.widget.LinearLayout pauseButton -> f
+    android.view.View backgroundLayout -> b
+    android.view.View mainFilenameLayout -> c
+    android.view.View clearButton -> d
+    android.view.View expandButton -> e
+    android.view.View pauseButton -> f
     android.widget.AutoCompleteTextView searchEditText -> g
     android.widget.ProgressBar darkProgressBar -> h
     android.widget.ProgressBar lightProgressBar -> i
@@ -113,55 +113,63 @@ com.nolanlawson.logcat.LogcatActivity -> com.nolanlawson.logcat.LogcatActivity:
     java.lang.String access$12(com.nolanlawson.logcat.LogcatActivity) -> i
     void access$13(com.nolanlawson.logcat.LogcatActivity) -> j
     void access$14$a962bf1(com.nolanlawson.logcat.LogcatActivity) -> k
-    void access$15(com.nolanlawson.logcat.LogcatActivity,com.nolanlawson.logcat.data.FilterAdapter) -> a
-    void access$16(com.nolanlawson.logcat.LogcatActivity,java.lang.String) -> b
-    void access$17(com.nolanlawson.logcat.LogcatActivity,java.lang.String) -> c
-    void access$18$a962bf1(com.nolanlawson.logcat.LogcatActivity) -> l
-    java.util.List access$19(com.nolanlawson.logcat.LogcatActivity) -> m
-    void access$20(com.nolanlawson.logcat.LogcatActivity,boolean,boolean) -> a
-    com.nolanlawson.logcat.data.SendLogDetails access$21(com.nolanlawson.logcat.LogcatActivity,boolean,boolean) -> b
-    void access$22(com.nolanlawson.logcat.LogcatActivity,java.lang.String) -> d
-    void access$23(com.nolanlawson.logcat.LogcatActivity,java.lang.String) -> e
-    void access$24(com.nolanlawson.logcat.LogcatActivity) -> n
-    void access$25(com.nolanlawson.logcat.LogcatActivity) -> o
-    void access$26(com.nolanlawson.logcat.LogcatActivity) -> p
-    void access$27(com.nolanlawson.logcat.LogcatActivity,java.lang.String,com.nolanlawson.logcat.data.LogLine,com.nolanlawson.logcat.data.LogLine) -> a
-    android.widget.LinearLayout access$28(com.nolanlawson.logcat.LogcatActivity) -> q
-com.nolanlawson.logcat.LogcatActivity$1 -> com.nolanlawson.logcat.ap:
+    void access$15(com.nolanlawson.logcat.LogcatActivity,com.nolanlawson.logcat.LogcatActivity$LogReaderAsyncTask) -> a
+    com.nolanlawson.logcat.LogcatActivity$LogReaderAsyncTask access$16(com.nolanlawson.logcat.LogcatActivity) -> l
+    void access$17(com.nolanlawson.logcat.LogcatActivity,com.nolanlawson.logcat.data.FilterAdapter) -> a
+    void access$18(com.nolanlawson.logcat.LogcatActivity,java.lang.String) -> b
+    void access$19(com.nolanlawson.logcat.LogcatActivity,java.lang.String) -> c
+    void access$20$a962bf1(com.nolanlawson.logcat.LogcatActivity) -> m
+    java.util.List access$21(com.nolanlawson.logcat.LogcatActivity) -> n
+    void access$22(com.nolanlawson.logcat.LogcatActivity,boolean,boolean) -> a
+    com.nolanlawson.logcat.data.SendLogDetails access$23(com.nolanlawson.logcat.LogcatActivity,boolean,boolean) -> b
+    void access$24(com.nolanlawson.logcat.LogcatActivity,java.lang.String) -> d
+    void access$25(com.nolanlawson.logcat.LogcatActivity,java.lang.String) -> e
+    void access$26(com.nolanlawson.logcat.LogcatActivity) -> o
+    android.os.Handler access$27(com.nolanlawson.logcat.LogcatActivity) -> p
+    void access$28(com.nolanlawson.logcat.LogcatActivity) -> q
+    void access$29(com.nolanlawson.logcat.LogcatActivity) -> r
+    void access$30(com.nolanlawson.logcat.LogcatActivity,java.lang.String,com.nolanlawson.logcat.data.LogLine,com.nolanlawson.logcat.data.LogLine) -> a
+    android.view.View access$31(com.nolanlawson.logcat.LogcatActivity) -> s
+com.nolanlawson.logcat.LogcatActivity$1 -> com.nolanlawson.logcat.aq:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
     android.app.ProgressDialog val$dialog -> b
     void onPostExecute(java.lang.Object) -> onPostExecute
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
 com.nolanlawson.logcat.LogcatActivity$10 -> com.nolanlawson.logcat.o:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
-    java.lang.CharSequence[] val$filenameArray -> b
-    com.nolanlawson.logcat.data.LogFileAdapter val$dropdownAdapter -> c
+    com.nolanlawson.logcat.data.LogFileAdapter val$dropdownAdapter -> b
+    java.lang.CharSequence[] val$filenameArray -> c
     void onClick(android.content.DialogInterface,int) -> onClick
 com.nolanlawson.logcat.LogcatActivity$11 -> com.nolanlawson.logcat.n:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
-    com.nolanlawson.logcat.data.LogFileAdapter val$dropdownAdapter -> b
+    java.lang.CharSequence[] val$filenameArray -> b
+    com.nolanlawson.logcat.data.LogFileAdapter val$dropdownAdapter -> c
     void onClick(android.content.DialogInterface,int) -> onClick
 com.nolanlawson.logcat.LogcatActivity$12 -> com.nolanlawson.logcat.m:
+    com.nolanlawson.logcat.LogcatActivity this$0 -> a
+    com.nolanlawson.logcat.data.LogFileAdapter val$dropdownAdapter -> b
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.nolanlawson.logcat.LogcatActivity$13 -> com.nolanlawson.logcat.l:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
     boolean[] val$checkedItems -> b
     java.lang.CharSequence[] val$filenameArray -> c
     int val$finalDeleteCount -> d
     android.content.DialogInterface val$parentDialog -> e
     void onClick(android.content.DialogInterface,int) -> onClick
-com.nolanlawson.logcat.LogcatActivity$13 -> com.nolanlawson.logcat.l:
+com.nolanlawson.logcat.LogcatActivity$14 -> com.nolanlawson.logcat.k:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
     void onCheckedChanged(android.widget.CompoundButton,boolean) -> onCheckedChanged
-com.nolanlawson.logcat.LogcatActivity$14 -> com.nolanlawson.logcat.k:
+com.nolanlawson.logcat.LogcatActivity$15 -> com.nolanlawson.logcat.j:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
     android.widget.CheckBox val$includeDeviceInfoCheckBox -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.nolanlawson.logcat.LogcatActivity$15 -> com.nolanlawson.logcat.j:
+com.nolanlawson.logcat.LogcatActivity$16 -> com.nolanlawson.logcat.q:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
     boolean val$asText -> b
     boolean val$includeDeviceInfo -> c
     com.nolanlawson.logcat.data.SenderAppAdapter val$senderAppAdapter -> d
     void onClick(android.content.DialogInterface,int) -> onClick
-com.nolanlawson.logcat.LogcatActivity$16 -> com.nolanlawson.logcat.p:
+com.nolanlawson.logcat.LogcatActivity$17 -> com.nolanlawson.logcat.r:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
     boolean val$asText -> b
     boolean val$includeDeviceInfo -> c
@@ -171,107 +179,109 @@ com.nolanlawson.logcat.LogcatActivity$16 -> com.nolanlawson.logcat.p:
     void onPreExecute() -> onPreExecute
     void onPostExecute(java.lang.Object) -> onPostExecute
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
-com.nolanlawson.logcat.LogcatActivity$17 -> com.nolanlawson.logcat.q:
+com.nolanlawson.logcat.LogcatActivity$18 -> com.nolanlawson.logcat.s:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
     android.widget.EditText val$editText -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.nolanlawson.logcat.LogcatActivity$18 -> com.nolanlawson.logcat.r:
+com.nolanlawson.logcat.LogcatActivity$19 -> com.nolanlawson.logcat.t:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
     java.lang.String val$filename -> b
     java.util.List val$logLines -> c
     void onPostExecute(java.lang.Object) -> onPostExecute
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
-com.nolanlawson.logcat.LogcatActivity$19 -> com.nolanlawson.logcat.s:
-    com.nolanlawson.logcat.LogcatActivity this$0 -> a
-    java.lang.String val$filename -> b
-    java.util.List val$logLines -> c
-    void onPostExecute(java.lang.Object) -> onPostExecute
-    java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
-com.nolanlawson.logcat.LogcatActivity$2 -> com.nolanlawson.logcat.an:
+com.nolanlawson.logcat.LogcatActivity$2 -> com.nolanlawson.logcat.ap:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
     void onClick(android.content.DialogInterface,int) -> onClick
-com.nolanlawson.logcat.LogcatActivity$20 -> com.nolanlawson.logcat.y:
+com.nolanlawson.logcat.LogcatActivity$20 -> com.nolanlawson.logcat.z:
+    com.nolanlawson.logcat.LogcatActivity this$0 -> a
+    java.lang.String val$filename -> b
+    java.util.List val$logLines -> c
+    void onPostExecute(java.lang.Object) -> onPostExecute
+    java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
+com.nolanlawson.logcat.LogcatActivity$21 -> com.nolanlawson.logcat.ab:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
     java.util.List val$filenames -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.nolanlawson.logcat.LogcatActivity$21 -> com.nolanlawson.logcat.ab:
+com.nolanlawson.logcat.LogcatActivity$22 -> com.nolanlawson.logcat.aa:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
     java.lang.String val$filename -> b
     void onPreExecute() -> onPreExecute
     void onPostExecute(java.lang.Object) -> onPostExecute
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
-com.nolanlawson.logcat.LogcatActivity$22 -> com.nolanlawson.logcat.z:
+com.nolanlawson.logcat.LogcatActivity$22$1 -> com.nolanlawson.logcat.ar:
+    com.nolanlawson.logcat.LogcatActivity$22 this$1 -> a
+    int val$maxLines -> b
+    void run() -> run
+com.nolanlawson.logcat.LogcatActivity$23 -> com.nolanlawson.logcat.w:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
     android.os.AsyncTask val$openFileTask -> b
     void run() -> run
-com.nolanlawson.logcat.LogcatActivity$23 -> com.nolanlawson.logcat.v:
-    com.nolanlawson.logcat.LogcatActivity this$0 -> a
-    void onClick(android.content.DialogInterface,int) -> onClick
 com.nolanlawson.logcat.LogcatActivity$24 -> com.nolanlawson.logcat.u:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
-    void run() -> run
-com.nolanlawson.logcat.LogcatActivity$25 -> com.nolanlawson.logcat.x:
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.nolanlawson.logcat.LogcatActivity$25 -> com.nolanlawson.logcat.y:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
     void run() -> run
-com.nolanlawson.logcat.LogcatActivity$26 -> com.nolanlawson.logcat.w:
+com.nolanlawson.logcat.LogcatActivity$26 -> com.nolanlawson.logcat.x:
+    com.nolanlawson.logcat.LogcatActivity this$0 -> a
+    void run() -> run
+com.nolanlawson.logcat.LogcatActivity$27 -> com.nolanlawson.logcat.b:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
     android.widget.EditText val$editText -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.nolanlawson.logcat.LogcatActivity$27 -> com.nolanlawson.logcat.b:
-    com.nolanlawson.logcat.LogcatActivity this$0 -> a
-    void onClick(android.content.DialogInterface,int) -> onClick
 com.nolanlawson.logcat.LogcatActivity$28 -> com.nolanlawson.logcat.c:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
-    void run() -> run
+    void onClick(android.content.DialogInterface,int) -> onClick
 com.nolanlawson.logcat.LogcatActivity$29 -> com.nolanlawson.logcat.a:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
-    com.nolanlawson.logcat.data.LogLine val$logLine -> b
-    void onClick(android.content.DialogInterface,int) -> onClick
-com.nolanlawson.logcat.LogcatActivity$3 -> com.nolanlawson.logcat.ai:
+    void run() -> run
+com.nolanlawson.logcat.LogcatActivity$3 -> com.nolanlawson.logcat.aj:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
     android.content.Intent val$data -> b
     void run() -> run
-com.nolanlawson.logcat.LogcatActivity$30 -> com.nolanlawson.logcat.d:
+com.nolanlawson.logcat.LogcatActivity$30 -> com.nolanlawson.logcat.f:
+    com.nolanlawson.logcat.LogcatActivity this$0 -> a
+    com.nolanlawson.logcat.data.LogLine val$logLine -> b
+    void onClick(android.content.DialogInterface,int) -> onClick
+com.nolanlawson.logcat.LogcatActivity$31 -> com.nolanlawson.logcat.d:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
     int val$color -> b
     void run() -> run
-com.nolanlawson.logcat.LogcatActivity$4 -> com.nolanlawson.logcat.ah:
+com.nolanlawson.logcat.LogcatActivity$4 -> com.nolanlawson.logcat.ai:
+    com.nolanlawson.logcat.LogcatActivity this$0 -> a
+    void run() -> run
+com.nolanlawson.logcat.LogcatActivity$5 -> com.nolanlawson.logcat.ah:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
     java.util.List doInBackground$68cf9880() -> a
     void onPostExecute(java.lang.Object) -> onPostExecute
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
-com.nolanlawson.logcat.LogcatActivity$4$1 -> com.nolanlawson.logcat.i:
-    com.nolanlawson.logcat.LogcatActivity$4 this$1 -> a
+com.nolanlawson.logcat.LogcatActivity$5$1 -> com.nolanlawson.logcat.p:
+    com.nolanlawson.logcat.LogcatActivity$5 this$1 -> a
     com.nolanlawson.logcat.data.FilterAdapter val$filterAdapter -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.nolanlawson.logcat.LogcatActivity$5 -> com.nolanlawson.logcat.ag:
+com.nolanlawson.logcat.LogcatActivity$6 -> com.nolanlawson.logcat.af:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
     android.widget.AutoCompleteTextView val$editText -> b
     com.nolanlawson.logcat.data.FilterAdapter val$filterAdapter -> c
     void onClick(android.content.DialogInterface,int) -> onClick
-com.nolanlawson.logcat.LogcatActivity$6 -> com.nolanlawson.logcat.ad:
+com.nolanlawson.logcat.LogcatActivity$7 -> com.nolanlawson.logcat.an:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
     android.widget.AutoCompleteTextView val$editText -> b
     com.nolanlawson.logcat.data.FilterAdapter val$filterAdapter -> c
     android.app.AlertDialog val$alertDialog -> d
     boolean onEditorAction(android.widget.TextView,int,android.view.KeyEvent) -> onEditorAction
-com.nolanlawson.logcat.LogcatActivity$7 -> com.nolanlawson.logcat.am:
+com.nolanlawson.logcat.LogcatActivity$8 -> com.nolanlawson.logcat.am:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
     java.lang.String val$trimmed -> b
     com.nolanlawson.logcat.data.FilterAdapter val$filterAdapter -> c
     com.nolanlawson.logcat.db.FilterItem doInBackground$7853f5aa() -> a
     void onPostExecute(java.lang.Object) -> onPostExecute
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
-com.nolanlawson.logcat.LogcatActivity$8 -> com.nolanlawson.logcat.ak:
+com.nolanlawson.logcat.LogcatActivity$9 -> com.nolanlawson.logcat.ak:
     com.nolanlawson.logcat.LogcatActivity this$0 -> a
     android.widget.CheckBox val$checkBox -> b
     void onClick(android.content.DialogInterface,int) -> onClick
-com.nolanlawson.logcat.LogcatActivity$9 -> com.nolanlawson.logcat.aj:
-    com.nolanlawson.logcat.LogcatActivity this$0 -> a
-    com.nolanlawson.logcat.data.LogFileAdapter val$dropdownAdapter -> b
-    java.lang.CharSequence[] val$filenameArray -> c
-    void onClick(android.content.DialogInterface,int) -> onClick
-com.nolanlawson.logcat.LogcatActivity$LogReaderAsyncTask -> com.nolanlawson.logcat.g:
+com.nolanlawson.logcat.LogcatActivity$LogReaderAsyncTask -> com.nolanlawson.logcat.h:
     int counter -> a
     boolean paused -> b
     java.lang.Object lock -> c
@@ -309,10 +319,10 @@ com.nolanlawson.logcat.LogcatRecordingService -> com.nolanlawson.logcat.LogcatRe
     void makeToast(int,int) -> a
     void killProcess() -> a
     void access$1(com.nolanlawson.logcat.LogcatRecordingService) -> a
-com.nolanlawson.logcat.LogcatRecordingService$1 -> com.nolanlawson.logcat.t:
+com.nolanlawson.logcat.LogcatRecordingService$1 -> com.nolanlawson.logcat.v:
     com.nolanlawson.logcat.LogcatRecordingService this$0 -> a
     void onReceive(android.content.Context,android.content.Intent) -> onReceive
-com.nolanlawson.logcat.LogcatRecordingService$2 -> com.nolanlawson.logcat.aa:
+com.nolanlawson.logcat.LogcatRecordingService$2 -> com.nolanlawson.logcat.ac:
     com.nolanlawson.logcat.LogcatRecordingService this$0 -> a
     int val$stringResId -> b
     int val$toastLength -> c
@@ -335,10 +345,10 @@ com.nolanlawson.logcat.SettingsActivity -> com.nolanlawson.logcat.SettingsActivi
     boolean onPreferenceChange(android.preference.Preference,java.lang.Object) -> onPreferenceChange
     boolean onKeyDown(int,android.view.KeyEvent) -> onKeyDown
     void setBufferPreferenceSummary(java.lang.String) -> a
-com.nolanlawson.logcat.SettingsActivity$1 -> com.nolanlawson.logcat.ar:
+com.nolanlawson.logcat.SettingsActivity$1 -> com.nolanlawson.logcat.at:
     com.nolanlawson.logcat.SettingsActivity this$0 -> a
     boolean onPreferenceClick(android.preference.Preference) -> onPreferenceClick
-com.nolanlawson.logcat.SettingsActivity$2 -> com.nolanlawson.logcat.aq:
+com.nolanlawson.logcat.SettingsActivity$2 -> com.nolanlawson.logcat.as:
     com.nolanlawson.logcat.SettingsActivity this$0 -> a
     boolean onPreferenceClick(android.preference.Preference) -> onPreferenceClick
 com.nolanlawson.logcat.ShowRecordLogDialogActivity -> com.nolanlawson.logcat.ShowRecordLogDialogActivity:
@@ -355,19 +365,19 @@ com.nolanlawson.logcat.ShowRecordLogDialogActivity$1$1 -> com.nolanlawson.logcat
     java.lang.StringBuilder val$queryFilterText -> b
     java.lang.StringBuilder val$logLevelText -> c
     void onCallback(java.lang.Object) -> a
-com.nolanlawson.logcat.ShowRecordLogDialogActivity$2 -> com.nolanlawson.logcat.af:
+com.nolanlawson.logcat.ShowRecordLogDialogActivity$2 -> com.nolanlawson.logcat.ag:
     com.nolanlawson.logcat.ShowRecordLogDialogActivity this$0 -> a
     android.widget.EditText val$editText -> b
     java.lang.StringBuilder val$queryFilterText -> c
     java.lang.StringBuilder val$logLevelText -> d
     void onClick(android.view.View) -> onClick
-com.nolanlawson.logcat.ShowRecordLogDialogActivity$2$1 -> com.nolanlawson.logcat.f:
+com.nolanlawson.logcat.ShowRecordLogDialogActivity$2$1 -> com.nolanlawson.logcat.g:
     com.nolanlawson.logcat.ShowRecordLogDialogActivity$2 this$1 -> a
     void run() -> run
 com.nolanlawson.logcat.ShowRecordLogDialogActivity$3 -> com.nolanlawson.logcat.al:
     com.nolanlawson.logcat.ShowRecordLogDialogActivity this$0 -> a
     void onClick(android.view.View) -> onClick
-com.nolanlawson.logcat.data.ColorScheme -> com.nolanlawson.logcat.data.p:
+com.nolanlawson.logcat.data.ColorScheme -> com.nolanlawson.logcat.data.q:
     com.nolanlawson.logcat.data.ColorScheme Dark -> a
     com.nolanlawson.logcat.data.ColorScheme Light -> b
     com.nolanlawson.logcat.data.ColorScheme Android -> c
@@ -413,7 +423,7 @@ com.nolanlawson.logcat.data.FilterAdapter$1 -> com.nolanlawson.logcat.data.c:
     com.nolanlawson.logcat.data.FilterAdapter this$0 -> a
     com.nolanlawson.logcat.db.FilterItem val$filterItem -> b
     void onClick(android.view.View) -> onClick
-com.nolanlawson.logcat.data.FilterQueryWithLevel -> com.nolanlawson.logcat.data.o:
+com.nolanlawson.logcat.data.FilterQueryWithLevel -> com.nolanlawson.logcat.data.p:
     java.lang.String filterQuery -> a
     java.lang.String logLevel -> b
     java.lang.String getFilterQuery() -> a
@@ -502,6 +512,13 @@ com.nolanlawson.logcat.data.LogLineViewWrapper -> com.nolanlawson.logcat.data.f:
     android.widget.TextView getTagTextView() -> c
     android.widget.TextView getLevelTextView() -> d
     android.widget.TextView getOutputTextView() -> e
+com.nolanlawson.logcat.data.SavedLog -> com.nolanlawson.logcat.data.o:
+    java.util.List logLines -> a
+    boolean truncated -> b
+    void setLogLines(java.util.List) -> a
+    void setTruncated(boolean) -> a
+    java.util.List getLogLines() -> a
+    boolean isTruncated() -> b
 com.nolanlawson.logcat.data.SearchCriteria -> com.nolanlawson.logcat.data.g:
     java.util.regex.Pattern PID_PATTERN -> a
     java.util.regex.Pattern TAG_PATTERN -> b
@@ -607,18 +624,18 @@ com.nolanlawson.logcat.db.FilterItem -> com.nolanlawson.logcat.c.b:
     java.lang.String access$1(com.nolanlawson.logcat.db.FilterItem) -> a
 com.nolanlawson.logcat.db.FilterItem$1 -> com.nolanlawson.logcat.c.a:
     int compare(java.lang.Object,java.lang.Object) -> compare
-com.nolanlawson.logcat.helper.BuildHelper -> com.nolanlawson.logcat.b.k:
+com.nolanlawson.logcat.helper.BuildHelper -> com.nolanlawson.logcat.b.j:
     java.util.List BUILD_FIELDS -> a
     java.util.List BUILD_VERSION_FIELDS -> b
     java.lang.String getBuildInformationAsString() -> a
     void putKeyValue(java.lang.Class,java.lang.String,java.util.SortedMap) -> a
-com.nolanlawson.logcat.helper.DialogHelper -> com.nolanlawson.logcat.b.d:
+com.nolanlawson.logcat.helper.DialogHelper -> com.nolanlawson.logcat.b.c:
     void startRecordingWithProgressDialog(java.lang.String,java.lang.String,java.lang.String,java.lang.Runnable,android.content.Context) -> a
     boolean isInvalidFilename(java.lang.CharSequence) -> a
     void showFilterDialogForRecording(android.content.Context,java.lang.String,java.lang.String,java.util.List,com.nolanlawson.logcat.util.Callback) -> a
     android.widget.EditText createEditTextForFilenameSuggestingDialog(android.content.Context) -> a
     void showFilenameSuggestingDialog$3d856522(android.content.Context,android.widget.EditText,android.content.DialogInterface$OnClickListener,android.content.DialogInterface$OnClickListener) -> a
-com.nolanlawson.logcat.helper.DialogHelper$1 -> com.nolanlawson.logcat.b.g:
+com.nolanlawson.logcat.helper.DialogHelper$1 -> com.nolanlawson.logcat.b.f:
     android.app.ProgressDialog val$progressDialog -> a
     android.content.Context val$context -> b
     java.lang.String val$filename -> c
@@ -628,28 +645,26 @@ com.nolanlawson.logcat.helper.DialogHelper$1 -> com.nolanlawson.logcat.b.g:
     void onPreExecute() -> onPreExecute
     void onPostExecute(java.lang.Object) -> onPostExecute
     java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
-com.nolanlawson.logcat.helper.DialogHelper$2 -> com.nolanlawson.logcat.b.h:
+com.nolanlawson.logcat.helper.DialogHelper$2 -> com.nolanlawson.logcat.b.g:
     android.widget.Spinner val$spinner -> a
     android.content.Context val$context -> b
     android.widget.AutoCompleteTextView val$autoCompleteTextView -> c
     com.nolanlawson.logcat.util.Callback val$callback -> d
     void onClick(android.content.DialogInterface,int) -> onClick
-com.nolanlawson.logcat.helper.DialogHelper$3 -> com.nolanlawson.logcat.b.i:
+com.nolanlawson.logcat.helper.DialogHelper$3 -> com.nolanlawson.logcat.b.h:
     android.content.Context val$context -> a
     android.widget.EditText val$editText -> b
     boolean onEditorAction(android.widget.TextView,int,android.view.KeyEvent) -> onEditorAction
-com.nolanlawson.logcat.helper.DonateHelper -> com.nolanlawson.logcat.b.b:
-    boolean isDonateVersionInstalled(android.content.Context) -> a
 com.nolanlawson.logcat.helper.LogcatHelper -> com.nolanlawson.logcat.b.a:
     com.nolanlawson.logcat.util.UtilLogger log -> a
     java.lang.Process getLogcatProcess(java.lang.String) -> a
     java.util.List getLogcatArgs(java.lang.String) -> c
     java.lang.String getLastLogLine(java.lang.String) -> b
-com.nolanlawson.logcat.helper.PackageHelper -> com.nolanlawson.logcat.b.q:
+com.nolanlawson.logcat.helper.PackageHelper -> com.nolanlawson.logcat.b.p:
     com.nolanlawson.logcat.util.UtilLogger log -> a
     boolean isCatlogDonateInstalled(android.content.Context) -> a
     java.lang.String getVersionName(android.content.Context) -> b
-com.nolanlawson.logcat.helper.PreferenceHelper -> com.nolanlawson.logcat.b.j:
+com.nolanlawson.logcat.helper.PreferenceHelper -> com.nolanlawson.logcat.b.i:
     java.util.Map ellipsisLengthsCache -> a
     float textSize -> b
     java.lang.Character defaultLogLevel -> c
@@ -678,7 +693,7 @@ com.nolanlawson.logcat.helper.PreferenceHelper -> com.nolanlawson.logcat.b.j:
     java.util.List getBufferNames(android.content.Context) -> m
     boolean getIncludeDeviceInfoPreference(android.content.Context) -> n
     void setIncludeDeviceInfoPreference(android.content.Context,boolean) -> a
-com.nolanlawson.logcat.helper.SaveLogHelper -> com.nolanlawson.logcat.b.s:
+com.nolanlawson.logcat.helper.SaveLogHelper -> com.nolanlawson.logcat.b.r:
     com.nolanlawson.logcat.util.UtilLogger log -> a
     java.io.File saveTemporaryFile$648438bb(java.lang.String,java.lang.CharSequence,java.util.List) -> a
     boolean checkSdCard(android.content.Context) -> a
@@ -687,7 +702,7 @@ com.nolanlawson.logcat.helper.SaveLogHelper -> com.nolanlawson.logcat.b.s:
     void deleteLogIfExists(java.lang.String) -> b
     java.util.Date getLastModifiedDate(java.lang.String) -> c
     java.util.List getLogFilenames() -> b
-    java.util.List openLog(java.lang.String) -> d
+    com.nolanlawson.logcat.data.SavedLog openLog(java.lang.String,int) -> a
     boolean saveLog(java.lang.CharSequence,java.lang.String) -> a
     boolean saveLog(java.util.List,java.lang.String) -> a
     boolean saveLog(java.util.List,java.lang.CharSequence,java.lang.String) -> a
@@ -699,18 +714,18 @@ com.nolanlawson.logcat.helper.SaveLogHelper -> com.nolanlawson.logcat.b.s:
     java.io.File saveTemporaryZipFile(java.lang.String,java.util.List) -> a
     java.io.File saveTemporaryZipFileAndThrow(java.lang.String,java.util.List) -> b
     long copy(java.io.InputStream,java.io.OutputStream) -> a
-com.nolanlawson.logcat.helper.SaveLogHelper$1 -> com.nolanlawson.logcat.b.r:
+com.nolanlawson.logcat.helper.SaveLogHelper$1 -> com.nolanlawson.logcat.b.q:
     int compare(java.lang.Object,java.lang.Object) -> compare
-com.nolanlawson.logcat.helper.ServiceHelper -> com.nolanlawson.logcat.b.p:
+com.nolanlawson.logcat.helper.ServiceHelper -> com.nolanlawson.logcat.b.o:
     com.nolanlawson.logcat.util.UtilLogger log -> a
     void startOrStopCrazyLogger(android.content.Context) -> a
     void stopBackgroundServiceIfRunning(android.content.Context) -> b
     void startBackgroundServiceIfNotAlreadyRunning(android.content.Context,java.lang.String,java.lang.String,java.lang.String) -> a
     boolean checkIfServiceIsRunning(android.content.Context,java.lang.Class) -> a
-com.nolanlawson.logcat.helper.UpdateHelper -> com.nolanlawson.logcat.b.e:
+com.nolanlawson.logcat.helper.UpdateHelper -> com.nolanlawson.logcat.b.d:
     boolean areUpdatesNecessary(android.content.Context) -> a
     void runUpdatesIfNecessary(android.content.Context) -> b
-com.nolanlawson.logcat.helper.UpdateHelper$Update -> com.nolanlawson.logcat.b.c:
+com.nolanlawson.logcat.helper.UpdateHelper$Update -> com.nolanlawson.logcat.b.b:
     com.nolanlawson.logcat.helper.UpdateHelper$Update Update1 -> a
     com.nolanlawson.logcat.helper.UpdateHelper$Update Update2 -> b
     com.nolanlawson.logcat.util.Function isNecessary -> c
@@ -720,15 +735,15 @@ com.nolanlawson.logcat.helper.UpdateHelper$Update -> com.nolanlawson.logcat.b.c:
     com.nolanlawson.logcat.util.Callback getRunUpdate() -> b
     com.nolanlawson.logcat.helper.UpdateHelper$Update[] values() -> values
     com.nolanlawson.logcat.helper.UpdateHelper$Update valueOf(java.lang.String) -> valueOf
-com.nolanlawson.logcat.helper.UpdateHelper$Update$1 -> com.nolanlawson.logcat.b.m:
+com.nolanlawson.logcat.helper.UpdateHelper$Update$1 -> com.nolanlawson.logcat.b.l:
     java.lang.Object apply(java.lang.Object) -> a
-com.nolanlawson.logcat.helper.UpdateHelper$Update$2 -> com.nolanlawson.logcat.b.l:
+com.nolanlawson.logcat.helper.UpdateHelper$Update$2 -> com.nolanlawson.logcat.b.k:
     void onCallback(java.lang.Object) -> a
-com.nolanlawson.logcat.helper.UpdateHelper$Update$3 -> com.nolanlawson.logcat.b.o:
+com.nolanlawson.logcat.helper.UpdateHelper$Update$3 -> com.nolanlawson.logcat.b.n:
     java.lang.Object apply(java.lang.Object) -> a
-com.nolanlawson.logcat.helper.UpdateHelper$Update$4 -> com.nolanlawson.logcat.b.n:
+com.nolanlawson.logcat.helper.UpdateHelper$Update$4 -> com.nolanlawson.logcat.b.m:
     void onCallback(java.lang.Object) -> a
-com.nolanlawson.logcat.helper.WidgetHelper -> com.nolanlawson.logcat.b.f:
+com.nolanlawson.logcat.helper.WidgetHelper -> com.nolanlawson.logcat.b.e:
     com.nolanlawson.logcat.util.UtilLogger log -> a
     void updateWidgets(android.content.Context) -> a
     void updateWidgets$1a552341(android.content.Context) -> b
@@ -747,7 +762,7 @@ com.nolanlawson.logcat.reader.LogcatReaderLoader -> com.nolanlawson.logcat.reade
     boolean multiple -> c
     android.os.Parcelable$Creator CREATOR -> CREATOR
     com.nolanlawson.logcat.reader.LogcatReader loadReader() -> a
-    com.nolanlawson.logcat.reader.LogcatReaderLoader create(android.content.Context,boolean) -> a
+    com.nolanlawson.logcat.reader.LogcatReaderLoader create$4c2e95c8(android.content.Context) -> a
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
 com.nolanlawson.logcat.reader.LogcatReaderLoader$1 -> com.nolanlawson.logcat.reader.d:
@@ -781,7 +796,6 @@ com.nolanlawson.logcat.reader.SingleLogcatReader -> com.nolanlawson.logcat.reade
     java.lang.String lastLine -> f
     void killQuietly() -> c
     java.lang.String readLine() -> a
-    boolean isDatedLogLine(java.lang.String) -> a
     boolean readyToRecord() -> b
 com.nolanlawson.logcat.util.ArrayUtil -> com.nolanlawson.logcat.a.c:
     int indexOf(java.lang.Object[],java.lang.Object) -> a
