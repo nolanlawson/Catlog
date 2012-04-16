@@ -796,6 +796,7 @@ com.nolanlawson.logcat.reader.SingleLogcatReader -> com.nolanlawson.logcat.reade
     java.lang.String lastLine -> f
     void killQuietly() -> c
     java.lang.String readLine() -> a
+    boolean isDatedLogLine(java.lang.String) -> a
     boolean readyToRecord() -> b
 com.nolanlawson.logcat.util.ArrayUtil -> com.nolanlawson.logcat.a.c:
     int indexOf(java.lang.Object[],java.lang.Object) -> a
