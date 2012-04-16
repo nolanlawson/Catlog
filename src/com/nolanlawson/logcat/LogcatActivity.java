@@ -1798,8 +1798,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 				LogcatReaderLoader loader = LogcatReaderLoader.create(LogcatActivity.this, true);
 				reader = loader.loadReader();
 				
+				int maxLines = PreferenceHelper.getDisplayLimitPreference(LogcatActivity.this);
+				
 				String line;
-				List<LogLine> initialLines = new LinkedList<LogLine>();
+				LinkedList<LogLine> initialLines = new LinkedList<LogLine>();
 				while ((line = reader.readLine()) != null) {
 					if (paused) {
 						synchronized (lock) {
@@ -1812,6 +1814,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 					if (!reader.readyToRecord()) {
 						// "ready to record" in this case means all the initial lines have been flushed from the reader
 						initialLines.add(logLine);
+						if (initialLines.size() > maxLines) {
+							initialLines.removeFirst();
+						}
 					} else if (!initialLines.isEmpty()) {
 						// flush all the initial lines we've loaded
 						initialLines.add(logLine);
