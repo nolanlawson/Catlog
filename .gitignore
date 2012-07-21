@@ -1,6 +1,6 @@
 bin
 gen
 *~
-proguard/dump.txt
-proguard/seeds.txt
-proguard/usage.txt
+**/proguard/dump.txt
+**/proguard/seeds.txt
+**/proguard/usage.txt
