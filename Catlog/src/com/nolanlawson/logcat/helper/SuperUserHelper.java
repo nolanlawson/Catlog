@@ -20,6 +20,8 @@ public class SuperUserHelper {
 	
 	private static UtilLogger log = new UtilLogger(SuperUserHelper.class);
 	
+	private static boolean failedToObtainRoot = false;
+	
 	private static void showToast(final Context context, final int resId) {
 		Handler handler = new Handler(Looper.getMainLooper());
 		
@@ -52,6 +54,7 @@ public class SuperUserHelper {
 			process.waitFor();
 			if (process.exitValue() != 0) {
 				showToast(context, R.string.toast_no_root);
+				failedToObtainRoot = true;
 			} else {
 				// success
                 PreferenceHelper.setJellybeanRootRan(context);
@@ -60,10 +63,16 @@ public class SuperUserHelper {
 		} catch (IOException e) {
 			log.w(e, "Cannot obtain root");
 			showToast(context, R.string.toast_no_root);
+			failedToObtainRoot = true;
 		} catch (InterruptedException e) {
 			log.w(e, "Cannot obtain root");
 			showToast(context, R.string.toast_no_root);
+			failedToObtainRoot = true;
 		}
 
+	}
+	
+	public static boolean isFailedToObtainRoot() {
+		return failedToObtainRoot;
 	}
 }

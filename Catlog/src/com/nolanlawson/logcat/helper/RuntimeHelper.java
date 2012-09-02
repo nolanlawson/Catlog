@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.List;
 
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import com.nolanlawson.logcat.util.ArrayUtil;
@@ -21,10 +22,9 @@ public class RuntimeHelper {
 	 * @param args
 	 */
 	public static Process exec(List<String> args) throws IOException {
-		
 		// since JellyBean, sudo is required to read other apps' logs
-		boolean requireSu = VersionHelper.getVersionSdkIntCompat() >= VersionHelper.VERSION_JELLYBEAN;
-		if (requireSu) {
+		if (VersionHelper.getVersionSdkIntCompat() >= VersionHelper.VERSION_JELLYBEAN
+				&& !SuperUserHelper.isFailedToObtainRoot()) {
 			Process process = Runtime.getRuntime().exec("su");
 			
 			PrintStream outputStream = null;
@@ -39,8 +39,6 @@ public class RuntimeHelper {
 			}
 			
 			return process;
-			/*args = Arrays.asList("su", "-c" , TextUtils.join(" ", args));
-			return Runtime.getRuntime().exec(ArrayUtil.toArray(args, String.class));*/
 		}
 		return Runtime.getRuntime().exec(ArrayUtil.toArray(args, String.class));
 	}
