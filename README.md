@@ -1,5 +1,6 @@
 CatLog
 =========
+Graphical log reader for Android.
 
 Author
 ======
