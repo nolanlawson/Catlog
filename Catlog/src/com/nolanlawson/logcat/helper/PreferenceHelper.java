@@ -42,6 +42,28 @@ public class PreferenceHelper {
 		displayLimit = -1;
 	}	
 	
+	/**
+	 * Record that we managed to get root in JellyBean.
+	 * @param context
+	 * @return
+	 */
+	public static void setJellybeanRootRan(Context context) {
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        Editor editor = sharedPrefs.edit();
+        editor.putBoolean(context.getString(R.string.pref_ran_jellybean_su_update), true);
+        editor.commit();
+	}
+	
+	/**
+	 * Return true if we have root in jelly bean.
+	 * @param context
+	 * @return
+	 */
+	public static boolean getJellybeanRootRan(Context context) {
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+		return sharedPrefs.getBoolean(context.getString(R.string.pref_ran_jellybean_su_update), false);
+	}
+	
 	public static boolean getWidgetExistsPreference(Context context, int appWidgetId) {
 		
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
