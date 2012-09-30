@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.List;
 
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import com.nolanlawson.logcat.util.ArrayUtil;
+import com.nolanlawson.logcat.util.UtilLogger;
 
 /**
  * Helper functions for running processes.
@@ -16,6 +16,8 @@ import com.nolanlawson.logcat.util.ArrayUtil;
  *
  */
 public class RuntimeHelper {
+    
+    private static UtilLogger log = new UtilLogger(RuntimeHelper.class);
 	
 	/**
 	 * Exec the arguments, using root if necessary.
@@ -41,6 +43,16 @@ public class RuntimeHelper {
 			return process;
 		}
 		return Runtime.getRuntime().exec(ArrayUtil.toArray(args, String.class));
+	}
+	
+	public static void destroy(Process process) {
+	    // if we're in JellyBean, then we need to kill the process as root, which requires all this
+	    // extra UnixProcess logic
+	    if (VersionHelper.getVersionSdkIntCompat() >= VersionHelper.VERSION_JELLYBEAN) {
+	       SuperUserHelper.destroy(process);
+	    } else {
+	        process.destroy();
+	    }
 	}
 	
 }
