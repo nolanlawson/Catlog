@@ -1,9 +1,14 @@
 package com.nolanlawson.logcat.helper;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,6 +32,7 @@ public class SuperUserHelper {
 	private static boolean failedToObtainRoot = false;
 	
 	private static final Pattern PID_PATTERN = Pattern.compile("\\d+");
+	private static final Pattern SPACES_PATTERN = Pattern.compile("\\s+");
 	
 	private static void showToast(final Context context, final int resId) {
 		Handler handler = new Handler(Looper.getMainLooper());
@@ -40,24 +46,85 @@ public class SuperUserHelper {
 			}});
 	}
 	
+	private static List<Integer> getAllRelatedPids(final int pid) {
+	    final String pidAsString = Integer.toString(pid);
+	    List<Integer> result = new ArrayList<Integer>(Arrays.asList(pid));
+	    // use 'ps' to get this pid and all pids that are related to it (e.g. spawned by it)
+        try {
+                
+            final Process suProcess = Runtime.getRuntime().exec("su");
+    
+            new Thread(new Runnable() {
+                
+                @Override
+                public void run() {
+                    PrintStream outputStream = null;
+                    try {
+                        outputStream = new PrintStream(new BufferedOutputStream(suProcess.getOutputStream(), 8192));
+                        outputStream.println("ps");
+                        outputStream.flush();
+                    } finally {
+                        if (outputStream != null) {
+                            outputStream.close();
+                        }
+                    }
+                    
+                }
+            }).run();
+            
+            
+            BufferedReader bufferedReader = null;
+            try {
+                bufferedReader = new BufferedReader(new InputStreamReader(suProcess.getInputStream()), 8192);
+                while (bufferedReader.ready()) {
+                    String[] line = SPACES_PATTERN.split(bufferedReader.readLine());
+                    if (line.length >= 3 ) {
+                        if (pidAsString.equals(line[2])) {
+                            result.add(Integer.parseInt(line[1]));
+                        } else if (pidAsString.equals(line[1])) {
+                            result.add(Integer.parseInt(line[2]));
+                        }
+                    }
+                }
+            } finally {
+                if (bufferedReader != null) {
+                    bufferedReader.close();
+                }
+            }
+        } catch (IOException e1) {
+            log.e(e1, "cannot get process ids");
+        }
+        
+        return result;
+	}
+	
 	public static void destroy(Process process) {
 	    // stupid method for getting the pid, but it actually works
 	    Matcher matcher = PID_PATTERN.matcher(process.toString());
 	    matcher.find();
 	    int pid = Integer.parseInt(matcher.group());
+	    List<Integer> allRelatedPids = getAllRelatedPids(pid);
+	    log.e("Killing %s", allRelatedPids);
+	    for (Integer relatedPid : allRelatedPids) {
+	        destroyPid(relatedPid);
+	    }
         
-        Process suProcess2;
-        PrintStream outputStream2 = null;
+	}
+	
+	private static void destroyPid(int pid) {
+
+        Process suProcess;
+        PrintStream outputStream = null;
         try {
-            suProcess2 = Runtime.getRuntime().exec("su");
-            outputStream2 = new PrintStream(new BufferedOutputStream(suProcess2.getOutputStream(), 8192));
-            outputStream2.println("kill " + pid);
-            outputStream2.flush();
+            suProcess = Runtime.getRuntime().exec("su");
+            outputStream = new PrintStream(new BufferedOutputStream(suProcess.getOutputStream(), 8192));
+            outputStream.println("kill " + pid);
+            outputStream.flush();
         } catch (IOException e) {
-            log.e(e, "cannot kill process " + process);
+            log.e(e, "cannot kill process " + pid);
         } finally {
-            if (outputStream2 != null) {
-                outputStream2.close();
+            if (outputStream != null) {
+                outputStream.close();
             }
         }
 	}
