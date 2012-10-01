@@ -705,6 +705,7 @@ com.nolanlawson.logcat.helper.PreferenceHelper -> com.nolanlawson.logcat.b.h:
     void setIncludeDeviceInfoPreference(android.content.Context,boolean) -> a
 com.nolanlawson.logcat.helper.RuntimeHelper -> com.nolanlawson.logcat.b.i:
     java.lang.Process exec(java.util.List) -> a
+    void destroy(java.lang.Process) -> a
 com.nolanlawson.logcat.helper.SaveLogHelper -> com.nolanlawson.logcat.b.j:
     com.nolanlawson.logcat.util.UtilLogger log -> a
     java.io.File saveTemporaryFile$648438bb(java.lang.String,java.lang.CharSequence,java.util.List) -> a
@@ -737,17 +738,24 @@ com.nolanlawson.logcat.helper.ServiceHelper -> com.nolanlawson.logcat.b.l:
 com.nolanlawson.logcat.helper.SuperUserHelper -> com.nolanlawson.logcat.b.m:
     com.nolanlawson.logcat.util.UtilLogger log -> a
     boolean failedToObtainRoot -> b
+    java.util.regex.Pattern PID_PATTERN -> c
+    java.util.regex.Pattern SPACES_PATTERN -> d
     void showToast(android.content.Context,int) -> a
+    java.util.List getAllRelatedPids(int) -> a
+    void destroy(java.lang.Process) -> a
     void requestRoot(android.content.Context) -> a
     boolean isFailedToObtainRoot() -> a
 com.nolanlawson.logcat.helper.SuperUserHelper$1 -> com.nolanlawson.logcat.b.n:
     android.content.Context val$context -> a
     int val$resId -> b
     void run() -> run
-com.nolanlawson.logcat.helper.UpdateHelper -> com.nolanlawson.logcat.b.o:
+com.nolanlawson.logcat.helper.SuperUserHelper$2 -> com.nolanlawson.logcat.b.o:
+    java.lang.Process val$suProcess -> a
+    void run() -> run
+com.nolanlawson.logcat.helper.UpdateHelper -> com.nolanlawson.logcat.b.p:
     boolean areUpdatesNecessary(android.content.Context) -> a
     void runUpdatesIfNecessary(android.content.Context) -> b
-com.nolanlawson.logcat.helper.UpdateHelper$Update -> com.nolanlawson.logcat.b.p:
+com.nolanlawson.logcat.helper.UpdateHelper$Update -> com.nolanlawson.logcat.b.q:
     com.nolanlawson.logcat.helper.UpdateHelper$Update Update1 -> a
     com.nolanlawson.logcat.helper.UpdateHelper$Update Update2 -> b
     com.nolanlawson.logcat.helper.UpdateHelper$Update Update3 -> c
@@ -758,24 +766,24 @@ com.nolanlawson.logcat.helper.UpdateHelper$Update -> com.nolanlawson.logcat.b.p:
     com.nolanlawson.logcat.util.Callback getRunUpdate() -> b
     com.nolanlawson.logcat.helper.UpdateHelper$Update[] values() -> values
     com.nolanlawson.logcat.helper.UpdateHelper$Update valueOf(java.lang.String) -> valueOf
-com.nolanlawson.logcat.helper.UpdateHelper$Update$1 -> com.nolanlawson.logcat.b.q:
+com.nolanlawson.logcat.helper.UpdateHelper$Update$1 -> com.nolanlawson.logcat.b.r:
     java.lang.Object apply(java.lang.Object) -> a
-com.nolanlawson.logcat.helper.UpdateHelper$Update$2 -> com.nolanlawson.logcat.b.r:
+com.nolanlawson.logcat.helper.UpdateHelper$Update$2 -> com.nolanlawson.logcat.b.s:
     void onCallback(java.lang.Object) -> a
-com.nolanlawson.logcat.helper.UpdateHelper$Update$3 -> com.nolanlawson.logcat.b.s:
+com.nolanlawson.logcat.helper.UpdateHelper$Update$3 -> com.nolanlawson.logcat.b.t:
     java.lang.Object apply(java.lang.Object) -> a
-com.nolanlawson.logcat.helper.UpdateHelper$Update$4 -> com.nolanlawson.logcat.b.t:
+com.nolanlawson.logcat.helper.UpdateHelper$Update$4 -> com.nolanlawson.logcat.b.u:
     void onCallback(java.lang.Object) -> a
-com.nolanlawson.logcat.helper.UpdateHelper$Update$5 -> com.nolanlawson.logcat.b.u:
+com.nolanlawson.logcat.helper.UpdateHelper$Update$5 -> com.nolanlawson.logcat.b.v:
     java.lang.Object apply(java.lang.Object) -> a
-com.nolanlawson.logcat.helper.UpdateHelper$Update$6 -> com.nolanlawson.logcat.b.v:
+com.nolanlawson.logcat.helper.UpdateHelper$Update$6 -> com.nolanlawson.logcat.b.w:
     void onCallback(java.lang.Object) -> a
-com.nolanlawson.logcat.helper.VersionHelper -> com.nolanlawson.logcat.b.w:
+com.nolanlawson.logcat.helper.VersionHelper -> com.nolanlawson.logcat.b.x:
     java.lang.reflect.Field sdkIntField -> a
     boolean fetchedSdkIntField -> b
     int getVersionSdkIntCompat() -> a
     java.lang.reflect.Field getSdkIntField() -> b
-com.nolanlawson.logcat.helper.WidgetHelper -> com.nolanlawson.logcat.b.x:
+com.nolanlawson.logcat.helper.WidgetHelper -> com.nolanlawson.logcat.b.y:
     com.nolanlawson.logcat.util.UtilLogger log -> a
     void updateWidgets(android.content.Context) -> a
     void updateWidgets$1a552341(android.content.Context) -> b
