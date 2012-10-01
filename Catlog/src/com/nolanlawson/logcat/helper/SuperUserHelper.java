@@ -62,6 +62,7 @@ public class SuperUserHelper {
                     try {
                         outputStream = new PrintStream(new BufferedOutputStream(suProcess.getOutputStream(), 8192));
                         outputStream.println("ps");
+                        outputStream.println("exit");
                         outputStream.flush();
                     } finally {
                         if (outputStream != null) {
@@ -72,6 +73,14 @@ public class SuperUserHelper {
                 }
             }).run();
             
+            if (suProcess != null) {
+                try {
+                    suProcess.waitFor();
+                } catch (InterruptedException e) {
+                    log.e(e, "cannot get pids");
+                }
+            }
+            
             
             BufferedReader bufferedReader = null;
             try {
@@ -81,8 +90,6 @@ public class SuperUserHelper {
                     if (line.length >= 3 ) {
                         if (pidAsString.equals(line[2])) {
                             result.add(Integer.parseInt(line[1]));
-                        } else if (pidAsString.equals(line[1])) {
-                            result.add(Integer.parseInt(line[2]));
                         }
                     }
                 }
@@ -104,7 +111,7 @@ public class SuperUserHelper {
 	    matcher.find();
 	    int pid = Integer.parseInt(matcher.group());
 	    List<Integer> allRelatedPids = getAllRelatedPids(pid);
-	    log.e("Killing %s", allRelatedPids);
+	    log.d("Killing %s", allRelatedPids);
 	    for (Integer relatedPid : allRelatedPids) {
 	        destroyPid(relatedPid);
 	    }
@@ -113,18 +120,26 @@ public class SuperUserHelper {
 	
 	private static void destroyPid(int pid) {
 
-        Process suProcess;
+        Process suProcess = null;
         PrintStream outputStream = null;
         try {
             suProcess = Runtime.getRuntime().exec("su");
             outputStream = new PrintStream(new BufferedOutputStream(suProcess.getOutputStream(), 8192));
             outputStream.println("kill " + pid);
+            outputStream.println("exit");
             outputStream.flush();
         } catch (IOException e) {
             log.e(e, "cannot kill process " + pid);
         } finally {
             if (outputStream != null) {
                 outputStream.close();
+            }
+            if (suProcess != null) {
+                try {
+                    suProcess.waitFor();
+                } catch (InterruptedException e) {
+                    log.e(e, "cannot kill process " + pid);
+                }
             }
         }
 	}
