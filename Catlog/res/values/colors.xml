@@ -60,60 +60,67 @@
 	<color name="foreground_info">#FF333333</color>
 	<color name="foreground_warn">#FF333333</color>
 
-	<!-- Android color FTW -->
-	<color name="tag_color_01">#FFA4C639</color>
-	<color name="tag_color_02">#FF3366FF</color>
-	<color name="tag_color_03">#FFCC9900</color>
-	<color name="tag_color_04">#FFCC0000</color>
-	<color name="tag_color_05">#FFCCCCCC</color>
-	<color name="tag_color_06">#FF990099</color>
-	<color name="tag_color_07">#FF00CC00</color>
-	<color name="tag_color_08">#FF66CCFF</color>
-	<color name="tag_color_09">#FF00CC99</color>
-	<color name="tag_color_10">#FFFF6633</color>
-	<color name="tag_color_11">#FFFFFFFF</color>
-	<color name="tag_color_12">#FFCCCCFF</color>
-	<color name="tag_color_13">#FFFFFF00</color>
-	<color name="tag_color_14">#FF0099CC</color>
-	<color name="tag_color_15">#FF999900</color>
-	<color name="tag_color_16">#FFCC3399</color>
-	<color name="tag_color_17">#FFFFCC99</color>
+	<!--  generated with saturation/brightness 0.7/0.95 -->
+	<color name="tag_color_01">#FF4965f2</color>
+	<color name="tag_color_02">#FF96f249</color>
+	<color name="tag_color_03">#FFf249c8</color>
+	<color name="tag_color_04">#FF49f2eb</color>
+	<color name="tag_color_05">#FFf2ba49</color>
+	<color name="tag_color_06">#FF8849f2</color>
+	<color name="tag_color_07">#FF49f257</color>
+	<color name="tag_color_08">#FFf2496c</color>
+	<color name="tag_color_09">#FF499ef2</color>
+	<color name="tag_color_10">#FFcff249</color>
+	<color name="tag_color_11">#FFe449f2</color>
+	<color name="tag_color_12">#FF49f2b2</color>
+	<color name="tag_color_13">#FFf28149</color>
+	<color name="tag_color_14">#FF4f49f2</color>
+	<color name="tag_color_15">#FF73f249</color>
+	<color name="tag_color_16">#FFf249a5</color>
+	<color name="tag_color_17">#FF49d6f2</color>
 
-	<color name="light_tag_color_01">#FF5b39c6</color>
-	<color name="light_tag_color_02">#FFcc9900</color>
-	<color name="light_tag_color_03">#FF3366ff</color>
-	<color name="light_tag_color_04">#FF006600</color>
-	<color name="light_tag_color_05">#FF990000</color>
-	<color name="light_tag_color_06">#FF000066</color>
-	<color name="light_tag_color_07">#FFff33ff</color>
-	<color name="light_tag_color_08">#FF993300</color>
-	<color name="light_tag_color_09">#FFff3366</color>
-	<color name="light_tag_color_10">#FF0099cc</color>
-	<color name="light_tag_color_11">#FF000000</color>
-	<color name="light_tag_color_12">#FF333300</color>
-	<color name="light_tag_color_13">#FF0000ff</color>
-	<color name="light_tag_color_14">#FFff6633</color>
-	<color name="light_tag_color_15">#FF6666ff</color>
-	<color name="light_tag_color_16">#FF33cc66</color>
-	<color name="light_tag_color_17">#FF003366</color>
+	
+	<!--  generated with saturation/brightness 1/0.75 -->
+	<color name="light_tag_color_01">#FF65bf00</color>
+	<color name="light_tag_color_02">#FFbf009d</color>
+	<color name="light_tag_color_03">#FF00bfaa</color>
+	<color name="light_tag_color_04">#FFbf7200</color>
+	<color name="light_tag_color_05">#FF3b00bf</color>
+	<color name="light_tag_color_06">#FF00bf03</color>
+	<color name="light_tag_color_07">#FFbf0035</color>
+	<color name="light_tag_color_08">#FF006dbf</color>
+	<color name="light_tag_color_09">#FFa5bf00</color>
+	<color name="light_tag_color_10">#FFa200bf</color>
+	<color name="light_tag_color_11">#FF00bf6a</color>
+	<color name="light_tag_color_12">#FFbf3200</color>
+	<color name="light_tag_color_13">#FF0005bf</color>
+	<color name="light_tag_color_14">#FF3dbf00</color>
+	<color name="light_tag_color_15">#FFbf0075</color>
+	<color name="light_tag_color_16">#FF00adbf</color>
+	<color name="light_tag_color_17">#FFbf9a00</color>
 
-	<color name="android_theme_tag_color_01">#FF222222</color>
-	<color name="android_theme_tag_color_02">#FF996666</color>
-	<color name="android_theme_tag_color_03">#FFFFCC99</color>
-	<color name="android_theme_tag_color_04">#FFCC0000</color>
-	<color name="android_theme_tag_color_05">#FF666633</color>
-	<color name="android_theme_tag_color_06">#FF990099</color>
-	<color name="android_theme_tag_color_07">#FF006600</color>
-	<color name="android_theme_tag_color_08">#FF660066</color>
-	<color name="android_theme_tag_color_09">#FF003399</color>
-	<color name="android_theme_tag_color_10">#FFFF6633</color>
-	<color name="android_theme_tag_color_11">#FFFFFFFF</color>
-	<color name="android_theme_tag_color_12">#FFCC3333</color>
-	<color name="android_theme_tag_color_13">#FFFFFF00</color>
-	<color name="android_theme_tag_color_14">#FF0099CC</color>
-	<color name="android_theme_tag_color_15">#FF009933</color>
-	<color name="android_theme_tag_color_16">#FFCC3399</color>
-	<color name="android_theme_tag_color_17">#FFFFCC00</color>
+
+
+
+    <!--  generated with saturation/brightness 1/0.45 -->
+	<color name="android_theme_tag_color_01">#FF736c00</color>
+	<color name="android_theme_tag_color_02">#FF4a0073</color>
+	<color name="android_theme_tag_color_03">#FF007329</color>
+	<color name="android_theme_tag_color_04">#FF730700</color>
+	<color name="android_theme_tag_color_05">#FF001a73</color>
+	<color name="android_theme_tag_color_06">#FF3c7300</color>
+	<color name="android_theme_tag_color_07">#FF73005d</color>
+	<color name="android_theme_tag_color_08">#FF007367</color>
+	<color name="android_theme_tag_color_09">#FF734600</color>
+	<color name="android_theme_tag_color_10">#FF240073</color>
+	<color name="android_theme_tag_color_11">#FF007303</color>
+	<color name="android_theme_tag_color_12">#FF73001f</color>
+	<color name="android_theme_tag_color_13">#FF004073</color>
+	<color name="android_theme_tag_color_14">#FF627300</color>
+	<color name="android_theme_tag_color_15">#FF620073</color>
+	<color name="android_theme_tag_color_16">#FF007341</color>
+	<color name="android_theme_tag_color_17">#FF731f00</color>
+
 
 
 </resources>
