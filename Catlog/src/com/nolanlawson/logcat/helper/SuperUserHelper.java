@@ -47,7 +47,6 @@ public class SuperUserHelper {
 	}
 	
 	private static List<Integer> getAllRelatedPids(final int pid) {
-	    final String pidAsString = Integer.toString(pid);
 	    List<Integer> result = new ArrayList<Integer>(Arrays.asList(pid));
 	    // use 'ps' to get this pid and all pids that are related to it (e.g. spawned by it)
         try {
@@ -88,9 +87,11 @@ public class SuperUserHelper {
                 while (bufferedReader.ready()) {
                     String[] line = SPACES_PATTERN.split(bufferedReader.readLine());
                     if (line.length >= 3 ) {
-                        if (pidAsString.equals(line[2])) {
-                            result.add(Integer.parseInt(line[1]));
-                        }
+                        try {
+                            if (pid == Integer.parseInt(line[2])) {
+                                result.add(Integer.parseInt(line[1]));
+                            }
+                        } catch (NumberFormatException ignore) {}
                     }
                 }
             } finally {
