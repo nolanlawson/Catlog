@@ -41,10 +41,6 @@ Téléchargez <a href="market://details?id=com.nolanlawson.logcat.donate">CatLog
     <string name="filter_choice_tag">Tag</string>
     <string name="filter_text_colon">Texte pour filtrer:</string>
     
-    <string name="first_run_message">\
-<b>Nouveautés en 1.4!</b>\n\
-    - Mise à jour pour JellyBean.\
-</string>
     <string name="first_run_pref_summary">Afficher de nouveau le message d\'introduction</string>
     <string name="first_run_pref_title">Réinitialiser l\'introduction</string>
     <string name="first_run_title">Bienvenue à CatLog!</string>

@@ -42,10 +42,6 @@
     <string name="filter_choice_tag">タグ</string>
     <string name="filter_text_colon">フィルタテクスト：</string>
     
-    <string name="first_run_message">\
-<b>1.4のアップデート！</b>\n\
-    - JellyBeanためのアップデート。\
-</string>
     <string name="first_run_pref_summary">また紹介のメッセージを見せる。</string>
     <string name="first_run_pref_title">紹介リセット</string>
     <string name="first_run_title">CatLogにようこそ！</string>

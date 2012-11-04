@@ -96,11 +96,7 @@
     <string name="filter_choice_pid">Process id</string>
     <string name="filter_choice_tag">Tag</string>
     <string name="filter_text_colon">Filter text:</string>
-    
-    <string name="first_run_message">\
-<b>New in 1.4!</b>\n\
-    - Jelly Bean support for rooted devices.\
-</string>
+
     <string name="first_run_pref_summary">Show introductory message again.</string>
     <string name="first_run_pref_title">Reset Introduction</string>
     <string name="first_run_title">Welcome to CatLog!</string>

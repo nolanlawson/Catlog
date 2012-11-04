@@ -49,12 +49,6 @@
     <!-- TO TRANSLATE -->
     <string name="filter_text_colon">Filter text:</string>
     
-    <string name="first_run">first_run23</string>
-    <!-- TO TRANSLATE -->
-    <string name="first_run_message">\
-<b>New in 1.4!</b>\n\
-    - Jelly Bean support for rooted devices.\
-</string>
     <string name="first_run_pref_summary">Visa välkomstmeddelandet igen.</string>
     <string name="first_run_pref_title">Återställ introdukton</string>
     <string name="first_run_title">Välkommen till CatLog!</string>

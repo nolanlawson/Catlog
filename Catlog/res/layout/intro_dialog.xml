@@ -77,12 +77,5 @@
 
 		</LinearLayout>
 
-			<TextView android:id="@+id/first_run_text_view"
-				android:textColor="@android:color/primary_text_dark_nodisable"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:paddingTop="2dp" android:textSize="14sp"
-				 android:linksClickable="true" android:text="@string/first_run_message"
-				android:paddingRight="8dp"/>
-
 	</LinearLayout>
 </ScrollView>
