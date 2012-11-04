@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -69,10 +70,13 @@ public class AboutActivity extends Activity implements OnClickListener {
 		}
 		String message = loadTextFile(isDonateVersion ? R.raw.donate_message : R.raw.free_message);
 		String changelog = loadTextFile(R.raw.changelog);
+		String css = loadTextFile(R.raw.about_css);
+		text = String.format(text, version, message, changelog, css);
 		
-		text = String.format(text, version, message, changelog);
+		WebSettings settings = aboutWebView.getSettings();
+		settings.setDefaultTextEncodingName("utf-8");
 		
-		aboutWebView.loadData(text, "text/html", "utf-8");
+		aboutWebView.loadDataWithBaseURL(null, text, "text/html", "UTF-8", null);
 	}
 
 	private String loadTextFile(int resourceId) {
