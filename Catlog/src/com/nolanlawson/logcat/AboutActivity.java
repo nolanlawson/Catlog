@@ -71,7 +71,9 @@ public class AboutActivity extends Activity implements OnClickListener {
 		String message = loadTextFile(isDonateVersion ? R.raw.donate_message : R.raw.free_message);
 		String changelog = loadTextFile(R.raw.changelog);
 		String css = loadTextFile(R.raw.about_css);
-		text = String.format(text, version, message, changelog, css);
+		String translations = loadTextFile(R.raw.translations);
+		text = String.format(text, version, message, changelog, css, translations);
+		
 		
 		WebSettings settings = aboutWebView.getSettings();
 		settings.setDefaultTextEncodingName("utf-8");

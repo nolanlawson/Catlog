@@ -1,6 +1,13 @@
 body {
     color : #cccccc;
 }
+
+table {
+    margin : auto;
+    border-collapse:separate;
+    border-spacing:10px;
+}
+
 a:link {
     color: #0099dd;
 }
