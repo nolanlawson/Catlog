@@ -1553,7 +1553,12 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
                 public void onClick(DialogInterface dialog, int which) {
 
                     if (which == 0) { // tag
-                        silentlySetSearchText(SearchCriteria.TAG_KEYWORD + logLine.getTag());
+                        // determine the right way to phrase this tag query - e.g.
+                        // tag:myTag or tag:"my tag"
+                        String tagQuery = (logLine.getTag().contains(" "))
+                                ? ('"' + logLine.getTag() + '"')
+                                : logLine.getTag();
+                        silentlySetSearchText(SearchCriteria.TAG_KEYWORD + tagQuery);
                     } else { // which == 1, i.e. process id
                         silentlySetSearchText(SearchCriteria.PID_KEYWORD + logLine.getProcessId());
                     }
