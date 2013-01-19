@@ -9,6 +9,8 @@ import java.util.List;
 import android.text.TextUtils;
 
 import com.nolanlawson.logcat.helper.LogcatHelper;
+import com.nolanlawson.logcat.helper.RuntimeHelper;
+import com.nolanlawson.logcat.helper.VersionHelper;
 import com.nolanlawson.logcat.util.UtilLogger;
 
 public class SingleLogcatReader extends AbsLogcatReader {
@@ -44,10 +46,14 @@ public class SingleLogcatReader extends AbsLogcatReader {
 	@Override
 	public void killQuietly() {
 		if (logcatProcess != null) {
-			logcatProcess.destroy();
+			RuntimeHelper.destroy(logcatProcess);
 			log.d("killed 1 logcat process");
 		}
-		if (bufferedReader != null) {
+		
+		// post-jellybean, we just kill the process, so there's no need
+		// to close the bufferedReader.  Anyway, it just hangs.
+		if (VersionHelper.getVersionSdkIntCompat() < VersionHelper.VERSION_JELLYBEAN
+		        && bufferedReader != null) {
 			try {
 				bufferedReader.close();
 			} catch (IOException e) {

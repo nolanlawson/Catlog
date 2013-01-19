@@ -59,10 +59,13 @@ public class LogcatHelper {
 			log.e(e, "unexpected exception");
 		} finally {		
 			if (dumpLogcatProcess != null) {
-				dumpLogcatProcess.destroy();
+				RuntimeHelper.destroy(dumpLogcatProcess);
 				log.d("destroyed 1 dump logcat process");
 			}
-			if (reader != null) {
+			// post-jellybean, we just kill the process, so there's no need
+	        // to close the bufferedReader.  Anyway, it just hangs.
+	        if (VersionHelper.getVersionSdkIntCompat() < VersionHelper.VERSION_JELLYBEAN 
+	                && reader != null) {
 				try {
 					reader.close();
 				} catch (IOException e) {
