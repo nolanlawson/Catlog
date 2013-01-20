@@ -15,6 +15,7 @@ License
 Overview
 ---------
 CatLog is a free and open-source log reader for Android.  
+
 It shows a scrolling (tailed) view of the Android "Logcat" system log, 
 hence the goofy name.  It also allows you to record logs in real time, send logs via email, 
 and filter using a variety of criteria.
@@ -22,11 +23,13 @@ and filter using a variety of criteria.
 Download
 --------------
 
-CatLog can be downloaded from [the Google Play Store][3].  
+CatLog may be downloaded from [the Google Play Store][3].  
+
 You can also find a direct APK download link from [the CatLog page on my web site][5].
 
 Details
 -----------
+
 You can read all about CatLog in [my blog posts][4].
 
 
