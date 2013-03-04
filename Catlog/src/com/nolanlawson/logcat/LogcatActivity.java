@@ -1375,6 +1375,16 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         searchEditText.setOnEditorActionListener(this);
         searchEditText.setOnClickListener(this);
         
+        searchEditText.setOnItemClickListener(new OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+            }
+        });
+
         searchSuggestionsAdapter = new SortedFilterArrayAdapter<String>(
                 this, R.layout.simple_dropdown_small, new ArrayList<String>());
         searchEditText.setAdapter(searchSuggestionsAdapter);
