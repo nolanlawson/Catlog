@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import android.app.AlertDialog;
@@ -242,7 +243,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
             
             if (!TextUtils.isEmpty(level)) {
                 CharSequence[] logLevels = getResources().getStringArray(R.array.log_levels_values);
-                int logLevelLimit = ArrayUtil.indexOf(logLevels, level.toUpperCase());
+                int logLevelLimit = ArrayUtil.indexOf(logLevels, level.toUpperCase(Locale.US));
                 
                 if (logLevelLimit == -1) {
                     String invalidLevel = String.format(getString(R.string.toast_invalid_level), level);
@@ -1375,7 +1376,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         searchEditText.setOnEditorActionListener(this);
         searchEditText.setOnClickListener(this);
         
-        searchEditText.setOnItemClickListener(new OnItemClickListener()
+        searchEditText.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
