@@ -18,14 +18,18 @@ public class LogcatHelper {
 	private static UtilLogger log = new UtilLogger(LogcatHelper.class);
 	
 	public static Process getLogcatProcess(String buffer) throws IOException {
+		return getLogcatProcess(buffer, null);
+	}
+	
+	public static Process getLogcatProcess(String buffer, List<String> filterSpec) throws IOException {
 		
-		List<String> args = getLogcatArgs(buffer);
+		List<String> args = getLogcatArgs(buffer, filterSpec);
 		Process process = RuntimeHelper.exec(args);
 		
 		return process;
 	}
 	
-	private static List<String> getLogcatArgs(String buffer) {
+	private static List<String> getLogcatArgs(String buffer, List<String> filterSpec) {
 		List<String> args = new ArrayList<String>(Arrays.asList("logcat", "-v", "time"));
 		
 		// for some reason, adding -b main excludes log output from AndroidRuntime runtime exceptions,
@@ -34,6 +38,9 @@ public class LogcatHelper {
 			args.add("-b");
 			args.add(buffer);
 		}
+		
+		if (filterSpec != null)
+			args.addAll(filterSpec);
 		
 		return args;
 	}
@@ -44,7 +51,7 @@ public class LogcatHelper {
 		String result = null;
 		try {
 			
-			List<String> args = getLogcatArgs(buffer);
+			List<String> args = getLogcatArgs(buffer, null);
 			args.add("-d"); // -d just dumps the whole thing
 			
 			dumpLogcatProcess = RuntimeHelper.exec(args);
