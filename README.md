@@ -27,6 +27,21 @@ CatLog may be downloaded from [the Google Play Store][3].
 
 You can also find a direct APK download link from [the CatLog page on my web site][5].
 
+FAQs
+-------------
+
+#### Where are the logs saved?
+
+On the SD card, under ```/sdcard/catlog/saved_logs/```.
+
+#### I can't see any logs!
+
+First, check to see if you're running a custom ROM.  If so, test on an alternative logging app, and if the
+problem persists, contact the creator of your ROM.
+
+Otherwise, check to see if you're running Jelly Bean (Android 4.2+).  [CatLog has issues with Jelly Bean][6].
+
+
 Details
 -----------
 
@@ -38,3 +53,4 @@ You can read all about CatLog in [my blog posts][4].
 [3]: https://play.google.com/store/apps/details?id=com.nolanlawson.logcat
 [4]: http://nolanlawson.com/tag/catlog/
 [5]: http://nolanlawson.com/apps/#catlog
+[6]: http://nolanlawson.com/2012/09/02/catlog-jives-with-jelly-bean-goes-open-source/
