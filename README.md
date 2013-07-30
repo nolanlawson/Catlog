@@ -36,10 +36,14 @@ On the SD card, under ```/sdcard/catlog/saved_logs/```.
 
 #### I can't see any logs!
 
-First, check to see if you're running a custom ROM.  If so, test on an alternative logging app, and if the
-problem persists, contact the creator of your ROM.
+This problem typically shows up on custom ROMs.  First off, try an alternative logging app, to verify that
+the problem is with your ROM and not CatLog.
 
-Otherwise, check to see if you're running Jelly Bean (Android 4.2+).  [CatLog has issues with Jelly Bean][6].
+Next, see if your ROM offers system-wide settings to disable logging.  Be sure to reboot after you change anything.
+
+If that still doesn't work, you can contact the creator of your ROM to file a bug/RFE.
+
+And if you don't have root, check to see if you're running Jelly Bean (Android 4.2+).  [CatLog has issues with unrooted Jelly Bean][6].
 
 
 Details
