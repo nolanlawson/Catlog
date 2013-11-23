@@ -7,7 +7,6 @@ import java.util.Random;
 
 import android.app.IntentService;
 import android.app.Notification;
-import android.app.Notification.Builder;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
