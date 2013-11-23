@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import android.content.ClipData;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -19,7 +20,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.text.ClipboardManager;
+import android.content.ClipboardManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,7 +66,8 @@ public class SenderAppAdapter extends ArrayAdapter<ResolveInfo> {
 		if (launchable instanceof DummyClipboardLaunchable) {
 			ClipboardManager clipboard = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE); 
 			
-			clipboard.setText(body);
+			clipboard.setPrimaryClip(ClipData.newPlainText("CatLog",body));
+			
 			Toast.makeText(mContext, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
 		} else {
 		
