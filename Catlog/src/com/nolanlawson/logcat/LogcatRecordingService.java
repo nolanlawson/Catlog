@@ -164,9 +164,9 @@ public class LogcatRecordingService extends IntentService {
         CharSequence tickerText = getText(R.string.notification_ticker);
 
         // Set the icon, scrolling text and timestamp
+        // TODO Add NotificationBuilder code
         Notification notification = new Notification(R.drawable.status_icon, tickerText,
                 System.currentTimeMillis());
-        
 
         Intent stopRecordingIntent = new Intent();
         stopRecordingIntent.setAction(ACTION_STOP_RECORDING);
