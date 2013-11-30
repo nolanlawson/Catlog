@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
     
     <style name="AppTheme" parent="android:Theme.Holo"></style>
+    
+    <style name="ButtonAction" parent="android:Widget.Holo.Button">
+    	<item name="android:background">?android:attr/selectableItemBackground</item>    
+    </style>
     
 </resources>

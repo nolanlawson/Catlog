@@ -9,8 +9,8 @@
     <color name="yellow2">#FFffc600</color>	
 
     <color name="action_bar_start">#FFFBFBFB</color>
-	<color name="action_bar_end">#FFCCCCCC</color>	
-    
+	<color name="action_bar_end">#FFCCCCCC</color>
+	
 	<color name="linkColorBlue">#0099dd</color>
 
 	<color name="dark_divider">#33cccccc</color>
@@ -44,6 +44,8 @@
 	<color name="main_foreground_att">#FF0c7db5</color>
 	<color name="main_foreground_sprint">#FFffde00</color>
 	<color name="main_foreground_tmobile">#FFe9098d</color>
+	
+	<color name="main_divider">@android:color/darker_gray</color>
 
 	<color name="spinner_droptown_dark">#FF333333</color>
 	<color name="spinner_droptown_light">#00000000</color>

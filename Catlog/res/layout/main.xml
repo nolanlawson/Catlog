@@ -42,17 +42,16 @@
 
         <LinearLayout
             android:id="@+id/main_pause_button"
-            style="@android:style/Widget.Button"
+            style="@style/ButtonAction"
             android:layout_width="@dimen/main_button_width"
             android:layout_height="fill_parent"
-            android:background="@android:drawable/list_selector_background"
             android:gravity="center_vertical|left"
             android:orientation="horizontal" >
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="fill_parent"
-                android:background="@android:color/darker_gray" />
+                android:background="@color/main_divider" />
 
             <ImageView
                 android:id="@+id/main_pause_button_image"
@@ -64,17 +63,16 @@
 
         <LinearLayout
             android:id="@+id/main_more_button"
-            style="@android:style/Widget.Button"
+            style="@style/ButtonAction"
             android:layout_width="@dimen/main_button_width"
             android:layout_height="fill_parent"
-            android:background="@android:drawable/list_selector_background"
             android:gravity="center_vertical|left"
             android:orientation="horizontal" >
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="fill_parent"
-                android:background="@android:color/darker_gray" />
+                android:background="@color/main_divider" />
 
             <ImageView
                 android:id="@+id/main_expand_button_image"
@@ -86,17 +84,16 @@
 
         <LinearLayout
             android:id="@+id/main_clear_button"
-            style="@android:style/Widget.Button"
+            style="@style/ButtonAction"
             android:layout_width="@dimen/main_button_width"
             android:layout_height="fill_parent"
-            android:background="@android:drawable/list_selector_background"
             android:gravity="center_vertical|left"
             android:orientation="horizontal" >
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="fill_parent"
-                android:background="@android:color/darker_gray" />
+                android:background="@color/main_divider" />
 
             <ImageView
                 android:id="@+id/main_clear_button_image"
@@ -105,8 +102,9 @@
                 android:layout_weight="1"
                 android:src="@drawable/ic_menu_close_clear_cancel_32" />
         </LinearLayout>
+                
     </LinearLayout>
-
+    
     <LinearLayout
         android:id="@+id/main_filename_outer_layout"
         android:layout_width="fill_parent"
