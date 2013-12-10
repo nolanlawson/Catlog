@@ -18,10 +18,10 @@
 			</intent-filter>			
 		</activity>
 
-		<activity android:name=".AboutActivity" android:theme="@android:style/Theme.Dialog" />
+		<activity android:name=".AboutActivity" android:theme="@style/DialogTheme" />
 	
 		
-		<activity android:name=".ShowRecordLogDialogActivity" android:theme="@android:style/Theme.Dialog" />
+		<activity android:name=".ShowRecordLogDialogActivity" android:theme="@style/DialogTheme" />
 		
 
 		<activity android:name=".SettingsActivity" />
@@ -46,11 +46,9 @@
 				<data android:scheme="catlog_widget" />
 			</intent-filter>
 			
-			
 			<meta-data android:name="android.appwidget.provider"
 				android:resource="@xml/recording_widget_info" />
 		</receiver>
-
 
 	</application>
 

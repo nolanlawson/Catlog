@@ -3,6 +3,8 @@
     
     <style name="AppTheme" parent="android:Theme.Holo"></style>
     
+    <style name="DialogTheme" parent="android:Theme.Holo.Dialog"></style>
+    
     <style name="ButtonAction" parent="android:Widget.Holo.Button">
     	<item name="android:background">?android:attr/selectableItemBackground</item>    
     </style>

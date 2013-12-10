@@ -42,20 +42,24 @@
 		android:text="@string/enter_filename" style="?android:attr/textAppearanceMedium"/>
 
 	<LinearLayout android:id="@+id/LinearLayout02"
-		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:orientation="horizontal" android:padding="3dp">
+	    style="?android:attr/buttonBarStyle"
+		android:layout_width="match_parent" android:layout_height="wrap_content"
+		android:orientation="horizontal" android:layout_marginTop="10dp">
 
-		<Button android:text="@android:string/ok" android:layout_width="0px"
-			android:layout_height="wrap_content" android:id="@android:id/button1"
-			android:layout_weight="0.3" android:minWidth="50dp" />
-		<Button android:text="@string/text_filter_ellipsis"
-			android:layout_width="0px" android:layout_height="wrap_content"
-			android:id="@android:id/button2" android:layout_weight="0.3"
-			android:minWidth="50dp" />
-		<Button android:text="@android:string/cancel"
+	    <Button android:text="@android:string/cancel"
+	        style="?android:attr/buttonBarButtonStyle"
 			android:layout_width="0px" android:layout_height="wrap_content"
 			android:id="@android:id/button3" android:layout_weight="0.3"
 			android:minWidth="50dp" />
+		<Button android:text="@string/text_filter_ellipsis"
+		    style="?android:attr/buttonBarButtonStyle"
+			android:layout_width="0px" android:layout_height="wrap_content"
+			android:id="@android:id/button2" android:layout_weight="0.3"
+			android:minWidth="50dp" />
+		<Button android:text="@android:string/ok" android:layout_width="0px"
+		    style="?android:attr/buttonBarButtonStyle"
+			android:layout_height="wrap_content" android:id="@android:id/button1"
+			android:layout_weight="0.3" android:minWidth="50dp" />
 	</LinearLayout>
 
 </LinearLayout>
