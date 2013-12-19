@@ -502,63 +502,68 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     menu.add(0, CONTEXT_MENU_COPY_ID, 0, R.string.copy_to_clipboard);
   }
 
-  @Override
-  public boolean onContextItemSelected(MenuItem item) {
-    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
-    final LogLine logLine = adapter.getItem(info.position);
-    if (logLine != null) {
-    switch (item.getItemId()) {
-      case CONTEXT_MENU_COPY_ID:
-        ClipboardManager clipboard = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        LogLine logLine = adapter.getItem(info.position);
+        if (logLine != null) {
+            switch (item.getItemId()) {
+                case CONTEXT_MENU_COPY_ID:
+                    ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 
-        clipboard.setText("TAG: " + logLine.getTag() + ", LINE:" + logLine.getOriginalLine() + "\nMESSAGE:" + logLine.getLogOutput());
-        Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
-        return true;
-        case CONTEXT_MENU_FILTER_ID:
+                    clipboard.setText(logLine.getOriginalLine());
+                    Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
+                    return true;
+                case CONTEXT_MENU_FILTER_ID:
 
-          if (logLine.getProcessId() == -1) {
-            // invalid line
-            return false;
-          }
-
-          List<CharSequence> choices = Arrays.<CharSequence>asList(getResources().getStringArray(R.array.filter_choices));
-          List<CharSequence> choicesSubtexts = Arrays.<CharSequence>asList(logLine.getTag(), Integer.toString(logLine.getProcessId()));
-
-          int tagColor = LogLineAdapterUtil.getOrCreateTagColor(this, logLine.getTag());
-
-          TagAndProcessIdAdapter textAndSubtextAdapter = new TagAndProcessIdAdapter(this, choices, choicesSubtexts, tagColor, -1);
-
-          new AlertDialog.Builder(this)
-                  .setCancelable(true)
-                  .setTitle(R.string.filter_choice)
-                  .setIcon(R.drawable.ic_search_category_default)
-                  .setSingleChoiceItems(textAndSubtextAdapter, -1, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                      if (which == 0) { // tag
-                        // determine the right way to phrase this tag query - e.g.
-                        // tag:myTag or tag:"my tag"
-                        String tagQuery = (logLine.getTag().contains(" "))
-                        ? ('"' + logLine.getTag() + '"')
-                        : logLine.getTag();
-                        silentlySetSearchText(SearchCriteria.TAG_KEYWORD + tagQuery);
-                      }
-                      else { // which == 1, i.e. process id
-                        silentlySetSearchText(SearchCriteria.PID_KEYWORD + logLine.getProcessId());
-                      }
-
-                      // put the cursor at the end
-                      searchEditText.setSelection(searchEditText.length());
-                      dialog.dismiss();
-
+                    if (logLine.getProcessId() == -1) {
+                        // invalid line
+                        return false;
                     }
-                  }).create().show();
-          return true;
-      }
+
+                    showSearchByDialog(logLine);
+                    return true;
+            }
+        }
+        return false;
     }
-    return false;
+  
+  private void showSearchByDialog(final LogLine logLine) {
+      List<CharSequence> choices = Arrays.<CharSequence>asList(getResources().getStringArray(R.array.filter_choices));
+      List<CharSequence> choicesSubtexts = Arrays.<CharSequence>asList(logLine.getTag(), Integer.toString(logLine.getProcessId()));
+
+      int tagColor = LogLineAdapterUtil.getOrCreateTagColor(this, logLine.getTag());
+
+      TagAndProcessIdAdapter textAndSubtextAdapter = new TagAndProcessIdAdapter(this, choices, choicesSubtexts, tagColor, -1);
+
+      new AlertDialog.Builder(this)
+              .setCancelable(true)
+              .setTitle(R.string.filter_choice)
+              .setIcon(R.drawable.ic_search_category_default)
+              .setSingleChoiceItems(textAndSubtextAdapter, -1, new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                  if (which == 0) { // tag
+                    // determine the right way to phrase this tag query - e.g.
+                    // tag:myTag or tag:"my tag"
+                    String tagQuery = (logLine.getTag().contains(" "))
+                    ? ('"' + logLine.getTag() + '"')
+                    : logLine.getTag();
+                    silentlySetSearchText(SearchCriteria.TAG_KEYWORD + tagQuery);
+                  }
+                  else { // which == 1, i.e. process id
+                    silentlySetSearchText(SearchCriteria.PID_KEYWORD + logLine.getProcessId());
+                  }
+
+                  // put the cursor at the end
+                  searchEditText.setSelection(searchEditText.length());
+                  dialog.dismiss();
+
+                }
+              })
+              .show();
   }
 
   private void showRecordLogDialog() {
