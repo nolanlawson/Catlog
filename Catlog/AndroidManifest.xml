@@ -15,6 +15,21 @@
 				<action android:name="com.nolanlawson.logcat.intents.LAUNCH" />
 				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>			
+			<intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:mimeType="application/x-gzip"
+                    android:pathPattern=".*\\.gz"
+                    android:scheme="file" />
+                <data
+                    android:mimeType="application/x-gzip"
+                    android:pathPattern=".*\\.gz"
+                    android:scheme="content" />
+            </intent-filter>
 		</activity>
 
 		<activity android:name=".AboutActivity" android:theme="@android:style/Theme.Dialog" />
