@@ -2,7 +2,6 @@ package com.nolanlawson.logcat;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -23,11 +22,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.ClipboardManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -41,7 +42,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
@@ -82,9 +82,10 @@ import com.nolanlawson.logcat.util.ArrayUtil;
 import com.nolanlawson.logcat.util.LogLineAdapterUtil;
 import com.nolanlawson.logcat.util.StringUtil;
 import com.nolanlawson.logcat.util.UtilLogger;
+import java.util.Arrays;
 
 public class LogcatActivity extends ListActivity implements TextWatcher, OnScrollListener, 
-        FilterListener, OnEditorActionListener, OnItemLongClickListener, OnClickListener, OnLongClickListener {
+        FilterListener, OnEditorActionListener, OnClickListener, OnLongClickListener {
     
     private static final int REQUEST_CODE_SETTINGS = 1;
     
@@ -93,6 +94,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     
     // how many suggestions to keep in the autosuggestions text
     private static final int MAX_NUM_SUGGESTIONS = 1000;
+
+  // id for context menu entry
+  private static final int CONTEXT_MENU_FILTER_ID = 0;
+  private static final int CONTEXT_MENU_COPY_ID = 1;
     
     private static UtilLogger log = new UtilLogger(LogcatActivity.class);
     
@@ -125,8 +130,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         
         collapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(this);
         
-        log.d("initial collapsed mode is %s", collapsedMode);
-        
+      log.d("initial collapsed mode is %s", collapsedMode);
+
+      registerForContextMenu(getListView());
+
         setUpWidgets();
         
         setUpAdapter();
@@ -489,14 +496,83 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         return super.onPrepareOptionsMenu(menu);
     }
 
+  @Override
+  public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+    menu.add(0, CONTEXT_MENU_FILTER_ID, 0, R.string.filter_choice);
+    menu.add(0, CONTEXT_MENU_COPY_ID, 0, R.string.copy_to_clipboard);
+  }
 
-    private void showRecordLogDialog() {
-        
-        // start up the dialog-like activity
-        String[] suggestions = ArrayUtil.toArray(new ArrayList<String>(searchSuggestionsSet), String.class);
-        
-        Intent intent = new Intent(LogcatActivity.this, ShowRecordLogDialogActivity.class);
-        intent.putExtra(ShowRecordLogDialogActivity.EXTRA_QUERY_SUGGESTIONS, suggestions);
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        LogLine logLine = adapter.getItem(info.position);
+        if (logLine != null) {
+            switch (item.getItemId()) {
+                case CONTEXT_MENU_COPY_ID:
+                    ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+
+                    clipboard.setText(logLine.getOriginalLine());
+                    Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
+                    return true;
+                case CONTEXT_MENU_FILTER_ID:
+
+                    if (logLine.getProcessId() == -1) {
+                        // invalid line
+                        return false;
+                    }
+
+                    showSearchByDialog(logLine);
+                    return true;
+            }
+        }
+        return false;
+    }
+  
+  private void showSearchByDialog(final LogLine logLine) {
+      List<CharSequence> choices = Arrays.<CharSequence>asList(getResources().getStringArray(R.array.filter_choices));
+      List<CharSequence> choicesSubtexts = Arrays.<CharSequence>asList(logLine.getTag(), Integer.toString(logLine.getProcessId()));
+
+      int tagColor = LogLineAdapterUtil.getOrCreateTagColor(this, logLine.getTag());
+
+      TagAndProcessIdAdapter textAndSubtextAdapter = new TagAndProcessIdAdapter(this, choices, choicesSubtexts, tagColor, -1);
+
+      new AlertDialog.Builder(this)
+              .setCancelable(true)
+              .setTitle(R.string.filter_choice)
+              .setIcon(R.drawable.ic_search_category_default)
+              .setSingleChoiceItems(textAndSubtextAdapter, -1, new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                  if (which == 0) { // tag
+                    // determine the right way to phrase this tag query - e.g.
+                    // tag:myTag or tag:"my tag"
+                    String tagQuery = (logLine.getTag().contains(" "))
+                    ? ('"' + logLine.getTag() + '"')
+                    : logLine.getTag();
+                    silentlySetSearchText(SearchCriteria.TAG_KEYWORD + tagQuery);
+                  }
+                  else { // which == 1, i.e. process id
+                    silentlySetSearchText(SearchCriteria.PID_KEYWORD + logLine.getProcessId());
+                  }
+
+                  // put the cursor at the end
+                  searchEditText.setSelection(searchEditText.length());
+                  dialog.dismiss();
+
+                }
+              })
+              .show();
+  }
+
+  private void showRecordLogDialog() {
+
+    // start up the dialog-like activity
+    String[] suggestions = ArrayUtil.toArray(new ArrayList<String>(searchSuggestionsSet), String.class);
+
+    Intent intent = new Intent(LogcatActivity.this, ShowRecordLogDialogActivity.class);
+    intent.putExtra(ShowRecordLogDialogActivity.EXTRA_QUERY_SUGGESTIONS, suggestions);
         
         startActivity(intent);
     }
@@ -1424,9 +1500,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         setListAdapter(adapter);
         
         getListView().setOnScrollListener(this);
-        getListView().setOnItemLongClickListener(this);
-        
-        
     }    
     
     @Override
@@ -1535,56 +1608,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
                 }
             });
         }
-    }
-
-    @Override
-    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
-        
-        final LogLine logLine = adapter.getItem(position);
-        
-        if (logLine.getProcessId() == -1) {
-            // invalid line
-            return false;
-        }
-        
-        List<CharSequence> choices = Arrays.<CharSequence>asList(getResources().getStringArray(R.array.filter_choices));
-        List<CharSequence> choicesSubtexts = Arrays.<CharSequence>asList(logLine.getTag(), Integer.toString(logLine.getProcessId()));
-        
-        int tagColor = LogLineAdapterUtil.getOrCreateTagColor(this, logLine.getTag());
-        
-        TagAndProcessIdAdapter textAndSubtextAdapter = new TagAndProcessIdAdapter(this, choices, choicesSubtexts, tagColor, -1);
-        
-        
-        new AlertDialog.Builder(this)
-            .setCancelable(true)
-            .setTitle(R.string.filter_choice)
-            .setIcon(R.drawable.ic_search_category_default)
-            .setSingleChoiceItems(textAndSubtextAdapter, -1, new DialogInterface.OnClickListener() {
-                
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                    if (which == 0) { // tag
-                        // determine the right way to phrase this tag query - e.g.
-                        // tag:myTag or tag:"my tag"
-                        String tagQuery = (logLine.getTag().contains(" "))
-                                ? ('"' + logLine.getTag() + '"')
-                                : logLine.getTag();
-                        silentlySetSearchText(SearchCriteria.TAG_KEYWORD + tagQuery);
-                    } else { // which == 1, i.e. process id
-                        silentlySetSearchText(SearchCriteria.PID_KEYWORD + logLine.getProcessId());
-                    }
-                    
-                    // put the cursor at the end
-                    searchEditText.setSelection(searchEditText.length());
-                    dialog.dismiss();
-                    
-                }
-            }).create().show();
-        
-        
-        
-        return true;
     }
     
     private void silentlySetSearchText(String text) {
