@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -793,8 +794,13 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
             }
         }
         
-        expandButtonImage.setImageResource(
-                collapsedMode ? R.drawable.ic_menu_more_32 : R.drawable.ic_menu_less_32);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        	expandButtonImage.setImageResource(
+                    collapsedMode ? R.drawable.ic_action_expand : R.drawable.ic_action_collapse);
+        } else {
+        	expandButtonImage.setImageResource(
+                    collapsedMode ? R.drawable.ic_menu_more_32 : R.drawable.ic_menu_less_32);	
+        }
         
         adapter.notifyDataSetChanged();
         
@@ -1377,9 +1383,17 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         collapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(getApplicationContext());
         clearButton.setVisibility(filename == null? View.VISIBLE : View.GONE);
         pauseButton.setVisibility(filename == null? View.VISIBLE : View.GONE);
-        pauseButtonImage.setImageResource(R.drawable.ic_media_pause);
-        expandButtonImage.setImageResource(
-                collapsedMode ? R.drawable.ic_menu_more_32 : R.drawable.ic_menu_less_32);
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        	pauseButtonImage.setImageResource(R.drawable.ic_action_pause);
+            expandButtonImage.setImageResource(
+                    collapsedMode ? R.drawable.ic_action_expand : R.drawable.ic_action_collapse);
+        } else {
+        	pauseButtonImage.setImageResource(R.drawable.ic_media_pause);
+            expandButtonImage.setImageResource(
+                    collapsedMode ? R.drawable.ic_menu_more_32 : R.drawable.ic_menu_less_32);
+        }
+        
         addFiltersToSuggestions(); // filters are what initial populate the suggestions
         updateDisplayedFilename();
         resetFilter();
@@ -1478,6 +1492,12 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         expandButtonImage = (ImageView) findViewById(R.id.main_expand_button_image);
         pauseButtonImage = (ImageView) findViewById(R.id.main_pause_button_image);
         
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        	expandButtonImage.setAlpha(0.8f);
+        	pauseButtonImage.setAlpha(0.8f);
+        	((ImageView) findViewById(R.id.main_clear_button_image)).setAlpha(0.8f);
+        	((AutoCompleteTextView) findViewById(R.id.main_edit_text)).setAlpha(0.8f);
+        }
         
         for (View view : new View[]{clearButton, expandButton, pauseButton}) {
             view.setOnClickListener(this);
@@ -1725,8 +1745,13 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
                 currentTask.pause();
             }
         
-            pauseButtonImage.setImageResource(
-                    currentTask.isPaused() ? R.drawable.ic_media_play : R.drawable.ic_media_pause);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            	pauseButtonImage.setImageResource(
+                        currentTask.isPaused() ? R.drawable.ic_action_play : R.drawable.ic_action_pause);
+            } else {
+            	pauseButtonImage.setImageResource(
+                        currentTask.isPaused() ? R.drawable.ic_media_play : R.drawable.ic_media_pause);	
+            }
         }
     }
 
