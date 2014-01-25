@@ -530,7 +530,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
             @Override
             protected void onPostExecute(List<FilterItem> filters) {
                 super.onPostExecute(filters);
-                
+                                
                 final FilterAdapter filterAdapter = new FilterAdapter(LogcatActivity.this, filters);
                 
                 new AlertDialog.Builder(LogcatActivity.this)
@@ -557,9 +557,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
                 
             }
             
-            
-            
         }.execute((Void)null);
+        // TODO
+        //this solves the problem, need to check what is causing it
+        //}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Void)null);
     }
     
     private void showAddFilterDialog(final FilterAdapter filterAdapter) {
