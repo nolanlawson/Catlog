@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.nolanlawson.logcat" android:installLocation="auto" 
+	package="com.nolanlawson.logcat" android:installLocation="auto"
 	android:versionName="1.5.0" android:versionCode="42">
 	<application android:icon="@drawable/icon" android:label="@string/app_name">
 		<activity android:name=".LogcatActivity" android:label="@string/app_name"
@@ -10,7 +10,7 @@
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
-			
+
 			<intent-filter>
 				<action android:name="com.nolanlawson.logcat.intents.LAUNCH" />
 				<category android:name="android.intent.category.DEFAULT" />
@@ -18,10 +18,10 @@
 		</activity>
 
 		<activity android:name=".AboutActivity" android:theme="@android:style/Theme.Dialog" />
-	
-		
+
+
 		<activity android:name=".ShowRecordLogDialogActivity" android:theme="@android:style/Theme.Dialog" />
-		
+
 
 		<activity android:name=".SettingsActivity" />
 
@@ -49,14 +49,56 @@
 			<meta-data android:name="android.appwidget.provider"
 				android:resource="@xml/recording_widget_info" />
 		</receiver>
+        <!-- Tooleap Start -->
 
+        <activity android:name=".FloatingLogcatActivity"
+                  android:label="@string/app_name"
+                  android:screenOrientation="user"
+                  android:theme="@android:style/Theme.Translucent.NoTitleBar"
+                  android:launchMode="singleInstance"
+                  android:configChanges="keyboard|keyboardHidden|orientation"
+                  android:windowSoftInputMode="stateHidden"
+                  android:taskAffinity=".tooleap">
+            <intent-filter>
+                <action android:name="com.tooleap.sdk.TOOLEAP_SHOW"/>
+            </intent-filter>
+
+        </activity>
+
+        <service android:name="com.nolanlawson.sdk.TooleapAppService"/>
+        <service android:name="com.nolanlawson.sdk.TooleapUIService"
+                 android:process=":UIService"
+                 android:exported="true">
+            <intent-filter>
+                <action android:name="com.tooleap.sdk.BIND_UI_SERVICE" />
+            </intent-filter>
+        </service>
+        <receiver android:name="com.nolanlawson.sdk.TooleapReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REPLACED"/>
+                <data android:scheme="package"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.tooleap.sdk.TOOLEAP_ACTION"/>
+            </intent-filter>
+        </receiver>
+
+        <meta-data android:name="com.tooleap.sdk.apiKey" android:value="36AC6942EE246083CEE" />
+        <!-- Tooleap End -->
 
 	</application>
 
-	<uses-sdk android:minSdkVersion="3" android:targetSdkVersion="10" />
+	<uses-sdk android:minSdkVersion="8" android:targetSdkVersion="10" />
 	<uses-permission android:name="android.permission.READ_LOGS" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	
+
+    <!-- Tooleap Permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <!-- - - - - - - - - - - -->
+
 	<!--  'Sup Koush: https://plus.google.com/103583939320326217147/posts/T9xnMJEnzf1 -->
 	<uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
 
