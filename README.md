@@ -17,7 +17,8 @@ Author
 
 Download
 --------------
-You can download the apk directly from XDA
+You can download the apk [directly from XDA:][5]
+http://forum.xda-developers.com/android/apps-games/app-tooleap-catlog-floating-logcat-t2829741/post54432316
 
 
 
@@ -25,3 +26,4 @@ You can download the apk directly from XDA
 [2]: http://i.imgur.com/8DEsdi4.png
 [3]: http://i.imgur.com/Bqp2xlel.jpg
 [4]: http://i.imgur.com/DWwC2YC.png
+[5]: http://forum.xda-developers.com/android/apps-games/app-tooleap-catlog-floating-logcat-t2829741/post54432316
