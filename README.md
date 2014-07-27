@@ -10,7 +10,7 @@ Up until now we've used this enhanced CatLog for our own development, and we wan
 
 Author
 --------
-[Tooleap][1]
+[Tooleap - www.tooleap.com][1]
 
 ![Screenshot][2] ![Screenshot][3] ![Screenshot][4]
 
