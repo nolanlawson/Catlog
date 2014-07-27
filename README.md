@@ -1,1 +1,35 @@
-tbd
+Tooleap CatLog
+==============
+Those of you who are developers or just plain technophiles, might know of a handy little tool called CatLog by Nolan Lawson. This tool allows you to view Android's logcat directly on your device. 
+It is very useful when you want to view your app debug logs, even when away from the computer.
+
+In Tooelap, we wanted to make it even more useful by integrating it with our SDK, and make it float above other apps. That way, we can use an app and view its debug logs on the same time.
+Note that your device need to be rooted in order for this utility to work.
+
+Up until now we've used this enhanced CatLog for our own development, and we want to share this utility and its code with the developers community. Have fun debugging :)
+
+Author
+--------
+Tooleap[1]
+
+![Screenshot][2] ![Screenshot][3] ![Screenshot][4]
+
+Overview
+---------
+CatLog is a free and open-source log reader for Android.  
+
+It shows a scrolling (tailed) view of the Android "Logcat" system log, 
+hence the goofy name.  It also allows you to record logs in real time, send logs via email, 
+and filter using a variety of criteria.
+
+Download
+--------------
+
+You can download the apk directly from XDA
+
+
+
+[1]: http://www.tooleap.com
+[2]: http://i.imgur.com/8DEsdi4.png
+[3]: http://i.imgur.com/Bqp2xlel.jpg
+[4]: http://i.imgur.com/DWwC2YC.png

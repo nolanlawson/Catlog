@@ -1690,8 +1690,8 @@ public class LogcatActivity extends TooleapActivities.ListActivity implements Te
                     TooleapPopOutMiniApp miniApp = new TooleapPopOutMiniApp(this, intent);
 
                     // An example for some customizations of a mini app. You can use your own...
-                    miniApp.contentTitle = "Floating Catlog";
-                    miniApp.notificationText = "Hello! I'm the Catlog Bubble.";
+                    miniApp.contentTitle = "Tooleap CatLog";
+                    miniApp.notificationText = "Click on the bubble to open the Tooleap CatLog";
 
                     tooleap.addMiniApp(miniApp);
 
