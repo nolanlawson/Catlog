@@ -10,21 +10,13 @@ Up until now we've used this enhanced CatLog for our own development, and we wan
 
 Author
 --------
-Tooleap[1]
+[Tooleap][1]
 
 ![Screenshot][2] ![Screenshot][3] ![Screenshot][4]
 
-Overview
----------
-CatLog is a free and open-source log reader for Android.  
-
-It shows a scrolling (tailed) view of the Android "Logcat" system log, 
-hence the goofy name.  It also allows you to record logs in real time, send logs via email, 
-and filter using a variety of criteria.
 
 Download
 --------------
-
 You can download the apk directly from XDA
 
 
