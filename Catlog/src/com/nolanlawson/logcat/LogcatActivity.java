@@ -1,17 +1,8 @@
 package com.nolanlawson.logcat;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import android.app.ListActivity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,53 +19,19 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
-import android.view.ContextMenu;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView;
+import android.widget.*;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.Filter;
 import android.widget.Filter.FilterListener;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.Toast;
-
-import com.nolanlawson.logcat.data.ColorScheme;
-import com.nolanlawson.logcat.data.FilterAdapter;
-import com.nolanlawson.logcat.data.LogFileAdapter;
-import com.nolanlawson.logcat.data.LogLine;
-import com.nolanlawson.logcat.data.LogLineAdapter;
-import com.nolanlawson.logcat.data.SavedLog;
-import com.nolanlawson.logcat.data.SearchCriteria;
-import com.nolanlawson.logcat.data.SendLogDetails;
-import com.nolanlawson.logcat.data.SenderAppAdapter;
-import com.nolanlawson.logcat.data.SortedFilterArrayAdapter;
-import com.nolanlawson.logcat.data.TagAndProcessIdAdapter;
+import com.nolanlawson.logcat.data.*;
 import com.nolanlawson.logcat.db.CatlogDBHelper;
 import com.nolanlawson.logcat.db.FilterItem;
-import com.nolanlawson.logcat.helper.BuildHelper;
-import com.nolanlawson.logcat.helper.DialogHelper;
-import com.nolanlawson.logcat.helper.PreferenceHelper;
-import com.nolanlawson.logcat.helper.SaveLogHelper;
-import com.nolanlawson.logcat.helper.ServiceHelper;
-import com.nolanlawson.logcat.helper.UpdateHelper;
+import com.nolanlawson.logcat.helper.*;
 import com.nolanlawson.logcat.intents.Intents;
 import com.nolanlawson.logcat.reader.LogcatReader;
 import com.nolanlawson.logcat.reader.LogcatReaderLoader;
@@ -82,11 +39,16 @@ import com.nolanlawson.logcat.util.ArrayUtil;
 import com.nolanlawson.logcat.util.LogLineAdapterUtil;
 import com.nolanlawson.logcat.util.StringUtil;
 import com.nolanlawson.logcat.util.UtilLogger;
-import java.util.Arrays;
+import com.tooleap.sdk.Tooleap;
+import com.tooleap.sdk.TooleapActivities;
+import com.tooleap.sdk.TooleapPopOutMiniApp;
 
-public class LogcatActivity extends ListActivity implements TextWatcher, OnScrollListener, 
+import java.io.File;
+import java.util.*;
+
+public class LogcatActivity extends TooleapActivities.ListActivity implements TextWatcher, OnScrollListener,
         FilterListener, OnEditorActionListener, OnClickListener, OnLongClickListener {
-    
+
     private static final int REQUEST_CODE_SETTINGS = 1;
     
     // how often to check to see if we've gone over the max size
@@ -101,7 +63,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     
     private static UtilLogger log = new UtilLogger(LogcatActivity.class);
     
-    private View backgroundLayout, mainFilenameLayout, clearButton, expandButton, pauseButton;
+    private View backgroundLayout, mainFilenameLayout, clearButton, expandButton, pauseButton, popoutButton;
     private AutoCompleteTextView searchEditText;
     private ProgressBar darkProgressBar, lightProgressBar;
     private LogLineAdapter adapter;
@@ -125,9 +87,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         setContentView(R.layout.main);
-        
+
         collapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(this);
         
       log.d("initial collapsed mode is %s", collapsedMode);
@@ -141,6 +103,13 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         updateBackgroundColor();
         
         runUpdatesIfNecessaryAndShowInitialMessage();
+
+        if (isStartedByTooleap()) {
+
+            popoutButton.setVisibility(View.GONE);
+
+        }
+
     }
 
     
@@ -151,6 +120,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
             final ProgressDialog dialog = new ProgressDialog(this);
             dialog.setMessage(getString(R.string.dialog_loading_updates));
             dialog.show();
+            makeDialogTooleapCompatible(dialog);
             
             new AsyncTask<Void, Void, Void>(){
 
@@ -207,12 +177,11 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         
         boolean isFirstRun = PreferenceHelper.getFirstRunPreference(getApplicationContext());
         if (isFirstRun) {
-            
             View view = View.inflate(this, R.layout.intro_dialog, null);
             TextView textView = (TextView) view.findViewById(R.id.first_run_text_view_2);
             textView.setMovementMethod(LinkMovementMethod.getInstance());
             textView.setLinkTextColor(ColorStateList.valueOf(getResources().getColor(R.color.linkColorBlue)));
-            new AlertDialog.Builder(this)
+            Dialog dlg = new AlertDialog.Builder(this)
                     .setTitle(R.string.first_run_title)
                     .setView(view)
                     .setPositiveButton(android.R.string.ok,
@@ -226,6 +195,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
                         })
                     .setCancelable(false)
                     .setIcon(R.drawable.icon).show();
+            makeDialogTooleapCompatible(dlg);
 
         } else {
             doAfterInitialMessage(getIntent());
@@ -315,13 +285,13 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     }
 
     private void onSettingsActivityResult(final Intent data) {
-        handler.post(new Runnable(){
+        handler.post(new Runnable() {
 
             @Override
             public void run() {
-                
+
                 updateBackgroundColor();
-                
+
                 if (data.hasExtra("bufferChanged") && data.getBooleanExtra("bufferChanged", false)
                         && currentlyOpenLog == null) {
                     // log buffer changed, so update list
@@ -388,7 +358,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
-        
+
         return true;
     }
     
@@ -536,7 +506,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 
       TagAndProcessIdAdapter textAndSubtextAdapter = new TagAndProcessIdAdapter(this, choices, choicesSubtexts, tagColor, -1);
 
-      new AlertDialog.Builder(this)
+      Dialog dialog = new AlertDialog.Builder(this)
               .setCancelable(true)
               .setTitle(R.string.filter_choice)
               .setIcon(R.drawable.ic_search_category_default)
@@ -564,6 +534,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
                 }
               })
               .show();
+      makeDialogTooleapCompatible(dialog);
   }
 
   private void showRecordLogDialog() {
@@ -609,7 +580,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
                 
                 final FilterAdapter filterAdapter = new FilterAdapter(LogcatActivity.this, filters);
                 
-                new AlertDialog.Builder(LogcatActivity.this)
+                Dialog dialog = new AlertDialog.Builder(LogcatActivity.this)
                     .setCancelable(true)
                     .setTitle(R.string.title_filters)
                     .setNegativeButton(android.R.string.cancel, null)
@@ -630,12 +601,12 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
                         }
                     })
                     .show();
-                
+                makeDialogTooleapCompatible(dialog);
             }
             
             
             
-        }.execute((Void)null);
+        }.execute((Void) null);
     }
     
     private void showAddFilterDialog(final FilterAdapter filterAdapter) {
@@ -692,6 +663,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         });
         
         alertDialog.show();
+        makeDialogTooleapCompatible(alertDialog);
         
     }
 
@@ -749,7 +721,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
             helpView.setHorizontalScrollBarEnabled(false);
             final CheckBox checkBox = (CheckBox) helpView.findViewById(android.R.id.checkbox);
             
-            new AlertDialog.Builder(this)
+            Dialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.menu_title_partial_select)
                 .setCancelable(true)
                 .setView(helpView)
@@ -771,6 +743,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
                     }
                 })
                 .show();
+            makeDialogTooleapCompatible(dialog);
         }
     }
     
@@ -873,8 +846,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
                     
                 }
             });
-        
-        builder.show();
+
+        makeDialogTooleapCompatible(builder.show());
         
     }
 
@@ -920,7 +893,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
                 }
             });
             builder.setNegativeButton(android.R.string.cancel, null);
-            builder.show();
+            makeDialogTooleapCompatible(builder.show());
         }
         
         
@@ -944,7 +917,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
             }
         });
         
-        new AlertDialog.Builder(this)
+        Dialog dialog = new AlertDialog.Builder(this)
             .setTitle(R.string.send_log_title)
             .setView(includeDeviceInfoView)
             .setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
@@ -956,7 +929,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
                 }
             })
             .show();
-        
+        makeDialogTooleapCompatible(dialog);
     }
     
     private void showSendLogToWhichAppDialogue(final boolean asText, final boolean includeDeviceInfo) {
@@ -977,7 +950,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         
         final SenderAppAdapter senderAppAdapter = new SenderAppAdapter(this, asText, attachmentType);
         
-        new AlertDialog.Builder(LogcatActivity.this)
+        Dialog dialog = new AlertDialog.Builder(LogcatActivity.this)
             .setTitle(title)
             .setCancelable(true)
             .setSingleChoiceItems(senderAppAdapter, -1, new DialogInterface.OnClickListener() {
@@ -988,7 +961,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
                     }
                 })
                 .show();
-
+        makeDialogTooleapCompatible(dialog);
         
     }
     
@@ -1010,6 +983,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
                     getBodyProgressDialog.setTitle(R.string.dialog_please_wait);
                     getBodyProgressDialog.setMessage(getString(R.string.dialog_compiling_log));
                     getBodyProgressDialog.show();
+                    makeDialogTooleapCompatible(getBodyProgressDialog);
                 }
             }
 
@@ -1274,8 +1248,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
                     
                 }
             });
-        
-        builder.show();
+
+        makeDialogTooleapCompatible(builder.show());
         
     }    
     private void openLog(final String filename) {
@@ -1432,17 +1406,17 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         builder.setTitle(R.string.log_level)
             .setCancelable(true)
             .setSingleChoiceItems(logLevels, adapter.getLogLevelLimit(), new DialogInterface.OnClickListener() {
-            
+
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 adapter.setLogLevelLimit(which);
                 logLevelChanged();
                 dialog.dismiss();
-                
+
             }
         });
-        
-        builder.show();
+
+        makeDialogTooleapCompatible(builder.show());
     }
     
     private void setUpWidgets() {
@@ -1472,13 +1446,14 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         backgroundLayout = findViewById(R.id.main_background);
         
         clearButton = findViewById(R.id.main_clear_button);
+        popoutButton = findViewById(R.id.main_popout_button);
         expandButton = findViewById(R.id.main_more_button);
         pauseButton = findViewById(R.id.main_pause_button);
         expandButtonImage = (ImageView) findViewById(R.id.main_expand_button_image);
         pauseButtonImage = (ImageView) findViewById(R.id.main_pause_button_image);
         
         
-        for (View view : new View[]{clearButton, expandButton, pauseButton}) {
+        for (View view : new View[]{clearButton, expandButton, pauseButton, popoutButton}) {
             view.setOnClickListener(this);
         }
         clearButton.setOnLongClickListener(this);
@@ -1701,6 +1676,32 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
                     searchEditText.setText("");
                 }
                 Toast.makeText(this, R.string.log_cleared, Toast.LENGTH_LONG).show();
+                break;
+            case R.id.main_popout_button:
+
+                // toggle the bubble availability
+
+                Tooleap tooleap = Tooleap.getInstance(this);
+
+                if (tooleap.getAllMiniApps().size() == 0) {
+                    // show the bubble
+                    Intent intent = new Intent(this, FloatingLogcatActivity.class);
+
+                    TooleapPopOutMiniApp miniApp = new TooleapPopOutMiniApp(this, intent);
+
+                    // An example for some customizations of a mini app. You can use your own...
+                    miniApp.contentTitle = "Tooleap CatLog";
+                    miniApp.notificationText = "Click on the bubble to open the CatLog";
+
+                    tooleap.addMiniApp(miniApp);
+
+                    // go back to the home screen
+                    moveTaskToBack(true);
+
+                } else {
+                    // remove the bubble
+                    tooleap.removeAllMiniApps();
+                }
                 break;
             case R.id.main_more_button:
                 unfocusEditText();
@@ -1971,3 +1972,4 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         
     }
 }
+

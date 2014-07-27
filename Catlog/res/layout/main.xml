@@ -105,6 +105,28 @@
                 android:layout_weight="1"
                 android:src="@drawable/ic_menu_close_clear_cancel_32" />
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/main_popout_button"
+            style="@android:style/Widget.Button"
+            android:layout_width="@dimen/main_button_width"
+            android:layout_height="fill_parent"
+            android:background="@android:drawable/list_selector_background"
+            android:gravity="center_vertical|left"
+            android:orientation="horizontal" >
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="@android:color/darker_gray" />
+
+            <ImageView
+                android:id="@+id/main_popout_button_image"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/ic_menu_set_as" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
