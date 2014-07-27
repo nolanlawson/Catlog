@@ -1691,7 +1691,7 @@ public class LogcatActivity extends TooleapActivities.ListActivity implements Te
 
                     // An example for some customizations of a mini app. You can use your own...
                     miniApp.contentTitle = "Tooleap CatLog";
-                    miniApp.notificationText = "Click on the bubble to open the Tooleap CatLog";
+                    miniApp.notificationText = "Click on the bubble to open the CatLog";
 
                     tooleap.addMiniApp(miniApp);
 
