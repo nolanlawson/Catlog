@@ -22,7 +22,7 @@ import com.nolanlawson.logcat.data.FilterQueryWithLevel;
 import com.nolanlawson.logcat.data.SortedFilterArrayAdapter;
 import com.nolanlawson.logcat.util.ArrayUtil;
 import com.nolanlawson.logcat.util.Callback;
-import com.nolanlawson.sdk.TooleapActivities;
+import com.tooleap.sdk.TooleapActivities;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;

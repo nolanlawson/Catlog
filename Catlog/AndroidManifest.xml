@@ -65,15 +65,15 @@
 
         </activity>
 
-        <service android:name="com.nolanlawson.sdk.TooleapAppService"/>
-        <service android:name="com.nolanlawson.sdk.TooleapUIService"
+        <service android:name="com.tooleap.sdk.TooleapAppService"/>
+        <service android:name="com.tooleap.sdk.TooleapUIService"
                  android:process=":UIService"
                  android:exported="true">
             <intent-filter>
                 <action android:name="com.tooleap.sdk.BIND_UI_SERVICE" />
             </intent-filter>
         </service>
-        <receiver android:name="com.nolanlawson.sdk.TooleapReceiver">
+        <receiver android:name="com.tooleap.sdk.TooleapReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REPLACED"/>
                 <data android:scheme="package"/>

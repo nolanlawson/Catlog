@@ -39,9 +39,9 @@ import com.nolanlawson.logcat.util.ArrayUtil;
 import com.nolanlawson.logcat.util.LogLineAdapterUtil;
 import com.nolanlawson.logcat.util.StringUtil;
 import com.nolanlawson.logcat.util.UtilLogger;
-import com.nolanlawson.sdk.Tooleap;
-import com.nolanlawson.sdk.TooleapActivities;
-import com.nolanlawson.sdk.TooleapPopOutMiniApp;
+import com.tooleap.sdk.Tooleap;
+import com.tooleap.sdk.TooleapActivities;
+import com.tooleap.sdk.TooleapPopOutMiniApp;
 
 import java.io.File;
 import java.util.*;
