@@ -1051,7 +1051,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         
         if (includeDeviceInfo) {
             // include device info
-            String deviceInfo = BuildHelper.getBuildInformationAsString();
+            String deviceInfo = BuildHelper.getBuildInformationAsString(this);
             if (asText) {
                 // append to top of body
                 body.append(deviceInfo).append('\n');
