@@ -17,10 +17,10 @@
 			</intent-filter>			
 		</activity>
 
-		<activity android:name=".AboutActivity" android:theme="@android:style/Theme.Dialog" />
+		<activity android:name=".AboutActivity" android:theme="@style/Theme.AppCompat" />
 	
 		
-		<activity android:name=".ShowRecordLogDialogActivity" android:theme="@android:style/Theme.Dialog" />
+		<activity android:name=".ShowRecordLogDialogActivity" android:theme="@style/Theme.AppCompat" />
 		
 
 		<activity android:name=".SettingsActivity" />
@@ -53,7 +53,7 @@
 
 	</application>
 
-	<uses-sdk android:minSdkVersion="3" android:targetSdkVersion="10" />
+	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="21" />
 	<uses-permission android:name="android.permission.READ_LOGS" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	

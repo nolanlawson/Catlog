@@ -10,7 +10,6 @@
         android:id="@+id/action_bar"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/main_button_height"
-        android:background="@drawable/action_bar"
         android:gravity="center_vertical|right"
         android:orientation="horizontal" >
 
@@ -49,11 +48,6 @@
             android:gravity="center_vertical|left"
             android:orientation="horizontal" >
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="fill_parent"
-                android:background="@android:color/darker_gray" />
-
             <ImageView
                 android:id="@+id/main_pause_button_image"
                 android:layout_width="0px"
@@ -71,11 +65,6 @@
             android:gravity="center_vertical|left"
             android:orientation="horizontal" >
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="fill_parent"
-                android:background="@android:color/darker_gray" />
-
             <ImageView
                 android:id="@+id/main_expand_button_image"
                 android:layout_width="0px"
@@ -92,11 +81,6 @@
             android:background="@android:drawable/list_selector_background"
             android:gravity="center_vertical|left"
             android:orientation="horizontal" >
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="fill_parent"
-                android:background="@android:color/darker_gray" />
 
             <ImageView
                 android:id="@+id/main_clear_button_image"
@@ -124,20 +108,10 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <View
-                android:id="@+id/main_border_view_1"
-                android:layout_width="fill_parent"
-                android:layout_height="1dp" />
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" >
-
-                <View
-                    android:id="@+id/main_border_view_2"
-                    android:layout_width="1dp"
-                    android:layout_height="fill_parent" />
 
                 <LinearLayout
                     android:layout_width="0px"
@@ -154,17 +128,7 @@
                         android:paddingTop="1dp"
                         android:typeface="monospace" />
                 </LinearLayout>
-
-                <View
-                    android:id="@+id/main_border_view_3"
-                    android:layout_width="1dp"
-                    android:layout_height="fill_parent" />
             </LinearLayout>
-
-            <View
-                android:id="@+id/main_border_view_4"
-                android:layout_width="fill_parent"
-                android:layout_height="1dp" />
         </LinearLayout>
     </LinearLayout>
 

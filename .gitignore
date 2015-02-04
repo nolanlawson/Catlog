@@ -1,5 +1,9 @@
 bin
 gen
+local.properties
+build
+.gradle
+.idea
 *~
 **/proguard/dump.txt
 **/proguard/seeds.txt
