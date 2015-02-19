@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!-- non-translateable strings-->
+	<string name="app_name">CatLog</string>
+	
+	<string name="donate_version_name">Donate</string>
+	
+	<string name="first_run">first_run23</string>
+	
+	<string name="log_level_debug">Debug</string>
+	<string name="log_level_error">Error</string>
+	<string name="log_level_info">Info</string>
+	<string name="log_level_value_debug">D</string>
+	<string name="log_level_value_error">E</string>
+	<string name="log_level_value_info">I</string>
+	<string name="log_level_value_verbose">V</string>
+	<string name="log_level_value_warn">W</string>
+	<string name="log_level_value_wtf">F</string>
+	<string name="log_level_verbose">Verbose</string>
+	<string name="log_level_warn">Warn</string>
+	<string name="log_level_wtf">What a Terrible Failure</string>
+	
+	<string name="pref_about">about</string>
+	<string name="pref_buffer">buffer</string>
+	<string name="pref_buffer_choice_events_value">events</string>
+	<string name="pref_buffer_choice_main_value">main</string>
+	<string name="pref_buffer_choice_radio_value">radio</string>
+	<string name="pref_default_log_level">default_level</string>
+	<string name="pref_display_limit">display_limit</string>
+	<string name="pref_display_limit_default">10000</string>
+	<string name="pref_expanded_by_default">expand_default</string>
+	<string name="pref_hide_partial_select_help">pref_hide_partial_select_help</string>
+	<string name="pref_include_device_info">device_info</string>
+	<string name="pref_log_line_period">log_line_period</string>
+	<string name="pref_log_line_period_default">200</string>
+	<string name="pref_ran_jellybean_su_update">jellybean_su</string>
+	<string name="pref_show_timestamp">show_timestamp</string>
+	<string name="pref_text_size">text_size</string>
+	<string name="pref_theme">theme</string>
+	<string name="pref_theme_choice_android_value">Android</string>
+	<string name="pref_theme_choice_att_value">Ma Bell</string>
+	<string name="pref_theme_choice_dark_value">Dark</string>
+	<string name="pref_theme_choice_light_value">Light</string>
+	<string name="pref_theme_choice_sprint_value">Big Yellow</string>
+	<string name="pref_theme_choice_tmobile_value">T-Mo</string>
+	<string name="pref_theme_choice_verizon_value">Big Red</string>
+	
+	<string name="text_size_large_value">L</string>
+	<string name="text_size_medium_value">M</string>
+	<string name="text_size_small_value">S</string>
+	<string name="text_size_xlarge_value">XL</string>
+	<string name="text_size_xsmall_value">XS</string>
+	
+<!-- translateable strings--><!-- Translated by R3gi (regiprogi@gmail.com), 19.II.2015 -->
+	<string name="about">O aplikaci</string>
+	<string name="about_catlog">O aplikaci CatLog</string>
+	
+	<string name="add_filter">Přidat filtr</string>
+	<string name="add_filter_ellipsis">Přidat filtr…</string>
+	
+	<string name="are_you_sure">Soubory (%d) budou odstraněny.</string>
+	
+	<string name="as_attachment">Jako přílohu</string>
+	<string name="as_text">Jako text</string>
+	
+	<string name="checkbox_never_show_partial_select_help">Již nezobrazovat</string>
+	
+	<string name="copied_to_clipboard">Zkopírováno do schránky.</string>
+	
+	<string name="copy_to_clipboard">Kopírovat do schránky</string>
+	
+	<string name="default_in_parens">(Výchozí)</string>
+	<string name="delete_all">Smazat vše</string>
+	<string name="delete_saved_log">Smazat uložené protokoly</string>
+	<string name="delimiter">, </string>
+	<string name="dialog_compiling_log">Sestavování protokolu…</string>
+	<string name="dialog_for_donate">Pro <b>bonusové barevné\nmotivy</b> si stáhněte\n<a href="market://details?id=com.nolanlawson.logcat.donate">CatLog Donate</a></string>
+	<string name="dialog_for_widget">Pro <b>widget</b>:\nDomů › přidržení\n › Widgety</string>
+	<string name="dialog_initializing_recorder">Načítání záznamníku…</string>
+	<string name="dialog_loading_updates">Načítání aktualizací…</string>
+	<string name="dialog_partial_select_explanation">1. Vyberte <b>první</b> řádek.\n2. Poté vyberte <b>poslení</b> řádek.</string>
+	<string name="dialog_please_wait">Čekejte prosím</string>
+	
+	<string name="enter_filename">Zadejte název souboru:</string>
+	<string name="enter_good_filename">Zadejte platný název souboru.</string>
+	
+	<string name="files_deleted">Počet odstraněných souborů: %d.</string>
+	
+	<string name="filter_choice">Hledat podle</string>
+	<string name="filter_choice_pid">ID procesu</string>
+	<string name="filter_choice_tag">Značky</string>
+	<string name="filter_text_colon">Filtr textu:</string>
+
+	<string name="first_run_pref_summary">Znovu zobrazit úvodní zprávu.</string>
+	<string name="first_run_pref_title">Obnovit uvítací zprávu</string>
+	<string name="first_run_title">Vítá Vás CatLog!</string>
+	
+	<string name="log_cleared">Logy pročištěny. Pro opětovné načtení tlačítko přidržte.</string>
+	<string name="log_level">Úroveň logů</string>
+	<string name="log_level_colon">Úroveň logů:</string>
+	<string name="log_recording_started">Záznam zahájen.</string>
+	<string name="log_saved">Log uložen.</string>
+	
+	<string name="main_edit_text_hint">Hledat</string>
+	
+	<string name="manage_saved_logs">Spravovat uložené logy</string>
+	
+	<string name="menu_title_partial_select">Výběr části</string>
+	
+	<string name="no_saved_logs">Nenalezeny žádné uložené logy.</string>
+	
+	<string name="notification_subtext">Klepnutím zastavíte nahrávání.</string>
+	<string name="notification_ticker">Nahrávání zahájeno</string>
+	<string name="notification_title">Probíhá záznam logu</string>
+	
+	<string name="open">Otevřít</string>
+	<string name="open_log">Otevřít log</string>
+	
+	<string name="play_x1_log">Přehrát (%s)</string>
+	<string formatted="false" name="play_x2_log">Přehrát (%s, %s)</string>
+	<string name="play_x3_log">Přehrát všechny logy</string>
+	
+	<string name="pref_buffer_choice_events">Events</string>
+	<string name="pref_buffer_choice_main">Main</string>
+	<string name="pref_buffer_choice_radio">Radio</string>
+	<string name="pref_buffer_none_checked_error">Povolte alespoň jeden buffer.</string>
+	<string name="pref_buffer_title">Buffer(y)</string>
+	<string name="pref_cat_advanced">Pokročilé</string>
+	<string name="pref_cat_appearance">Vzhled</string>
+	<string name="pref_cat_configuration">Konfigurace</string>
+	<string name="pref_default_log_level_summary">Počáteční úroveň logů při spuštění, otevírání souborů a zaznamenávání (%s)</string>
+	<string name="pref_default_log_level_title">Výchozí úroveň</string>
+	<string formatted="false" name="pref_display_limit_summary">Zobrazovat pouze posledních %d logů, aby nedocházelo k chybám „OutOfMemoryErrors“. (Výchozí: %s)</string>
+	<string name="pref_display_limit_title">Limit pro zobrazení logů</string>
+	<string name="pref_expanded_by_default_summary">Ve výchozím stavu zobrazovat celý text logu.</string>
+	<string name="pref_expanded_by_default_title">Rozbalit</string>
+	<string name="pref_log_line_period_error">Zadejte hodnotu mezi 1 a 1000.</string>
+	<string formatted="false" name="pref_log_line_period_summary">Při nahrávání zapisovat na SD kartu každých %d řádků (výchozí: %s).</string>
+	<string name="pref_log_line_period_title">Interval zápisu</string>
+	<string name="pref_show_timestamp_summary">Zobrazovat ID procesu a časové razítko pro rozbalené položky.</string>
+	<string name="pref_show_timestamp_title">Zobrazovat číslo procesu a časové razítko</string>
+	<string name="pref_text_size_title">Velikost textu</string>
+	<string name="pref_theme_choice_android_name">Android</string>
+	<string name="pref_theme_choice_att_name">Ma Bell</string>
+	<string name="pref_theme_choice_dark_name">Tmavé</string>
+	<string name="pref_theme_choice_light_name">Světlé</string>
+	<string name="pref_theme_choice_sprint_name">Žluté</string>
+	<string name="pref_theme_choice_tmobile_name">T-Mo</string>
+	<string name="pref_theme_choice_verizon_name">Červené</string>
+	<string name="pref_theme_summary_free">Vyžaduje „donate“ verzi.</string>
+	<string name="pref_theme_title">Barevné schéma</string>
+	
+	<string name="record_log">Záznam</string>
+	
+	<string name="recording_in_progress">Záznam je již spuštěn.</string>
+	
+	<string name="save">Uložit</string>
+	<string name="save_as">Uložit jako…</string>
+	<string name="save_log">Uložit log</string>
+	
+	<string name="sd_card_not_found">SD karta nenalezena.</string>
+	
+	<string name="select_logs_to_delete">Zvolte protokoly, které chcete smazat.</string>
+	
+	<string name="send_as_attachment">Odeslat jako přílohu</string>
+	<string name="send_as_text">Odeslat jako text</string>
+	<string name="send_log">Odeslat</string>
+	<string name="send_log_title">Odeslat protokol</string>
+	
+	<string name="settings">Nastavení</string>
+	
+	<string name="simultaneous"> (souběžné)</string>
+	
+	<string name="start_recording_log">Záznam</string>
+	
+	<string name="stop_recording_log">Ukončit záznam</string>
+	
+	<string name="subject_log_report">Log report</string>
+	
+	<string name="text_filter_ellipsis">Filtr…</string>
+	<string name="text_filter_text">Filtr textu</string>
+	<string name="text_include_device_info">Přiložit informace o zařízení</string>
+	<string name="text_size_large_name">Velký (14 pt)</string>
+	<string name="text_size_medium_name">Střední (12 pt)</string>
+	<string name="text_size_small_name">Malý (10 pt)</string>
+	<string name="text_size_xlarge_name">Velmi velký (16 pt)</string>
+	<string name="text_size_xsmall_name">Velmi malý (8 pt)</string>
+	
+	<string name="title_filter">Filtr</string>
+	<string name="title_filters">Filtry</string>
+	
+	<string formatted="false" name="toast_invalid_display_limit">Zadejte platné číslo mezi %d a %d.</string>
+	<string name="toast_invalid_level">Neplatný název úrovně: %s</string>
+	<string name="toast_invalid_selection">Neplatný výběr.  Prosím, opakujte akci.</string>
+	<string name="toast_log_truncated">Protokol je příliš dlouhý; zobrazeno posledních %d řádků.</string>
+	<string name="toast_no_root">Nelze získat root oprávnění.  Zobrazeny budou pouze vlastní logy aplikace CatLog.</string>
+	<string name="toast_pref_changed_restart_required">Nastavení aktualizováno. Změny se projeví po restartu.</string>
+	<string name="toast_request_root">CatLog vyžaduje pro čtení logů root (superuser) oprávnění.</string>
+	<string name="toast_started_select_partial">Aktivován režim částečného výběru</string>
+	
+	<string name="unable_to_save_log">Protokol nelze uložit. Je název souboru správný?</string>
+	
+	<string name="version">Verze %s</string>
+	
+	<string name="widget_recording_in_progress">Nahrávání…</string>
+	<string name="widget_start_recording">Záznam</string>
+</resources>
