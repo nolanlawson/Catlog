@@ -2,6 +2,8 @@ CatLog
 =========
 Graphical log reader for Android.
 
+_*Note*: this repo is unmaintained due to me having too little time and too little interest. Please check out a fork called [MatLog](https://plus.google.com/communities/108705871773878445106) that is optimized for newer devices._
+
 Author
 --------
 Nolan Lawson
