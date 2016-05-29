@@ -39,7 +39,9 @@
             android:nextFocusLeft="@+id/main_edit_text"
             android:nextFocusUp="@+id/main_edit_text"
             android:singleLine="true" />
-
+		
+       
+                
         <LinearLayout
             android:id="@+id/main_pause_button"
             style="@android:style/Widget.Button"
@@ -105,6 +107,7 @@
                 android:layout_weight="1"
                 android:src="@drawable/ic_menu_close_clear_cancel_32" />
         </LinearLayout>
+       
     </LinearLayout>
 
     <LinearLayout

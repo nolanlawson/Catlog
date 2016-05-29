@@ -130,9 +130,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         
         collapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(this);
         
-      log.d("initial collapsed mode is %s", collapsedMode);
+        log.d("initial collapsed mode is %s", collapsedMode);
 
-      registerForContextMenu(getListView());
+        registerForContextMenu(getListView());
 
         setUpWidgets();
         
@@ -390,6 +390,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         inflater.inflate(R.menu.main_menu, menu);
         
         return true;
+
     }
     
     @Override
@@ -424,9 +425,9 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         case R.id.menu_settings:
             startSettingsActivity();
             return true;
-        case R.id.menu_crazy_logger_service:
-            ServiceHelper.startOrStopCrazyLogger(this);
-            return true;
+//        case R.id.menu_crazy_logger_service:
+//            ServiceHelper.startOrStopCrazyLogger(this);
+//            return true;
         case R.id.menu_partial_select:
             startPartialSelectMode();
             return true;
@@ -436,7 +437,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         }
         return false;
     }
-
+/*
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         
@@ -495,7 +496,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         
         return super.onPrepareOptionsMenu(menu);
     }
-
+*/
   @Override
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
     menu.add(0, CONTEXT_MENU_FILTER_ID, 0, R.string.filter_choice);
@@ -1482,6 +1483,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
             view.setOnClickListener(this);
         }
         clearButton.setOnLongClickListener(this);
+
         
         filenameTextView = (TextView) findViewById(R.id.main_filename_text_view);
         mainFilenameLayout = findViewById(R.id.main_filename_linear_layout);
@@ -1650,6 +1652,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         
     }
 
+    //如果按搜索键，则选中本activity的搜索框，同时显示软键盘
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
         
@@ -1765,6 +1768,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 
     }    
 
+    //Called when an action is being performed.
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         
