@@ -42,6 +42,7 @@ import com.nolanlawson.logcat.helper.PreferenceHelper;
 import com.nolanlawson.logcat.util.LogLineAdapterUtil;
 import com.nolanlawson.logcat.util.StopWatch;
 import com.nolanlawson.logcat.util.UtilLogger;
+import java.util.regex.Pattern;
 
 /**
  * A ListAdapter that manages a ListView backed by an array of arbitrary
@@ -104,9 +105,6 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
     private LayoutInflater mInflater;
     
     private int logLevelLimit = 0;
-
-
-
 
     /**
      * Constructor
@@ -539,6 +537,7 @@ public class LogLineAdapter extends BaseAdapter implements Filterable {
      * is removed from the list.</p>
      */
     private class ArrayFilter extends Filter {
+		
         @Override
         protected FilterResults performFiltering(CharSequence prefix) {
             FilterResults results = new FilterResults();

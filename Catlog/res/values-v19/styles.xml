@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+		<item name="android:actionBarStyle">@style/ActionBarTheme</item>
+	</style>
+	
+	<style name="ActionBarTheme" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">@color/ab_color</item>
+    </style>
+	
+	<style
+		name="Dialog"
+		parent="@android:style/Theme.Holo.Light.Dialog">
+	</style>
+</resources>

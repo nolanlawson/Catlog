@@ -1,92 +1,39 @@
 package com.nolanlawson.logcat;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import android.app.*;
+import android.content.*;
+import android.os.*;
+import android.text.*;
+import android.view.*;
+import android.widget.*;
+import com.nolanlawson.logcat.data.*;
+import com.nolanlawson.logcat.helper.*;
+import com.nolanlawson.logcat.util.*;
+import java.util.*;
 
-import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import android.app.ListActivity;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.ClipboardManager;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
-import android.view.ContextMenu;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.Filter;
 import android.widget.Filter.FilterListener;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.Toast;
-
-import com.nolanlawson.logcat.data.ColorScheme;
-import com.nolanlawson.logcat.data.FilterAdapter;
-import com.nolanlawson.logcat.data.LogFileAdapter;
-import com.nolanlawson.logcat.data.LogLine;
-import com.nolanlawson.logcat.data.LogLineAdapter;
-import com.nolanlawson.logcat.data.SavedLog;
-import com.nolanlawson.logcat.data.SearchCriteria;
-import com.nolanlawson.logcat.data.SendLogDetails;
-import com.nolanlawson.logcat.data.SenderAppAdapter;
-import com.nolanlawson.logcat.data.SortedFilterArrayAdapter;
-import com.nolanlawson.logcat.data.TagAndProcessIdAdapter;
 import com.nolanlawson.logcat.db.CatlogDBHelper;
 import com.nolanlawson.logcat.db.FilterItem;
-import com.nolanlawson.logcat.helper.BuildHelper;
-import com.nolanlawson.logcat.helper.DialogHelper;
-import com.nolanlawson.logcat.helper.PreferenceHelper;
-import com.nolanlawson.logcat.helper.SaveLogHelper;
-import com.nolanlawson.logcat.helper.ServiceHelper;
-import com.nolanlawson.logcat.helper.UpdateHelper;
 import com.nolanlawson.logcat.intents.Intents;
 import com.nolanlawson.logcat.reader.LogcatReader;
 import com.nolanlawson.logcat.reader.LogcatReaderLoader;
-import com.nolanlawson.logcat.util.ArrayUtil;
-import com.nolanlawson.logcat.util.LogLineAdapterUtil;
-import com.nolanlawson.logcat.util.StringUtil;
-import com.nolanlawson.logcat.util.UtilLogger;
-import java.util.Arrays;
+import java.io.File;
 
-public class LogcatActivity extends ListActivity implements TextWatcher, OnScrollListener, 
-        FilterListener, OnEditorActionListener, OnClickListener, OnLongClickListener {
-    
+public class LogcatActivity extends ListActivity implements OnQueryTextListener, 
+OnScrollListener, FilterListener, OnEditorActionListener, OnLongClickListener {
+
     private static final int REQUEST_CODE_SETTINGS = 1;
     
     // how often to check to see if we've gone over the max size
@@ -101,15 +48,16 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     
     private static UtilLogger log = new UtilLogger(LogcatActivity.class);
     
-    private View backgroundLayout, mainFilenameLayout, clearButton, expandButton, pauseButton;
-    private AutoCompleteTextView searchEditText;
+    private View backgroundLayout, mainFilenameLayout;
+    private SearchView searchEditText;
     private ProgressBar darkProgressBar, lightProgressBar;
     private LogLineAdapter adapter;
     private LogReaderAsyncTask task;
-    private ImageView expandButtonImage, pauseButtonImage;
     private TextView filenameTextView;
     private View borderView1, borderView2, borderView3, borderView4;
     
+	private MenuItem itemExpandCollapse, itemPauseResume;
+	
     private int firstVisibleItem = -1;
     private boolean autoscrollToBottom = true;
     private boolean collapsedMode;
@@ -125,21 +73,21 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        setContentView(R.layout.main);
-        
-        collapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(this);
-        
-      log.d("initial collapsed mode is %s", collapsedMode);
 
-      registerForContextMenu(getListView());
+        setContentView(R.layout.main);
+
+        collapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(this);
+
+		log.d("initial collapsed mode is %s", collapsedMode);
+
+		registerForContextMenu(getListView());
 
         setUpWidgets();
-        
+
         setUpAdapter();
-        
+
         updateBackgroundColor();
-        
+
         runUpdatesIfNecessaryAndShowInitialMessage();
     }
 
@@ -152,25 +100,25 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
             dialog.setMessage(getString(R.string.dialog_loading_updates));
             dialog.show();
             
-            new AsyncTask<Void, Void, Void>(){
+			new Runnable(){
 
-                @Override
-                protected Void doInBackground(Void... params) {
-                    UpdateHelper.runUpdatesIfNecessary(LogcatActivity.this);
-                    return null;
-                }
+				@Override
+				public void run() {
+					UpdateHelper.runUpdatesIfNecessary(LogcatActivity.this);
+					
+					handler.post(new Runnable(){
 
-                @Override
-                protected void onPostExecute(Void result) {
-                    super.onPostExecute(result);
-                    if (dialog != null && dialog.isShowing()) {
-                        dialog.dismiss();
-                    }
-                    showInitialMessageAndStartupLog();
-                }
-                
-                
-            }.execute((Void)null);
+							@Override
+							public void run() {
+								if (dialog != null && dialog.isShowing()) {
+									dialog.dismiss();
+								}
+								showInitialMessageAndStartupLog();
+							}
+						});
+				}
+				
+			}.run();
             
         } else {
             showInitialMessageAndStartupLog();
@@ -225,7 +173,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
                             }
                         })
                     .setCancelable(false)
-                    .setIcon(R.drawable.icon).show();
+                    .setIcon(R.drawable.ic_launcher).show();
 
         } else {
             doAfterInitialMessage(getIntent());
@@ -277,9 +225,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     
     private void restartMainLog() {
         adapter.clear();
-        
         startUpMainLog();
-        
     }
 
     @Override
@@ -388,64 +334,103 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
-        
+		
+		itemExpandCollapse = menu.findItem(R.id.menu_moore_button);
+		itemPauseResume = menu.findItem(R.id.menu_pause_button);
+		
+		searchEditText = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+		searchEditText.setIconifiedByDefault(true);
+		searchEditText.setOnQueryTextListener(this);
+		searchEditText.setQueryHint("Search Here");
+
+        searchSuggestionsAdapter = new SortedFilterArrayAdapter<String>(
+			this, R.layout.simple_dropdown_small, new ArrayList<String>());
+			// TODO: adapter
+//		searchEditText.setSuggestionsAdapter(searchSuggestionsAdapter);
+		
         return true;
     }
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        
+
         switch (item.getItemId()) {
-        case R.id.menu_log_level:
-            showLogLevelDialog();
-            return true;
-        case R.id.menu_open_log:
-            showOpenLogDialog();
-            return true;
-        case R.id.menu_save_log:
-        case R.id.menu_save_as_log:
-            showSaveLogDialog();
-            return true;
-        case R.id.menu_record_log:
-            showRecordLogDialog();
-            return true;
-        case R.id.menu_stop_recording_log:
-            DialogHelper.stopRecordingLog(this);
-            return true;            
-        case R.id.menu_send_log:
-            showSendLogDialog();
-            return true;
-        case R.id.menu_main_log:
-            startUpMainLog();
-            return true;
-        case R.id.menu_delete_saved_log:
-            startDeleteSavedLogsDialog();
-            return true;
-        case R.id.menu_settings:
-            startSettingsActivity();
-            return true;
-        case R.id.menu_crazy_logger_service:
-            ServiceHelper.startOrStopCrazyLogger(this);
-            return true;
-        case R.id.menu_partial_select:
-            startPartialSelectMode();
-            return true;
-        case R.id.menu_filters:
-            showFiltersDialog();
-            return true;
+			case R.id.menu_log_level:
+				showLogLevelDialog();
+				return true;
+			case R.id.menu_open_log:
+				showOpenLogDialog();
+				return true;
+			case R.id.menu_save_log:
+			case R.id.menu_save_as_log:
+				showSaveLogDialog();
+				return true;
+			case R.id.menu_record_log:
+				showRecordLogDialog();
+				return true;
+			case R.id.menu_stop_recording_log:
+				DialogHelper.stopRecordingLog(this);
+				return true;            
+			case R.id.menu_send_log:
+				showSendLogDialog();
+				return true;
+			case R.id.menu_main_log:
+				startUpMainLog();
+				return true;
+			case R.id.menu_delete_saved_log:
+				startDeleteSavedLogsDialog();
+				return true;
+			case R.id.menu_settings:
+				startSettingsActivity();
+				return true;
+			case R.id.menu_crazy_logger_service:
+				ServiceHelper.startOrStopCrazyLogger(this);
+				return true;
+			case R.id.menu_partial_select:
+				startPartialSelectMode();
+				return true;
+			case R.id.menu_filters:
+				showFiltersDialog();
+				return true;
+
+			case R.id.menu_clear_button:
+                unfocusEditText();
+                if (adapter != null) {
+                    adapter.clear();
+                }
+                if (searchEditText != null) {
+                    searchEditText.setQuery("",true);
+                }
+                Toast.makeText(this, R.string.log_cleared, Toast.LENGTH_LONG).show();
+                break;
+            case R.id.menu_moore_button:
+                unfocusEditText();
+                expandOrCollapseAll(true);
+                break;
+            case R.id.menu_pause_button:
+                unfocusEditText();
+                pauseOrUnpause();
+                break;	
+			case R.id.menu_search:
+                if (searchEditText != null && searchEditText.getQuery().length() > 0) {
+                    // I think it's intuitive to click an edit text and have all the text selected
+					// TODO: this
+//                    searchEditText.setSelection(0, searchEditText.length());
+                }
+                break;
         }
         return false;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        
+
         boolean showingMainLog = (task != null);
-        
+
         MenuItem mainLogMenuItem = menu.findItem(R.id.menu_main_log);
         MenuItem saveLogMenuItem = menu.findItem(R.id.menu_save_log);
         MenuItem saveAsLogMenuItem = menu.findItem(R.id.menu_save_as_log);
-        
+
         mainLogMenuItem.setEnabled(!showingMainLog);
         mainLogMenuItem.setVisible(!showingMainLog);
         List<String> bufferNames = PreferenceHelper.getBufferNames(this);
@@ -458,41 +443,41 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
                 break;
             case 2:
                 mainLogTitle = String.format(getString(R.string.play_x2_log), 
-                        bufferNames.get(0), bufferNames.get(1));
+											 bufferNames.get(0), bufferNames.get(1));
                 break;
             default: // 3
                 mainLogTitle = getString(R.string.play_x3_log);                
                 break;
-                
+
         }
 
         mainLogMenuItem.setTitle(mainLogTitle);            
-        
+
         saveLogMenuItem.setEnabled(showingMainLog);
         saveLogMenuItem.setVisible(showingMainLog);
-        
+
         saveAsLogMenuItem.setEnabled(!showingMainLog);
         saveAsLogMenuItem.setVisible(!showingMainLog);
-        
+
         boolean recordingInProgress = ServiceHelper.checkIfServiceIsRunning(getApplicationContext(), LogcatRecordingService.class);
-    
+
         MenuItem recordMenuItem = menu.findItem(R.id.menu_record_log);
         MenuItem stopRecordingMenuItem = menu.findItem(R.id.menu_stop_recording_log);
-        
+
         recordMenuItem.setEnabled(!recordingInProgress);
         recordMenuItem.setVisible(!recordingInProgress);
-        
+
         stopRecordingMenuItem.setEnabled(recordingInProgress);
         stopRecordingMenuItem.setVisible(recordingInProgress);
-        
+
         MenuItem crazyLoggerMenuItem = menu.findItem(R.id.menu_crazy_logger_service);
         crazyLoggerMenuItem.setEnabled(UtilLogger.DEBUG_MODE);
         crazyLoggerMenuItem.setVisible(UtilLogger.DEBUG_MODE);
-        
+
         MenuItem partialSelectMenuItem = menu.findItem(R.id.menu_partial_select);
         partialSelectMenuItem.setEnabled(!partialSelectMode);
         partialSelectMenuItem.setVisible(!partialSelectMode);
-        
+
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -539,7 +524,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
       new AlertDialog.Builder(this)
               .setCancelable(true)
               .setTitle(R.string.filter_choice)
-              .setIcon(R.drawable.ic_search_category_default)
+              .setIcon(android.R.drawable.ic_search_category_default)
               .setSingleChoiceItems(textAndSubtextAdapter, -1, new DialogInterface.OnClickListener() {
 
                 @Override
@@ -558,7 +543,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
                   }
 
                   // put the cursor at the end
-                  searchEditText.setSelection(searchEditText.length());
+//                  searchEditText.setSelection(searchEditText.length());
                   dialog.dismiss();
 
                 }
@@ -574,70 +559,64 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     Intent intent = new Intent(LogcatActivity.this, ShowRecordLogDialogActivity.class);
     intent.putExtra(ShowRecordLogDialogActivity.EXTRA_QUERY_SUGGESTIONS, suggestions);
         
-        startActivity(intent);
-    }
+    startActivity(intent);
+}
 
-    private void showFiltersDialog() {
-        
-        new AsyncTask<Void, Void, List<FilterItem>>(){
+	private void showFiltersDialog() {
+		new Runnable(){
 
-            @Override
-            protected List<FilterItem> doInBackground(Void... params) {
-                
-                List<FilterItem> filters = new ArrayList<FilterItem>();
-                filters.add(FilterItem.create(-1, null)); // dummy for the "add filter" option
-                
-                CatlogDBHelper dbHelper = null;
-                try {
-                    dbHelper = new CatlogDBHelper(LogcatActivity.this);
-                    filters.addAll(dbHelper.findFilterItems());
-                } finally {
-                    if (dbHelper != null) {
-                        dbHelper.close();
-                    }
-                }
+			@Override
+			public void run() {
+				final List<FilterItem> filters = new ArrayList<FilterItem>();
+				filters.add(FilterItem.create(-1, null)); // dummy for the "add filter" option
 
-                Collections.sort(filters);
-                
-                return filters;
-                
-            }
+				CatlogDBHelper dbHelper = null;
+				try {
+					dbHelper = new CatlogDBHelper(LogcatActivity.this);
+					filters.addAll(dbHelper.findFilterItems());
+				} finally {
+					if (dbHelper != null) {
+						dbHelper.close();
+					}
+				}
+				Collections.sort(filters);
+				
+				handler.post(new Runnable(){
 
-            @Override
-            protected void onPostExecute(List<FilterItem> filters) {
-                super.onPostExecute(filters);
-                
-                final FilterAdapter filterAdapter = new FilterAdapter(LogcatActivity.this, filters);
-                
-                new AlertDialog.Builder(LogcatActivity.this)
-                    .setCancelable(true)
-                    .setTitle(R.string.title_filters)
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .setSingleChoiceItems(filterAdapter, 0, new DialogInterface.OnClickListener() {
-                        
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (which == 0) { // dummy 'add filter' item
-                                showAddFilterDialog(filterAdapter);
-                            } else {
-                                // load filter
-                                String text = filterAdapter.getItem(which).getText();
-                                silentlySetSearchText(text);
-                                dialog.dismiss();
-                            }
-                            
-                            
-                        }
-                    })
-                    .show();
-                
-            }
-            
-            
-            
-        }.execute((Void)null);
+						@Override
+						public void run() {
+							showFiltersDialog(filters);
+						}
+					});
+			}
+		}.run();
+
     }
     
+	private void showFiltersDialog(List<FilterItem> filters){
+		final FilterAdapter filterAdapter = new FilterAdapter(LogcatActivity.this, filters);
+
+		new AlertDialog.Builder(LogcatActivity.this)
+			.setCancelable(true)
+			.setTitle(R.string.title_filters)
+			.setNegativeButton(android.R.string.cancel, null)
+			.setSingleChoiceItems(filterAdapter, 0, new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					if (which == 0) { // dummy 'add filter' item
+						showAddFilterDialog(filterAdapter);
+					} else {
+						// load filter
+						String text = filterAdapter.getItem(which).getText();
+						silentlySetSearchText(text);
+						dialog.dismiss();
+					}
+				}
+			})
+			.show();
+	}
+	
     private void showAddFilterDialog(final FilterAdapter filterAdapter) {
         
         // show a popup to add a new filter text
@@ -661,8 +640,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
                     // dismiss soft keyboard
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+					
                     handleNewFilterText(editText.getText().toString(), filterAdapter);
-                    dialog.dismiss();
+                    
+					dialog.dismiss();
                 }
             })
             .setNegativeButton(android.R.string.cancel, null)
@@ -692,43 +673,41 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         });
         
         alertDialog.show();
-        
     }
 
     protected void handleNewFilterText(String text, final FilterAdapter filterAdapter) {
         final String  trimmed = text.trim();
         if (!TextUtils.isEmpty(trimmed)) {
             
-            new AsyncTask<Void, Void, FilterItem>(){
+			new Runnable(){
 
-                @Override
-                protected FilterItem doInBackground(Void... params) {
-                    CatlogDBHelper dbHelper = null;
+				@Override
+				public void run() {
+					CatlogDBHelper dbHelper = null;
                     try {
                         dbHelper = new CatlogDBHelper(LogcatActivity.this);
-                        return dbHelper.addFilter(trimmed);
-                        
-                                                    
+                        final FilterItem filterItem = dbHelper.addFilter(trimmed);
+
+						handler.post(new Runnable(){
+
+								@Override
+								public void run() {
+									if (filterItem != null) { // null indicates duplicate
+										filterAdapter.add(filterItem);
+										filterAdapter.sort(FilterItem.DEFAULT_COMPARATOR);
+										filterAdapter.notifyDataSetChanged();
+
+										addToAutocompleteSuggestions(trimmed);
+									}
+								}
+							});
                     } finally {
                         if (dbHelper != null) {
                             dbHelper.close();
                         }
                     }
-                }
-
-                @Override
-                protected void onPostExecute(FilterItem filterItem) {
-                    super.onPostExecute(filterItem);
-                    
-                    if (filterItem != null) { // null indicates duplicate
-                        filterAdapter.add(filterItem);
-                        filterAdapter.sort(FilterItem.DEFAULT_COMPARATOR);
-                        filterAdapter.notifyDataSetChanged();
-                        
-                        addToAutocompleteSuggestions(trimmed);
-                    }
-                }
-            }.execute((Void)null);
+				}
+			}.run();
         }
     }
 
@@ -760,7 +739,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
                     public void onClick(DialogInterface dialog, int which) {
                         partialSelectMode = true;
                         partiallySelectedLogLines.clear();
-                        Toast.makeText(LogcatActivity.this, R.string.toast_started_select_partial, Toast.LENGTH_SHORT).show();
+                        toast(R.string.toast_started_select_partial);
                         
                         if (checkBox.isChecked()) {
                             // hide this help dialog in the future
@@ -791,10 +770,10 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
                 logLine.setExpanded(!collapsedMode);
             }
         }
-        
-        expandButtonImage.setImageResource(
-                collapsedMode ? R.drawable.ic_menu_more_32 : R.drawable.ic_menu_less_32);
-        
+		
+		itemExpandCollapse.setIcon(collapsedMode ? android.R.drawable.ic_menu_more : R.drawable.ic_menu_less_32);
+        itemExpandCollapse.setTitle(collapsedMode ? R.string.menu_ab_expand : R.string.menu_ab_collapse);
+		
         adapter.notifyDataSetChanged();
         
         // ensure that we either stay autoscrolling at the bottom of the list...
@@ -965,72 +944,71 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
             // if asText is false, then we need to check to make sure we can access the sdcard
             return;
         }
-        
+
         String title = getString(asText ? R.string.send_as_text : R.string.send_as_attachment);
-        
+
         // determine the attachment type
-        SendLogDetails.AttachmentType attachmentType = asText 
-                ? SendLogDetails.AttachmentType.None 
-                : (includeDeviceInfo 
-                        ? SendLogDetails.AttachmentType.Zip 
-                        : SendLogDetails.AttachmentType.Text);
-        
+        SendLogDetails.AttachmentType attachmentType;
+		if (asText) {
+			attachmentType = SendLogDetails.AttachmentType.None;
+		} else {
+			attachmentType =  (includeDeviceInfo 
+				? SendLogDetails.AttachmentType.Zip 
+				: SendLogDetails.AttachmentType.Text);
+		}
+
         final SenderAppAdapter senderAppAdapter = new SenderAppAdapter(this, asText, attachmentType);
-        
+
         new AlertDialog.Builder(LogcatActivity.this)
             .setTitle(title)
             .setCancelable(true)
             .setSingleChoiceItems(senderAppAdapter, -1, new DialogInterface.OnClickListener() {
 
-                    public void onClick(final DialogInterface dialog, final int which) {
-                        dialog.dismiss();
-                        sendLogToTargetApp(asText, includeDeviceInfo, senderAppAdapter, which);
-                    }
-                })
-                .show();
-
-        
+				public void onClick(final DialogInterface dialog, final int which) {
+					dialog.dismiss();
+					sendLogToTargetApp(asText, includeDeviceInfo, senderAppAdapter, which);
+				}
+			})
+			.show();
     }
     
     protected void sendLogToTargetApp(final boolean asText, final boolean includeDeviceInfo, 
-            final SenderAppAdapter senderAppAdapter, final int which) {
-        
+									  final SenderAppAdapter senderAppAdapter, final int which) {
+
         final ProgressDialog getBodyProgressDialog = new ProgressDialog(LogcatActivity.this);
         getBodyProgressDialog.setCancelable(false);
-        
-        // do in the background to avoid jank
-        AsyncTask<Void, Void, SendLogDetails> getBodyTask = new AsyncTask<Void, Void, SendLogDetails>() {
-            
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                
-                if (asText || currentlyOpenLog == null || includeDeviceInfo) {
-                
-                    getBodyProgressDialog.setTitle(R.string.dialog_please_wait);
-                    getBodyProgressDialog.setMessage(getString(R.string.dialog_compiling_log));
-                    getBodyProgressDialog.show();
-                }
-            }
 
-            @Override
-            protected SendLogDetails doInBackground(Void... params) {
-                return getSendLogDetailsInBackground(asText, includeDeviceInfo);
-            }
+		if (asText || currentlyOpenLog == null || includeDeviceInfo) {
+			getBodyProgressDialog.setTitle(R.string.dialog_please_wait);
+			getBodyProgressDialog.setMessage(getString(R.string.dialog_compiling_log));
+			getBodyProgressDialog.show();
+		}
+		
+		new Runnable(){
 
-            @Override
-            protected void onPostExecute(SendLogDetails sendLogDetails) {
-                super.onPostExecute(sendLogDetails);
-                
-                senderAppAdapter.respondToClick(which, sendLogDetails.getSubject(), sendLogDetails.getBody(), 
-                        sendLogDetails.getAttachmentType(), sendLogDetails.getAttachment());
-                if (getBodyProgressDialog != null && getBodyProgressDialog.isShowing()) {
-                    getBodyProgressDialog.dismiss();
-                }
-            }
-        };
-        getBodyTask.execute((Void) null);
-        
+			@Override
+			public void run() {
+				final SendLogDetails sendLogDetails = getSendLogDetailsInBackground(asText, includeDeviceInfo);
+
+				handler.post(new Runnable(){
+
+						@Override
+						public void run() {
+							
+								senderAppAdapter.respondToClick(which, 
+																sendLogDetails.getSubject(), 
+																sendLogDetails.getBody(), 
+																sendLogDetails.getAttachmentType(), 
+																sendLogDetails.getAttachment());
+
+								if (getBodyProgressDialog != null && getBodyProgressDialog.isShowing()) {
+									getBodyProgressDialog.dismiss();
+								}
+
+						}
+					});
+			}
+		}.run();
     }
 
     private SendLogDetails getSendLogDetailsInBackground(boolean asText, boolean includeDeviceInfo) {
@@ -1118,32 +1096,30 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     }
 
     private void showSaveLogDialog() {
-        
+
         if (!SaveLogHelper.checkSdCard(this)) {
-            return;
+			return;
         }
-        
+
         final EditText editText = DialogHelper.createEditTextForFilenameSuggestingDialog(this);
-        
+
         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-            
+
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
-                
+				
                 if (DialogHelper.isInvalidFilename(editText.getText())) {
                     Toast.makeText(LogcatActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
                 } else {
                     String filename = editText.getText().toString();
-                    saveLog(filename);
+					saveLog(filename);
                 }
-                
-                
+				
                 dialog.dismiss();
-                
+
             }
         };
-        
+
         DialogHelper.showFilenameSuggestingDialog(this, editText, onClickListener, null, null, R.string.save_log);
     }
     
@@ -1154,14 +1130,18 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         // filter based on first and last
         boolean started = false;
         boolean foundLast = false;
+		
         for (int i = 0; i < adapter.getCount(); i ++) {
             LogLine logLine = adapter.getItem(i);
+			
             if (logLine == first) {
                 started = true;
             }
+			
             if (started) {
                 logLines.add(logLine.getOriginalLine());
             }
+			
             if (logLine == last) {
                 foundLast = true;
                 break;
@@ -1169,190 +1149,137 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         }
         
         if (!foundLast || logLines.isEmpty()) {
-            Toast.makeText(this, R.string.toast_invalid_selection, Toast.LENGTH_LONG).show();
+            toast(R.string.toast_invalid_selection);
             cancelPartialSelect();
             return;
         }
         
-        AsyncTask<Void,Void,Boolean> saveTask = new AsyncTask<Void, Void, Boolean>(){
+		new Runnable(){
 
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                SaveLogHelper.deleteLogIfExists(filename);
-                return SaveLogHelper.saveLog(logLines, filename);
-                
-            }
-
-            @Override
-            protected void onPostExecute(Boolean successfullySavedLog) {
-                
-                super.onPostExecute(successfullySavedLog);
-                
-                if (successfullySavedLog) {
-                    Toast.makeText(getApplicationContext(), R.string.log_saved, Toast.LENGTH_SHORT).show();
-                    openLog(filename);
+			@Override
+			public void run() {
+				SaveLogHelper.deleteLogIfExists(filename);
+                boolean successfullySavedLog = SaveLogHelper.saveLog(logLines, filename);
+				
+				if (successfullySavedLog) {
+                    toast(R.string.log_saved);
+					handler.post(new Runnable(){@Override public void run() {openLog(filename);}}); 
                 } else {
-                    Toast.makeText(getApplicationContext(), R.string.unable_to_save_log, Toast.LENGTH_LONG).show();
+                    toast(R.string.unable_to_save_log);
                 }
                 
                 cancelPartialSelect();
-            }
-            
-            
-        };
-        
-        saveTask.execute((Void)null);
-        
+			}
+		}.run();
     }
 
     private void saveLog(final String filename) {
-        
-        // do in background to avoid jankiness
-        
-        final List<CharSequence> logLines = getCurrentLogAsListOfStrings();
-        
-        AsyncTask<Void,Void,Boolean> saveTask = new AsyncTask<Void, Void, Boolean>(){
+        // TODO: do in background to avoid jankiness
 
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                SaveLogHelper.deleteLogIfExists(filename);
-                return SaveLogHelper.saveLog(logLines, filename);
-                
-            }
+		new Runnable(){
 
-            @Override
-            protected void onPostExecute(Boolean successfullySavedLog) {
-                
-                super.onPostExecute(successfullySavedLog);
-                
-                if (successfullySavedLog) {
-                    Toast.makeText(getApplicationContext(), R.string.log_saved, Toast.LENGTH_SHORT).show();
-                    openLog(filename);
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.unable_to_save_log, Toast.LENGTH_LONG).show();
-                }
-            }
-            
-            
-        };
-        
-        saveTask.execute((Void)null);
-        
+			@Override
+			public void run() {
+				final List<CharSequence> logLines = getCurrentLogAsListOfStrings();
+
+				SaveLogHelper.deleteLogIfExists(filename);
+				boolean successfullySavedLog = SaveLogHelper.saveLog(logLines, filename);
+
+				if (successfullySavedLog) {
+					toast(R.string.log_saved);
+					openLog(filename);
+				} else {
+					toast(R.string.unable_to_save_log);
+				}
+			}
+			
+		}.run();
     }
 
     private void showOpenLogDialog() {
-        
+
         if (!SaveLogHelper.checkSdCard(this)) {
             return;
         }
-        
+
         final List<CharSequence> filenames = new ArrayList<CharSequence>(SaveLogHelper.getLogFilenames());
-        
         if (filenames.isEmpty()) {
             Toast.makeText(this, R.string.no_saved_logs, Toast.LENGTH_SHORT).show();
             return;
         }
-        
 
-        
         int logToSelect = currentlyOpenLog != null ? filenames.indexOf(currentlyOpenLog) : -1;
-        
-        ArrayAdapter<CharSequence> dropdownAdapter = new LogFileAdapter(
-                this, filenames, logToSelect, false);
-        
-        Builder builder = new Builder(this);
-        
-        builder.setTitle(R.string.open_log)
-            .setCancelable(true)
-            .setSingleChoiceItems(dropdownAdapter, logToSelect == -1 ? 0 : logToSelect, new DialogInterface.OnClickListener() {
-                
+
+        ArrayAdapter<CharSequence> dropdownAdapter = new LogFileAdapter(this, filenames, logToSelect, false);
+
+        AlertDialog.Builder ab = new AlertDialog.Builder(this);
+
+        ab.setTitle(R.string.open_log);
+		ab.setCancelable(true);
+		ab.setSingleChoiceItems(dropdownAdapter, logToSelect == -1 ? 0 : logToSelect, new DialogInterface.OnClickListener() {
+
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                     String filename = filenames.get(which).toString();
                     openLog(filename);
-                    
                 }
             });
-        
-        builder.show();
-        
-    }    
+
+        ab.show();
+    } 
+	
     private void openLog(final String filename) {
-        
-        // do in background to avoid jank
-        
-        final AsyncTask<Void, Void, List<LogLine>> openFileTask = new AsyncTask<Void, Void, List<LogLine>>(){
+		resetDisplayedLog(filename);
+		showProgressBar();
 
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                resetDisplayedLog(filename);
-                
-                showProgressBar();
-            }
+        Runnable job = new Runnable(){
 
-            @Override
-            protected List<LogLine> doInBackground(Void... params) {
-
-                // remove any lines at the beginning if necessary
+			@Override
+			public void run() {
+				// remove any lines at the beginning if necessary
                 final int maxLines = PreferenceHelper.getDisplayLimitPreference(LogcatActivity.this);
                 SavedLog savedLog = SaveLogHelper.openLog(filename, maxLines);
                 List<String> lines = savedLog.getLogLines();
-                List<LogLine> logLines = new ArrayList<LogLine>();
+                final List<LogLine> logLines = new ArrayList<LogLine>();
                 for (String line : lines) {
                     logLines.add(LogLine.newLogLine(line, !collapsedMode));
                 }
-                
+
                 // notify the user if the saved file was truncated
                 if (savedLog.isTruncated()) {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            String toastText = String.format(getString(R.string.toast_log_truncated), maxLines);
-                            Toast.makeText(LogcatActivity.this, toastText, Toast.LENGTH_LONG).show();
-                        }
-                    });
+                    String toastText = String.format(getString(R.string.toast_log_truncated), maxLines);
+					toast(toastText);
                 }
-                
-                return logLines;
-            }
+				
+				handler.post(new Runnable(){
 
-            @Override
-            protected void onPostExecute(List<LogLine> logLines) {
-                super.onPostExecute(logLines);
-                hideProgressBar();
-                
-                for (LogLine logLine : logLines) {
-                    adapter.addWithFilter(logLine, "");
-                    addToAutocompleteSuggestions(logLine);
-                    
-                }
-                
-                // scroll to bottom
-                getListView().setSelection(getListView().getCount() - 1);
-            }
-        };
-        
+						@Override
+						public void run() {
+							hideProgressBar();
+
+							for (LogLine logLine : logLines) {
+								adapter.addWithFilter(logLine, "");
+								addToAutocompleteSuggestions(logLine);
+							}
+
+							// scroll to bottom
+							getListView().setSelection(getListView().getCount() - 1);
+						}
+					});
+			}
+		};
+
         // if the main log task is running, we can only run AFTER it's been canceled
-        
-        if (task != null) {
-            task.setOnFinished(new Runnable(){
 
-                @Override
-                public void run() {
-                    openFileTask.execute((Void)null);
-                    
-                }});
+        if (task != null) {
             task.unpause();
+			task.setOnFinished(null);
             task.killReader();
-            task = null;
-        } else {
+			task = null;
+        } 
             // main log not running; just open in this thread
-            openFileTask.execute((Void)null);
-        }
-        
-        
-        
+        job.run();
     }
     
     private void hideProgressBar() {
@@ -1374,11 +1301,15 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         adapter.clear();
         currentlyOpenLog = filename;
         collapsedMode = !PreferenceHelper.getExpandedByDefaultPreference(getApplicationContext());
-        clearButton.setVisibility(filename == null? View.VISIBLE : View.GONE);
+        
+		// TODO: this
+/*		clearButton.setVisibility(filename == null? View.VISIBLE : View.GONE);
         pauseButton.setVisibility(filename == null? View.VISIBLE : View.GONE);
         pauseButtonImage.setImageResource(R.drawable.ic_media_pause);
         expandButtonImage.setImageResource(
                 collapsedMode ? R.drawable.ic_menu_more_32 : R.drawable.ic_menu_less_32);
+*/				
+				
         addFiltersToSuggestions(); // filters are what initial populate the suggestions
         updateDisplayedFilename();
         resetFilter();
@@ -1406,15 +1337,16 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
 
         String defaultLogLevel = Character.toString(PreferenceHelper.getDefaultLogLevelPreference(this));
         CharSequence[] logLevels = getResources().getStringArray(R.array.log_levels_values);
-        int logLevelLimit = ArrayUtil.indexOf(logLevels,defaultLogLevel);
+        int logLevelLimit = ArrayUtil.indexOf(logLevels, defaultLogLevel);
         adapter.setLogLevelLimit(logLevelLimit);
         logLevelChanged();
-        
+
         // silently change edit text without invoking filtering
-        searchEditText.removeTextChangedListener(this);
-        searchEditText.setText("");
-        searchEditText.addTextChangedListener(this);
-        
+		if (searchEditText != null) {
+//			searchEditText.removeTextChangedListener(this);
+			searchEditText.setQuery("",false);
+//			searchEditText.addTextChangedListener(this);
+        }
     }
 
     private void showLogLevelDialog() {
@@ -1446,42 +1378,12 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     }
     
     private void setUpWidgets() {
-        
-        searchEditText = (AutoCompleteTextView) findViewById(R.id.main_edit_text);
-        searchEditText.addTextChangedListener(this);
-        searchEditText.setOnEditorActionListener(this);
-        searchEditText.setOnClickListener(this);
-        
-        searchEditText.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
-            }
-        });
-
-        searchSuggestionsAdapter = new SortedFilterArrayAdapter<String>(
-                this, R.layout.simple_dropdown_small, new ArrayList<String>());
-        searchEditText.setAdapter(searchSuggestionsAdapter);
-        
         darkProgressBar = (ProgressBar) findViewById(R.id.main_dark_progress_bar);
         lightProgressBar = (ProgressBar) findViewById(R.id.main_light_progress_bar);
         
         backgroundLayout = findViewById(R.id.main_background);
-        
-        clearButton = findViewById(R.id.main_clear_button);
-        expandButton = findViewById(R.id.main_more_button);
-        pauseButton = findViewById(R.id.main_pause_button);
-        expandButtonImage = (ImageView) findViewById(R.id.main_expand_button_image);
-        pauseButtonImage = (ImageView) findViewById(R.id.main_pause_button_image);
-        
-        
-        for (View view : new View[]{clearButton, expandButton, pauseButton}) {
-            view.setOnClickListener(this);
-        }
-        clearButton.setOnLongClickListener(this);
+
+       /* clearButton.setOnLongClickListener(this);	*/
         
         filenameTextView = (TextView) findViewById(R.id.main_filename_text_view);
         mainFilenameLayout = findViewById(R.id.main_filename_linear_layout);
@@ -1489,7 +1391,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         borderView2 = findViewById(R.id.main_border_view_2);
         borderView3 = findViewById(R.id.main_border_view_3);
         borderView4 = findViewById(R.id.main_border_view_4);
-        
     }
     
     private void setUpAdapter() {
@@ -1504,44 +1405,36 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        
-        LogLine logLine = adapter.getItem(position);
-        
-        if (partialSelectMode) {
 
+        LogLine logLine = adapter.getItem(position);
+
+        if (partialSelectMode) {
             logLine.setHighlighted(true);
-            
             partiallySelectedLogLines.add(logLine);
 
             handler.post(new Runnable() {
 
-                @Override
-                public void run() {
-    
-                    adapter.notifyDataSetChanged();
-                }
-            });
-            
+					@Override
+					public void run() {
+						adapter.notifyDataSetChanged();
+					}
+				});
+
 
             if (partiallySelectedLogLines.size() == 2) {
                 // last line
-                handler.post(new Runnable() {
+   /*             handler.post(new Runnable() {
 
-                    @Override
-                    public void run() {
-        
-                        completePartialSelect();
-                    }
-                });
+						@Override
+						public void run() {	*/
+							completePartialSelect();
+//						}
+//					});
             }
-            
-        
         } else {
-            
             logLine.setExpanded(!logLine.isExpanded());
             adapter.notifyDataSetChanged();            
         }
-        
     }
 
     private void completePartialSelect() {
@@ -1557,19 +1450,14 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
             
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
-                
                 if (DialogHelper.isInvalidFilename(editText.getText())) {
                     cancelPartialSelect();
-                    Toast.makeText(LogcatActivity.this, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
-                    
+                    toast(R.string.enter_good_filename);
                 } else {
                     String filename = editText.getText().toString();
                     savePartialLog(filename, partiallySelectedLogLines.get(0), partiallySelectedLogLines.get(1));
                 }
-                
                 dialog.dismiss();
-                
             }
         };
         
@@ -1584,7 +1472,6 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         };
         
         DialogHelper.showFilenameSuggestingDialog(this, editText, onClickListener, null, onCancelListener, R.string.save_log);
-        
     }
     
     private void cancelPartialSelect() {
@@ -1614,7 +1501,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         
         searchEditText.setFocusable(false);
         searchEditText.setFocusableInTouchMode(false);
-        searchEditText.setText(text);            
+        searchEditText.setQuery(text,true);            
         searchEditText.setFocusable(true);
         searchEditText.setFocusableInTouchMode(true);        
     }
@@ -1625,29 +1512,30 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         searchEditText.setFocusable(true);
         searchEditText.setFocusableInTouchMode(true);    
     }
+	
+	@Override
+	public boolean onQueryTextChange(String filterText) {
+		log.d("filtering: %s", filterText);
+		filter(filterText);
+		return true;
+	}
+	
+	@Override
+	public boolean onQueryTextSubmit(String filterText) {
+		log.d("filtering: %s", filterText);
+		filter(filterText);
+		return !true;
+	}
+	
+	private void filter(CharSequence filterText) {
+        Filter filter = adapter.getFilter();
+        filter.filter(filterText, this);
 
-    @Override
-    public void afterTextChanged(Editable s) {
-        // do nothing
-        
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count,
-            int after) {
-        // do nothing
-        
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        
-        CharSequence filterText = searchEditText.getText();
-        
-        log.d("filtering: %s", filterText);
-        
-        filter(filterText);
-        
+        if(filterText.length() > 0){
+			getActionBar().setSubtitle(String.format(getString(R.string.filter_by),filterText));
+		}else{
+			getActionBar().setSubtitle(null);
+		}
     }
 
     @Override
@@ -1666,51 +1554,11 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         return super.onKeyDown(keyCode, event);
     }
     
-    private void filter(CharSequence filterText) {
-        
-        Filter filter = adapter.getFilter();
-
-        filter.filter(filterText, this);
-        
-    }
-
     @Override
     public boolean onLongClick(View v) {
         // clear button long-pressed, undo clear
         startUpMainLog();
         return true;
-        
-    }
-    
-    @Override
-    public void onClick(View v) {
-
-        switch (v.getId()) {
-            case R.id.main_edit_text:
-                if (searchEditText != null && searchEditText.length() > 0) {
-                    // I think it's intuitive to click an edit text and have all the text selected
-                    searchEditText.setSelection(0, searchEditText.length());
-                }
-                break;
-            case R.id.main_clear_button:
-                unfocusEditText();
-                if (adapter != null) {
-                    adapter.clear();
-                }
-                if (searchEditText != null) {
-                    searchEditText.setText("");
-                }
-                Toast.makeText(this, R.string.log_cleared, Toast.LENGTH_LONG).show();
-                break;
-            case R.id.main_more_button:
-                unfocusEditText();
-                expandOrCollapseAll(true);
-                break;
-            case R.id.main_pause_button:
-                unfocusEditText();
-                pauseOrUnpause();
-                break;
-        }
         
     }
     
@@ -1724,8 +1572,8 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
                 currentTask.pause();
             }
         
-            pauseButtonImage.setImageResource(
-                    currentTask.isPaused() ? R.drawable.ic_media_play : R.drawable.ic_media_pause);
+			itemPauseResume.setIcon(currentTask.isPaused() ? android.R.drawable.ic_media_play : android.R.drawable.ic_media_pause);
+			itemPauseResume.setTitle(currentTask.isPaused() ? R.string.menu_ab_resume : R.string.menu_ab_pause);
         }
     }
 
@@ -1781,7 +1629,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     }    
     
     private void logLevelChanged() {
-        filter(searchEditText.getText());
+       if(searchEditText != null) filter(searchEditText.getQuery());
     }
     
     private void updateBackgroundColor() {
@@ -1812,11 +1660,32 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
     
     private void addToAutocompleteSuggestions(String trimmed) {
         if (searchSuggestionsSet.size() < MAX_NUM_SUGGESTIONS 
-                && !searchSuggestionsSet.contains(trimmed)) {
+                && !searchSuggestionsSet.contains(trimmed)
+				&& searchSuggestionsAdapter != null) {
             searchSuggestionsSet.add(trimmed);
             searchSuggestionsAdapter.add(trimmed);
         }
     }
+	
+	private void toast(final int res){
+		handler.post(new Runnable(){
+
+				@Override
+				public void run() {
+					Toast.makeText(LogcatActivity.this,res,Toast.LENGTH_LONG).show();
+				}
+			});
+	}
+	
+	private void toast(final String res){
+		handler.post(new Runnable(){
+
+				@Override
+				public void run() {
+					Toast.makeText(LogcatActivity.this,res,Toast.LENGTH_LONG).show();
+				}
+			});
+	}
 
     private class LogReaderAsyncTask extends AsyncTask<Void,LogLine,Void> {
         
@@ -1842,7 +1711,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
                 
                 String line;
                 LinkedList<LogLine> initialLines = new LinkedList<LogLine>();
-                while ((line = reader.readLine()) != null) {
+                while (((line = reader.readLine()) != null)&&!killed) {
                     if (paused) {
                         synchronized (lock) {
                             if (paused) {
@@ -1880,11 +1749,13 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
         }
 
         public void killReader() {
+			
             if (!killed) {
                 synchronized (lock) {
                     if (!killed && reader != null) {
                         reader.killQuietly();
                         killed = true;
+						paused = true;
                     }
                 }
             }
@@ -1917,7 +1788,7 @@ public class LogcatActivity extends ListActivity implements TextWatcher, OnScrol
                 hideProgressBar();
             }
             for (LogLine logLine : values) {
-                adapter.addWithFilter(logLine, searchEditText.getText());
+                adapter.addWithFilter(logLine, searchEditText.getQuery());
                 addToAutocompleteSuggestions(logLine);
             }
             

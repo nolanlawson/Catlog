@@ -1,5 +1,7 @@
 <resources>
 
+	<color name="ab_color">#5489BB</color>
+	
 	<color name="imageBackground">#DDFFFFFF</color>
 	<color name="imageBorder">#FF333333</color>
 

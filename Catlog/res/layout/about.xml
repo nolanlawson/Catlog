@@ -26,7 +26,7 @@
                 android:layout_gravity="top"
                 android:paddingTop="6dip"
                 android:paddingRight="10dip"
-                android:src="@drawable/icon" />
+                android:src="@drawable/ic_launcher" />
             <TextView  
                 style="?android:attr/textAppearanceLarge"
                 android:singleLine="true"

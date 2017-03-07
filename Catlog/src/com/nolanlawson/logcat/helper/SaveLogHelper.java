@@ -1,34 +1,17 @@
 package com.nolanlawson.logcat.helper;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+import java.io.*;
+import java.util.*;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.Toast;
-
 import com.nolanlawson.logcat.R;
 import com.nolanlawson.logcat.data.SavedLog;
 import com.nolanlawson.logcat.util.UtilLogger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class SaveLogHelper {
 
@@ -211,7 +194,6 @@ public class SaveLogHelper {
 	}
 	
 	private static boolean saveLog(List<CharSequence> logLines, CharSequence logString, String filename) {
-		
 		File catlogDir = getSavedLogsDirectory();
 		
 		File newFile = new File(catlogDir, filename);
@@ -223,6 +205,7 @@ public class SaveLogHelper {
 			log.e(ex, "couldn't create new file");
 			return false;
 		}
+		
 		PrintStream out = null;
 		try {
 			// specifying BUFFER gets rid of an annoying warning message
@@ -231,12 +214,12 @@ public class SaveLogHelper {
 			// save a log as either a list of strings or as a charsequence
 			if (logLines != null) {
 				for (CharSequence line : logLines) {
+//					Log.e("runt","writing new log line to "+newFile.getAbsolutePath());
 					out.println(line);
 				}				
 			} else if (logString != null) {
 				out.print(logString);
 			}
-			
 			
 		} catch (FileNotFoundException ex) {
 			log.e(ex,"unexpected exception");
@@ -248,8 +231,6 @@ public class SaveLogHelper {
 		}
 		
 		return true;
-		
-		
 	}
 	
 	public static File getTempDirectory() {
