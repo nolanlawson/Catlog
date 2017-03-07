@@ -36,30 +36,20 @@ import com.nolanlawson.logcat.util.Callback;
 public class DialogHelper {
 	
 	public static void startRecordingWithProgressDialog(final String filename, 
-			final String filterQuery, final String logLevel, final Runnable onPostExecute, final Context context) {
-		
+														final String filterQuery, final String logLevel, final Runnable onPostExecute, final Context context) {
+
 		final ProgressDialog progressDialog = new ProgressDialog(context);
 		progressDialog.setTitle(context.getString(R.string.dialog_please_wait));
 		progressDialog.setMessage(context.getString(R.string.dialog_initializing_recorder));
 		progressDialog.setCancelable(false);
-		
-		new AsyncTask<Void, Void, Void>(){
+		progressDialog.show();
+
+		new Runnable(){
 
 			@Override
-			protected void onPreExecute() {
-				super.onPreExecute();
-				progressDialog.show();
-			}
-
-			@Override
-			protected Void doInBackground(Void... params) {
+			public void run() {
 				ServiceHelper.startBackgroundServiceIfNotAlreadyRunning(context, filename, filterQuery, logLevel);
-				return null;
-			}
-			
-			@Override
-			protected void onPostExecute(Void result) {
-				super.onPostExecute(result);
+				
 				if (progressDialog != null && progressDialog.isShowing()) {
 					progressDialog.dismiss();
 				}
@@ -67,9 +57,7 @@ public class DialogHelper {
 					onPostExecute.run();
 				}
 			}
-		}
-		.execute((Void)null);
-		
+		}.run();
 	}
 	
 	public static boolean isInvalidFilename(CharSequence filename) {
