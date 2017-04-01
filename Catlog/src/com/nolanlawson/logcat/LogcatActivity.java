@@ -54,7 +54,6 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnLongClickListener {
     private LogLineAdapter adapter;
     private LogReaderAsyncTask task;
     private TextView filenameTextView;
-    private View borderView1, borderView2, borderView3, borderView4;
     
 	private MenuItem itemExpandCollapse, itemPauseResume;
 	
@@ -1336,10 +1335,6 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnLongClickListener {
             
             filenameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, PreferenceHelper.getTextSizePreference(this) + 2);
             ColorScheme colorScheme = PreferenceHelper.getColorScheme(this);
-            borderView1.setBackgroundColor(colorScheme.getForegroundColor(this));
-            borderView2.setBackgroundColor(colorScheme.getForegroundColor(this));
-            borderView3.setBackgroundColor(colorScheme.getForegroundColor(this));
-            borderView4.setBackgroundColor(colorScheme.getForegroundColor(this));
             filenameTextView.setTextColor(colorScheme.getForegroundColor(this));
             filenameTextView.setBackgroundColor(colorScheme.getBubbleBackgroundColor(this));
             filenameTextView.setText(currentlyOpenLog);
@@ -1401,6 +1396,7 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnLongClickListener {
         
         filenameTextView = (TextView) findViewById(R.id.main_filename_text_view);
         mainFilenameLayout = findViewById(R.id.main_filename_linear_layout);
+		
         borderView1 = findViewById(R.id.main_border_view_1);
         borderView2 = findViewById(R.id.main_border_view_2);
         borderView3 = findViewById(R.id.main_border_view_3);
