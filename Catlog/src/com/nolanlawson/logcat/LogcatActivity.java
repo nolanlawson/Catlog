@@ -127,18 +127,32 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnLongClickListener {
     }
 
     private void addFiltersToSuggestions() {
-        CatlogDBHelper dbHelper = null;
-        try {
-            dbHelper = new CatlogDBHelper(this);
+        new AsyncTask<Void, Void, List<FilterItem>>() {
+            @Override
+            protected List<FilterItem> doInBackground(Void... params) {
+                List<FilterItem> filterItems = new ArrayList<FilterItem>();
+                CatlogDBHelper dbHelper = null;
+                try {
+                    dbHelper = new CatlogDBHelper(LogcatActivity.this);
+                    
+                    for (FilterItem filterItem : dbHelper.findFilterItems()) {
+                        filterItems.add(filterItem);
+                    }
+                } finally {
+                    if (dbHelper != null) {
+                        dbHelper.close();
+                    }
+                }
+                return filterItems;
+            }
             
-            for (FilterItem filterItem : dbHelper.findFilterItems()) {
-                addToAutocompleteSuggestions(filterItem.getText());
+            @Override
+            protected void onPostExecute(List<FilterItem> filterItems) {
+                for (FilterItem filterItem : filterItems) {
+                    addToAutocompleteSuggestions(filterItem.getText());
+                }
             }
-        } finally {
-            if (dbHelper != null) {
-                dbHelper.close();
-            }
-        }
+        }.execute();
         
     }
 
