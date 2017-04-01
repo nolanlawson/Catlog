@@ -8,3 +8,12 @@ build
 **/proguard/dump.txt
 **/proguard/seeds.txt
 **/proguard/usage.txt
+
+.idea
+*.iml
+obj/
+.settings
+**/.DS_Store
+.gradle
+local.properties
+build
