@@ -362,6 +362,7 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnLongClickListener {
 //		searchEditText.setSuggestionsAdapter(searchSuggestionsAdapter);
 		
         return true;
+
     }
     
     @Override
@@ -434,7 +435,7 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnLongClickListener {
         }
         return false;
     }
-
+/*
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
 
@@ -493,7 +494,7 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnLongClickListener {
 
         return super.onPrepareOptionsMenu(menu);
     }
-
+*/
   @Override
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
     menu.add(0, CONTEXT_MENU_FILTER_ID, 0, R.string.filter_choice);
@@ -1392,7 +1393,17 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnLongClickListener {
         
         backgroundLayout = findViewById(R.id.main_background);
 
-       /* clearButton.setOnLongClickListener(this);	*/
+       /*clearButton = findViewById(R.id.main_clear_button);
+        expandButton = findViewById(R.id.main_more_button);
+        pauseButton = findViewById(R.id.main_pause_button);
+        expandButtonImage = (ImageView) findViewById(R.id.main_expand_button_image);
+        pauseButtonImage = (ImageView) findViewById(R.id.main_pause_button_image);
+        
+        
+        for (View view : new View[]{clearButton, expandButton, pauseButton}) {
+            view.setOnClickListener(this);
+        }
+        clearButton.setOnLongClickListener(this);	*/
         
         filenameTextView = (TextView) findViewById(R.id.main_filename_text_view);
         mainFilenameLayout = findViewById(R.id.main_filename_linear_layout);
@@ -1548,6 +1559,7 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnLongClickListener {
 		}
     }
 
+    //如果按搜索键，则选中本activity的搜索框，同时显示软键盘
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
         
@@ -1623,6 +1635,7 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnLongClickListener {
 
     }    
 
+    //Called when an action is being performed.
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         
