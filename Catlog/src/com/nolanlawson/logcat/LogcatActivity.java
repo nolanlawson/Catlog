@@ -12,6 +12,14 @@ import com.nolanlawson.logcat.util.*;
 import java.util.*;
 
 import android.app.AlertDialog.Builder;
+import android.app.ListActivity;
+import android.app.ProgressDialog;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.ResolveInfo;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -53,9 +61,9 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnClickListener, OnLon
     // how many suggestions to keep in the autosuggestions text
     private static final int MAX_NUM_SUGGESTIONS = 1000;
 
-  // id for context menu entry
-  private static final int CONTEXT_MENU_FILTER_ID = 0;
-  private static final int CONTEXT_MENU_COPY_ID = 1;
+    // id for context menu entry
+    private static final int CONTEXT_MENU_FILTER_ID = 0;
+    private static final int CONTEXT_MENU_COPY_ID = 1;
     
     private static UtilLogger log = new UtilLogger(LogcatActivity.class);
     
@@ -209,8 +217,22 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnClickListener, OnLon
     private void doAfterInitialMessage(Intent intent) {
         
         // handle an intent that was sent from an external application
+		if (intent == null) {
+            return;
+        }
+
+        if (Intents.ACTION_LAUNCH.equals(intent.getAction())) {
+            processLaunchIntent(intent);
+            return;
+        }
+
+        if (Intents.ACTION_SEND_EMAIL.equals(intent.getAction())) {
+            processSendMailIntent(intent);
+            return;
+        }
+    }
         
-        if (intent != null){
+/*        if (intent != null){
         	if (Intents.ACTION_LAUNCH.equals(intent.getAction())) {
         
 	            String filter = intent.getStringExtra(Intents.EXTRA_FILTER);
@@ -240,7 +262,7 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnClickListener, OnLon
 	        	}
 	        }
         }
-    }
+    }	*/
 
     private void openZippedLogFromContentProvider(Uri uri) {
 	    try 
@@ -270,6 +292,81 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnClickListener, OnLon
 	        // TODO Auto-generated catch block
 	        e.printStackTrace();
 	    }
+	}
+
+    private void processLaunchIntent(Intent intent) {
+
+        String filter = intent.getStringExtra(Intents.EXTRA_FILTER);
+        String level = intent.getStringExtra(Intents.EXTRA_LEVEL);
+
+        if (!TextUtils.isEmpty(filter)) {
+            silentlySetSearchText(filter);
+        }
+
+        if (!TextUtils.isEmpty(level)) {
+            CharSequence[] logLevels = getResources().getStringArray(R.array.log_levels_values);
+            int logLevelLimit = ArrayUtil.indexOf(logLevels, level.toUpperCase(Locale.US));
+
+            if (logLevelLimit == -1) {
+                String invalidLevel = String.format(getString(R.string.toast_invalid_level), level);
+                Toast.makeText(this, invalidLevel, Toast.LENGTH_LONG).show();
+            } else {
+                adapter.setLogLevelLimit(logLevelLimit);
+                logLevelChanged();
+            }
+        }
+    }
+
+    private void processSendMailIntent(Intent intent) {
+
+        // Get and check the "extra" info provided by the app that created the Intent
+        String[] mailRecipients = intent.getStringArrayExtra(Intents.EXTRA_MAIL_RECIPIENTS);
+        String mailService = intent.getStringExtra(Intents.EXTRA_MAIL_SERVICE);
+        String mailSubject = intent.getStringExtra(Intents.EXTRA_MAIL_SUBJECT);
+        boolean mailDeviceInfo = intent.getBooleanExtra(Intents.EXTRA_MAIL_DEVICE_INFO, false);
+        boolean mailAttachment = intent.getBooleanExtra(Intents.EXTRA_MAIL_ATTACHMENT, false);
+
+        if (mailRecipients.length < 1 || TextUtils.isEmpty(mailRecipients[0]) ||
+            TextUtils.isEmpty(mailService)) {
+            return;
+        }
+        if (TextUtils.isEmpty(mailSubject)) {
+            mailSubject = getString(R.string.subject_log_report);
+        }
+
+        // Despite the name of the method, this is NOT done on a background thread when this is
+        // launched via an Intent from external app
+        SendLogDetails sendLogDetails =
+                                 getSendLogDetailsInBackground(!mailAttachment, mailDeviceInfo);
+
+        // Get list of all apps that can handle sending text or files
+        List<ResolveInfo> resolveInfoAllAvailable = getPackageManager().queryIntentActivities(
+                         SenderAppAdapter.createDummyIntent(sendLogDetails.getAttachmentType()), 0);
+
+        // Filter to find the app that is specified by the Intent's "service" extra info
+        List<ActivityInfo> activityInfoMatches = new ArrayList<ActivityInfo>();
+        for (ResolveInfo resolveInfo : resolveInfoAllAvailable) {
+            if ((resolveInfo.activityInfo.name.toLowerCase()).contains(mailService.toLowerCase())) {
+                activityInfoMatches.add(resolveInfo.activityInfo);
+            }
+        }
+
+        // Ensure only one matches, ignore if ambiguous
+        if (activityInfoMatches.size() != 1) {
+            return;
+        }
+        ActivityInfo activityInfo = activityInfoMatches.get(0);
+
+        // Launch the email app
+        ComponentName componentName = new ComponentName(activityInfo.applicationInfo.packageName,
+                                                        activityInfo.name);
+        Intent actionSendIntent = SenderAppAdapter.createSendIntent(mailSubject,
+                                                                 sendLogDetails.getBody(),
+                                                                 sendLogDetails.getAttachmentType(),
+                                                                 sendLogDetails.getAttachment());
+        actionSendIntent.putExtra(Intent.EXTRA_EMAIL, mailRecipients);
+        actionSendIntent.setComponent(componentName);
+        startActivity(actionSendIntent);
     }
 
 
@@ -1090,7 +1187,7 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnClickListener, OnLon
         
         if (includeDeviceInfo) {
             // include device info
-            String deviceInfo = BuildHelper.getBuildInformationAsString();
+            String deviceInfo = BuildHelper.getBuildInformationAsString(this);
             if (asText) {
                 // append to top of body
                 body.append(deviceInfo).append('\n');
