@@ -163,8 +163,9 @@ public class LogcatRecordingService extends IntentService {
 		
         CharSequence tickerText = getText(R.string.notification_ticker);
 
+		// TODO: use builder
         // Set the icon, scrolling text and timestamp
-        Notification notification = new Notification(R.drawable.status_icon, tickerText,
+        Notification notification = new Notification(R.drawable.ic_launcher, tickerText,
                 System.currentTimeMillis());
         
 

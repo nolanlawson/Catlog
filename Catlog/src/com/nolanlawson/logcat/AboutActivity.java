@@ -34,6 +34,7 @@ public class AboutActivity extends Activity implements OnClickListener {
 	
 	
 	public void onCreate(Bundle savedInstanceState) {
+		int i = android.R.drawable.ic_menu_gallery;
 		
 		super.onCreate(savedInstanceState);
 	
