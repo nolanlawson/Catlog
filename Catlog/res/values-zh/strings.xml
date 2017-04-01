@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <!-- non-translateable strings-->
+    
+    
+    <string name="app_name">CatLog</string>
+    
+    <string name="donate_version_name">Donate</string>
+    
+    <string name="first_run">first_run23</string>
+    
+    <string name="log_level_debug">Debug</string>
+    <string name="log_level_error">Error</string>
+    <string name="log_level_info">Info</string>
+    <string name="log_level_value_debug">D</string>
+    <string name="log_level_value_error">E</string>
+    <string name="log_level_value_info">I</string>
+    <string name="log_level_value_verbose">V</string>
+    <string name="log_level_value_warn">W</string>
+    <string name="log_level_value_wtf">F</string>
+    <string name="log_level_verbose">Verbose</string>
+    <string name="log_level_warn">Warn</string>
+    <string name="log_level_wtf">What a Terrible Failure</string>
+    
+    <string name="pref_about">about</string>
+    <string name="pref_buffer">buffer</string>
+    <string name="pref_buffer_choice_events_value">events</string>
+    <string name="pref_buffer_choice_main_value">main</string>
+    <string name="pref_buffer_choice_radio_value">radio</string>
+    <string name="pref_default_log_level">default_level</string>
+    <string name="pref_display_limit">display_limit</string>
+    <string name="pref_display_limit_default">10000</string>
+    <string name="pref_expanded_by_default">expand_default</string>
+    <string name="pref_hide_partial_select_help">pref_hide_partial_select_help</string>
+    <string name="pref_include_device_info">device_info</string>
+    <string name="pref_log_line_period">log_line_period</string>
+    <string name="pref_log_line_period_default">200</string>
+    <string name="pref_ran_jellybean_su_update">jellybean_su</string>
+    <string name="pref_show_timestamp">show_timestamp</string>
+    <string name="pref_text_size">text_size</string>
+    <string name="pref_theme">theme</string>
+    <string name="pref_theme_choice_android_value">Android</string>
+    <string name="pref_theme_choice_att_value">Ma Bell</string>
+    <string name="pref_theme_choice_dark_value">Dark</string>
+    <string name="pref_theme_choice_light_value">Light</string>
+    <string name="pref_theme_choice_sprint_value">Big Yellow</string>
+    <string name="pref_theme_choice_tmobile_value">T-Mo</string>
+    <string name="pref_theme_choice_verizon_value">Big Red</string>
+    
+    <string name="text_size_large_value">L</string>
+    <string name="text_size_medium_value">M</string>
+    <string name="text_size_small_value">S</string>
+    <string name="text_size_xlarge_value">XL</string>
+    <string name="text_size_xsmall_value">XS</string>
+    
+    
+    <!-- translateable strings-->
+    
+    
+    <string name="about">关于</string>
+    <string name="about_catlog">About CatLog</string>
+    
+    <string name="add_filter">增加过滤</string>
+    <string name="add_filter_ellipsis">增加过滤</string>
+    
+    <string name="are_you_sure">%d 个文件将会被删除.</string>
+    
+    <string name="as_attachment">As Attachment</string>
+    <string name="as_text">As Text</string>
+    
+    <string name="checkbox_never_show_partial_select_help">Don\'t show again</string>
+    
+    <string name="copied_to_clipboard">已拷贝到剪贴板.</string>
+    
+    <string name="copy_to_clipboard">拷贝到剪贴板</string>
+    
+    <string name="default_in_parens">(Default)</string>
+    <string name="delete_all">删除全部</string>
+    <string name="delete_saved_log">删除已保存日志</string>
+    <string name="delimiter">, </string>
+    <string name="dialog_compiling_log">Compiling log…</string>
+    <string name="dialog_for_donate">For <b>bonus color\nschemes</b>, download\n<a href="market://details?id=com.nolanlawson.logcat.donate">CatLog Donate</a></string>
+    <string name="dialog_for_widget">For a <b>widget</b>,\ndo Home → Long\npress → Widgets</string>
+    <string name="dialog_initializing_recorder">加载记录…</string>
+    <string name="dialog_loading_updates">Loading updates…</string>
+    <string name="dialog_partial_select_explanation">1. 选择  <b>第一</b> 条.\n2. 再选择 <b>最后</b> 一条.</string>
+    <string name="dialog_please_wait">请稍候</string>
+    
+    <string name="enter_filename">输入要保存的文件名:</string>
+    <string name="enter_good_filename">请输入一个有效的文件名.</string>
+    
+    <string name="files_deleted">%d 个文件已删除.</string>
+    
+    <string name="filter_choice">搜索</string>
+    <string name="filter_choice_pid">进程id</string>
+    <string name="filter_choice_tag">标签</string>
+    <string name="filter_text_colon">文本过滤:</string>
+
+    <string name="first_run_pref_summary">显示介绍信息.</string>
+    <string name="first_run_pref_title">重置欢迎页</string>
+    <string name="first_run_title">欢迎使用CatLog!</string>
+    
+    <string name="log_cleared">日志已经清除,长按重新加载.</string>
+    <string name="log_level">Log Level</string>
+    <string name="log_level_colon">Log level:</string>
+    <string name="log_recording_started">日志记录已经开始.</string>
+    <string name="log_saved">日记已保存.</string>
+    
+    <string name="main_edit_text_hint">搜索</string>
+    
+    <string name="manage_saved_logs">管理已保存日志</string>
+    
+    <string name="menu_title_partial_select">部分选择</string>
+    
+    <string name="no_saved_logs">没有已保存的日志.</string>
+    
+    <string name="notification_subtext">选中停止记录.</string>
+    <string name="notification_ticker">日志记录已经开始</string>
+    <string name="notification_title">日志记录中</string>
+    
+    <string name="open">打开</string>
+    <string name="open_log">打开日志</string>
+    
+    <string name="play_x1_log">Play %s Log</string>
+    <string formatted="false" name="play_x2_log">Play %s, %s</string>
+    <string name="play_x3_log">Play All Logs</string>
+    
+    <string name="pref_buffer_choice_events">Events</string>
+    <string name="pref_buffer_choice_main">Main</string>
+    <string name="pref_buffer_choice_radio">Radio</string>
+    <string name="pref_buffer_none_checked_error">Please check at least one buffer.</string>
+    <string name="pref_buffer_title">Log Buffer(s)</string>
+    <string name="pref_cat_advanced">高级设置</string>
+    <string name="pref_cat_appearance">显示设置</string>
+    <string name="pref_cat_configuration">配置</string>
+    <string name="pref_default_log_level_summary">Log level at startup, when opening files, and when recording (%s)</string>
+    <string name="pref_default_log_level_title">Default Log Level</string>
+    <string formatted="false" name="pref_display_limit_summary">只显示最新的%d条日志信息,避免内存溢出.(默认: %s)</string>
+    <string name="pref_display_limit_title">日志条数显示限制</string>
+    <string name="pref_expanded_by_default_summary">默认显示完整日志信息.</string>
+    <string name="pref_expanded_by_default_title">默认展开日志</string>
+    <string name="pref_log_line_period_error">请输入1~100之间的整数.</string>
+    <string formatted="false" name="pref_log_line_period_summary">记录的时候, 每 %d条记录写一次文件 (默认: %s).</string>
+    <string name="pref_log_line_period_title">日志写入文件周期</string>
+    <string name="pref_show_timestamp_summary">展开日志信息时显示进程ID和时间戳.</string>
+    <string name="pref_show_timestamp_title">显示进程ID和时间戳</string>
+    <string name="pref_text_size_title">字体大小</string>
+    <string name="pref_theme_choice_android_name">Android</string>
+    <string name="pref_theme_choice_att_name">Ma Bell</string>
+    <string name="pref_theme_choice_dark_name">Dark</string>
+    <string name="pref_theme_choice_light_name">Light</string>
+    <string name="pref_theme_choice_sprint_name">Big Yellow</string>
+    <string name="pref_theme_choice_tmobile_name">T-Mo</string>
+    <string name="pref_theme_choice_verizon_name">Big Red</string>
+    <string name="pref_theme_summary_free">Requires donate version.</string>
+    <string name="pref_theme_title">Color Scheme</string>
+    
+    <string name="record_log">记录</string>
+    
+    <string name="recording_in_progress">日志已经在记录.</string>
+    
+    <string name="save">保存</string>
+    <string name="save_as">另存为</string>
+    <string name="save_log">保存日志</string>
+    
+    <string name="sd_card_not_found">没有SDCARD</string>
+    
+    <string name="select_logs_to_delete">选择要删除的日志.</string>
+    
+    <string name="send_as_attachment">另存为 Attachment</string>
+    <string name="send_as_text">另存为 Text</string>
+    <string name="send_log">发送</string>
+    <string name="send_log_title">发送日志</string>
+    
+    <string name="settings">设置</string>
+    
+    <string name="simultaneous"> (Simultaneous)</string>
+    
+    <string name="start_recording_log">开始记录</string>
+    
+    <string name="stop_recording_log">停止记录</string>
+    
+    <string name="subject_log_report">Log report</string>
+    
+    <string name="text_filter_ellipsis">过滤</string>
+    <string name="text_filter_text">Filter text</string>
+    <string name="text_include_device_info">Include device information</string>
+    <string name="text_size_large_name">较大 (14pt)</string>
+    <string name="text_size_medium_name">中 (12pt)</string>
+    <string name="text_size_small_name">较小 (10pt)</string>
+    <string name="text_size_xlarge_name">大 (16pt)</string>
+    <string name="text_size_xsmall_name">小 (8pt)</string>
+    
+    <string name="title_filter">Filter</string>
+    <string name="title_filters">过滤</string>
+    
+    <string formatted="false" name="toast_invalid_display_limit">Please enter a valid number between %d and %d.</string>
+    <string name="toast_invalid_level">Invalid level name: %s</string>
+    <string name="toast_invalid_selection">Invalid selection.  Please try again.</string>
+    <string name="toast_log_truncated">Log too large; showing last %d lines.</string>
+    <string name="toast_no_root">无法获取ROOT权限,只能记录catlog和百度地图的日志信息.</string>
+    <string name="toast_pref_changed_restart_required">Setting updated. Restart CatLog to see the changes.</string>
+    <string name="toast_request_root">CatLog需要超级权限.</string>
+    <string name="toast_started_select_partial">Select Partial mode enabled</string>
+    
+    <string name="unable_to_save_log">日志无法保存,文件名是否有效?</string>
+    
+    <string name="version">Version %s</string>
+    
+    <string name="widget_recording_in_progress">记录中...</string>
+    <string name="widget_start_recording">记录日志</string>
+</resources>
