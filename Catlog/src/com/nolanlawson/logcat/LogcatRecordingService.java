@@ -1,10 +1,5 @@
 package com.nolanlawson.logcat;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Random;
-
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -30,11 +25,16 @@ import com.nolanlawson.logcat.util.ArrayUtil;
 import com.nolanlawson.logcat.util.LogLineAdapterUtil;
 import com.nolanlawson.logcat.util.UtilLogger;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Random;
+
 /**
  * Reads logs.
- * 
+ *
  * @author nolan
- * 
+ *
  */
 public class LogcatRecordingService extends IntentService {
 
@@ -45,8 +45,8 @@ public class LogcatRecordingService extends IntentService {
 	public static final String EXTRA_LOADER = "loader";
 	public static final String EXTRA_QUERY_FILTER = "filter";
 	public static final String EXTRA_LEVEL = "level";
-	
-	
+
+
 	private static UtilLogger log = new UtilLogger(LogcatRecordingService.class);
 
 	private LogcatReader reader;
@@ -57,41 +57,41 @@ public class LogcatRecordingService extends IntentService {
 	private Method mSetForeground;
 	private boolean killed;
 	private final Object lock = new Object();
-	
+
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
-		
+
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			log.d("onReceive()");
-			
+
 			// received broadcast to kill service
 			killProcess();
 			ServiceHelper.stopBackgroundServiceIfRunning(context);
 		}
 	};
-	
+
 	private Handler handler;
 
 
 	public LogcatRecordingService() {
 		super("AppTrackerService");
 	}
-	
+
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		log.d("onCreate()");
-		
+
 		mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		
+
 		IntentFilter intentFilter = new IntentFilter(ACTION_STOP_RECORDING);
 		intentFilter.addDataScheme(URI_SCHEME);
-		
+
 		registerReceiver(receiver, intentFilter);
-		
+
 		handler = new Handler(Looper.getMainLooper());
-		
+
 		try {
 			mStartForeground = getClass().getMethod("startForeground", int.class, Notification.class);
 			mStopForeground = getClass().getMethod("stopForeground", boolean.class);
@@ -116,19 +116,19 @@ public class LogcatRecordingService extends IntentService {
 			// use the "time" log so we can see what time the logs were logged at
 			LogcatReaderLoader loader = intent.getParcelableExtra(EXTRA_LOADER);
 			reader = loader.loadReader();
-		
+
 			while (!reader.readyToRecord() && !killed) {
 				reader.readLine();
 				// keep skipping lines until we find one that is past the last log line, i.e.
 				// it's ready to record
-			}			
+			}
 			if (!killed) {
 				makeToast(R.string.log_recording_started, Toast.LENGTH_SHORT);
 			}
 		} catch (IOException e) {
 			log.d(e, "");
 		}
-		
+
 	}
 
 
@@ -139,12 +139,12 @@ public class LogcatRecordingService extends IntentService {
 		killProcess();
 
 		unregisterReceiver(receiver);
-		
+
 		stopForegroundCompat(R.string.notification_title);
-		
+
 		WidgetHelper.updateWidgets(getApplicationContext(), false);
-		
-		
+
+
 	}
 
     // This is the old onStart method that will be called on the pre-2.0
@@ -153,38 +153,32 @@ public class LogcatRecordingService extends IntentService {
     public void onStart(Intent intent, int startId) {
     	log.d("onStart()");
     	super.onStart(intent, startId);
-        handleCommand(intent);
+        handleCommand();
     }
 
-	private void handleCommand(Intent intent) {
-        
+	private void handleCommand() {
+
 		// notify the widgets that we're running
 		WidgetHelper.updateWidgets(getApplicationContext());
-		
-        CharSequence tickerText = getText(R.string.notification_ticker);
 
-		// TODO: use builder
-        // Set the icon, scrolling text and timestamp
-        Notification notification = new Notification(R.drawable.ic_launcher, tickerText,
-                System.currentTimeMillis());
-        
+        CharSequence tickerText = getText(R.string.notification_ticker);
 
         Intent stopRecordingIntent = new Intent();
         stopRecordingIntent.setAction(ACTION_STOP_RECORDING);
         // have to make this unique for God knows what reason
-        stopRecordingIntent.setData(Uri.withAppendedPath(Uri.parse(URI_SCHEME + "://stop/"), 
+        stopRecordingIntent.setData(Uri.withAppendedPath(Uri.parse(URI_SCHEME + "://stop/"),
         		Long.toHexString(new Random().nextLong())));
-        
+
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,
                     0 /* no requestCode */, stopRecordingIntent, PendingIntent.FLAG_ONE_SHOT);
-        
-        // Set the info for the views that show in the notification panel.
-        notification.setLatestEventInfo(this, getText(R.string.notification_title),
-                       getText(R.string.notification_subtext), pendingIntent);
+
+		Notification.Builder builder = new Notification.Builder(this)
+				.setContentIntent(pendingIntent)
+				.setSmallIcon(R.drawable.status_icon)
+				.setContentTitle(tickerText);
+		Notification notification = builder.build();
 
         startForegroundCompat(R.string.notification_title, notification);
-
-		
 	}
 
 
@@ -261,45 +255,45 @@ public class LogcatRecordingService extends IntentService {
 		log.d("onHandleIntent()");
 		handleIntent(intent);
 	}
-	
+
 	private void handleIntent(Intent intent) {
-		
+
 		log.d("Starting up %s now with intent: %s", LogcatRecordingService.class.getSimpleName(), intent);
-		
+
 		String filename = intent.getStringExtra(EXTRA_FILENAME);
 		String queryText = intent.getStringExtra(EXTRA_QUERY_FILTER);
 		String logLevel = intent.getStringExtra(EXTRA_LEVEL);
-		
+
 		SearchCriteria searchCriteria = new SearchCriteria(queryText);
-		
+
 		CharSequence[] logLevels = getResources().getStringArray(R.array.log_levels_values);
 		int logLevelLimit = ArrayUtil.indexOf(logLevels, logLevel);
-		
+
 		boolean searchCriteriaWillAlwaysMatch = searchCriteria.isEmpty();
 		boolean logLevelAcceptsEverything = logLevelLimit == 0;
-		
+
 		SaveLogHelper.deleteLogIfExists(filename);
-		
+
 		initializeReader(intent);
-		
+
 		StringBuilder stringBuilder = new StringBuilder();
-		
+
 		try {
-			
+
 			String line;
 			int lineCount = 0;
 			int logLinePeriod = PreferenceHelper.getLogLinePeriodPreference(getApplicationContext());
 			while ((line = reader.readLine()) != null && !killed) {
-				
+
 				// filter
 				if (!searchCriteriaWillAlwaysMatch || !logLevelAcceptsEverything) {
 					if (!checkLogLine(line, searchCriteria, logLevelLimit)) {
 						continue;
 					}
 				}
-				
+
 				stringBuilder.append(line).append("\n");
-				
+
 				if (++lineCount % logLinePeriod == 0) {
 					// avoid OutOfMemoryErrors; flush now
 					SaveLogHelper.saveLog(stringBuilder, filename);
@@ -311,9 +305,9 @@ public class LogcatRecordingService extends IntentService {
 		} finally {
 			killProcess();
 			log.d("CatlogService ended");
-			
+
 			boolean logSaved = SaveLogHelper.saveLog(stringBuilder, filename);
-			
+
 			if (logSaved) {
 				makeToast(R.string.log_saved, Toast.LENGTH_SHORT);
 				startLogcatActivityToViewSavedFile(filename);
@@ -325,38 +319,38 @@ public class LogcatRecordingService extends IntentService {
 
 	private boolean checkLogLine(String line, SearchCriteria searchCriteria, int logLevelLimit) {
 		LogLine logLine = LogLine.newLogLine(line, false);
-		return searchCriteria.matches(logLine) 
+		return searchCriteria.matches(logLine)
 				&& LogLineAdapterUtil.logLevelIsAcceptableGivenLogLevelLimit(logLine.getLogLevel(), logLevelLimit);
 	}
 
 
 	private void startLogcatActivityToViewSavedFile(String filename) {
-		
+
 		// start up the logcat activity if necessary and show the saved file
-		
+
 		Intent targetIntent = new Intent(getApplicationContext(), LogcatActivity.class);
 		targetIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
 		targetIntent.setAction(Intent.ACTION_MAIN);
 		targetIntent.putExtra("filename", filename);
-		
+
 		startActivity(targetIntent);
-		
+
 	}
 
 
 	private void makeToast(final int stringResId, final int toastLength) {
 		handler.post(new Runnable() {
-			
+
 			@Override
 			public void run() {
-				
+
 				Toast.makeText(LogcatRecordingService.this, stringResId, toastLength).show();
-				
+
 			}
 		});
-		
+
 	}
-	
+
 	private void killProcess() {
 		if (!killed) {
 			synchronized (lock) {
@@ -368,5 +362,5 @@ public class LogcatRecordingService extends IntentService {
 			}
 		}
 	}
-	
+
 }
