@@ -5,31 +5,32 @@
     
     <string name="add_filter">Añadir filtro</string>
     <string name="add_filter_ellipsis">Añadir filtro…</string>
-    
-    <string name="are_you_sure">%d archivos(s) se borrarán.</string>
+
+    <string name="app_name">CatLog</string>
+	
+    <string name="are_you_sure">%d archivo(s) serán eliminados.</string>
     
     <string name="as_attachment">Como Adjunto</string>
     <string name="as_text">Como Texto</string>
     
-    <string name="checkbox_never_show_partial_select_help">No mostrar más</string>
+    <string name="checkbox_never_show_partial_select_help">No mostrar otra vez</string>
     
     <string name="copied_to_clipboard">Copiado al portapapeles.</string>
-    
-    <string name="copy_to_clipboard">Copiar al portapapeles</string>
-    
-    <string name="default_in_parens">(Estandar)</string>
+    <string name="copy_to_clipboard">Copiar al portapapeles</string>    
+	
+	<string name="default_in_parens">(Por defecto)</string>
     <string name="delete_all">Eliminar todos</string>
-    <string name="delete_saved_log">Eliminar registros guardados</string>
+    <string name="delete_saved_log">Eliminar registros (logs) guardados</string>
     <string name="delimiter">, </string>
-    <string name="dialog_compiling_log">Compilando registro…</string>
+    <string name="dialog_compiling_log">Compilando registro (log)…</string>
     <string name="dialog_for_donate">Para <b>esquemas de color\nadicionales</b>, descargue\n<a href="market://details?id=com.nolanlawson.logcat.donate">CatLog Donate</a></string>
-    <string name="dialog_for_widget">Para un <b>widget</b>,\nuse Home → Pulsación\nlarga → Widgets</string>
-    <string name="dialog_initializing_recorder">Cargando grabador…</string>
+    <string name="dialog_for_widget">Para un <b>widget</b>,\nve a Home → Presionar\n → Widgets</string>
+	<string name="dialog_initializing_recorder">Cargando grabador…</string>
     <string name="dialog_loading_updates">Cargando actualizaciones…</string>
     <string name="dialog_partial_select_explanation">1. Seleccione la <b>primera</b> línea.\n2. Después seleccione la <b>última</b> línea.</string>
     <string name="dialog_please_wait">Espere, por favor</string>
-    
-    <string name="enter_filename">Nombre de archivo a guardar:</string>
+	
+	<string name="enter_filename">Introduce el nombre del archivo a guardar:</string>
     <string name="enter_good_filename">Por favor introduzca un nombre de archivo válido.</string>
     
     <string name="files_deleted">%d archivo(s) eliminado(s).</string>
@@ -41,33 +42,33 @@
 
     <string name="first_run_pref_summary">Mostrar mensaje de introducción otra vez.</string>
     <string name="first_run_pref_title">Reiniciar Introducción</string>
-    <string name="first_run_title">¡Bienvenido a CatLog!</string>
+    <string name="first_run_title">¡Bienvenido a CatLog!</string>    
+	
+	<string name="log_cleared">Registros (log) limpiados. Pulsación larga para recargar.</string>
+    <string name="log_level">Nivel de registro (log)</string>
+    <string name="log_level_colon">Nivel de registro (log):</string>
+    <string name="log_recording_started">Grabación del registro (log) iniciada.</string>
+    <string name="log_saved">Registro (log) guardado.</string>
+	
+	<string name="main_edit_text_hint">Buscar registros (logs)</string>
     
-    <string name="log_cleared">Registro limpio. Pulsación-larga para recargar.</string>
-    <string name="log_level">Nivel de Registro</string>
-    <string name="log_level_colon">Nivel de registro:</string>
-    <string name="log_recording_started">Grabación del registro iniciada.</string>
-    <string name="log_saved">Registro guardado.</string>
+    <string name="manage_saved_logs">Gestionar registros (logs) guardados</string>
     
-    <string name="main_edit_text_hint">Buscar registros</string>
+    <string name="menu_title_partial_select">Selección parcial</string>
+	
+    <string name="no_saved_logs">No se han encontrado registros (logs) guardados.</string>
     
-    <string name="manage_saved_logs">Gestionar Registros Guardados</string>
-    
-    <string name="menu_title_partial_select">Seleccionar parcial</string>
-    
-    <string name="no_saved_logs">No se encontraron registros guardados.</string>
-    
-    <string name="notification_subtext">Selecionar para detener grabación.</string>
-    <string name="notification_ticker">Grabación del registro iniciada</string>
-    <string name="notification_title">Grabación del registro en progreso</string>
+    <string name="notification_subtext">Seleccionar para detener la grabación.</string>
+    <string name="notification_ticker">Grabación del registro (log) iniciada</string>
+    <string name="notification_title">Grabación del registro (log) en progreso</string>
     
     <string name="open">Abrir</string>
-    <string name="open_log">Abrir registro</string>
-    
-    <string name="play_x1_log">Reproducir %s</string>
+    <string name="open_log">Abrir registro (log)</string>
+	
+    <string name="play_x1_log">Reproducir %s Log</string>
     <string formatted="false" name="play_x2_log">Reproducir %s, %s</string>
-    <string name="play_x3_log">Reproducir todos</string>
-    
+    <string name="play_x3_log">Reproducir todos los registros (Logs)</string>
+	
     <string name="pref_buffer_choice_events">Eventos</string>
     <string name="pref_buffer_choice_main">Principal</string>
     <string name="pref_buffer_choice_radio">Radio</string>
@@ -98,20 +99,19 @@
     <string name="pref_theme_summary_free">Requiere versión donación.</string>
     <string name="pref_theme_title">Esquema de Color</string>
     
-    <string name="record_log">Grabar Registro</string>
+	<string name="record_log">Grabar Registro</string>
     
     <string name="recording_in_progress">Grabación ya en proceso.</string>
     
-    <string name="save">Guardar</string>
+	<string name="save">Guardar</string>
     <string name="save_as">Guardar como…</string>
     <string name="save_log">Guardar Registro</string>
-    
+    	
     <string name="sd_card_not_found">Tarjeta SD no encontrada.</string>
-    
     <string name="select_logs_to_delete">Seleccione que registros eliminar.</string>
     
-    <string name="send_as_attachment">Enviar como Adjunto</string>
-    <string name="send_as_text">Enviar como Texto</string>
+    <string name="send_as_attachment">Enviar como adjunto</string>
+    <string name="send_as_text">Enviar como texto</string>
     <string name="send_log">Enviar</string>
     <string name="send_log_title">Enviar registro</string>
     
@@ -121,7 +121,7 @@
     
     <string name="start_recording_log">Grabar</string>
     
-    <string name="stop_recording_log">Parar Grabación</string>
+    <string name="stop_recording_log">Parar grabación</string>
     
     <string name="subject_log_report">Reporte del registro</string>
     
@@ -152,5 +152,4 @@
     
     <string name="widget_recording_in_progress">Grabando…</string>
     <string name="widget_start_recording">Grabar Registro</string>
-    <string name="app_name">CatLog</string>
 </resources>
