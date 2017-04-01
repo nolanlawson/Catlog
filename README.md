@@ -1,4 +1,4 @@
-CatLog ![project unmaintained](https://img.shields.io/badge/project-unmaintained-red.svg)
+CatLog
 =========
 Graphical log reader for Android.
 
