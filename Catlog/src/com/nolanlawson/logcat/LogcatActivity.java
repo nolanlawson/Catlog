@@ -65,7 +65,6 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnClickListener, OnLon
     private LogLineAdapter adapter;
     private LogReaderAsyncTask task;
     private TextView filenameTextView;
-    private View borderView1, borderView2, borderView3, borderView4;
     
 	private MenuItem itemExpandCollapse, itemPauseResume;
 	
@@ -138,18 +137,32 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnClickListener, OnLon
     }
 
     private void addFiltersToSuggestions() {
-        CatlogDBHelper dbHelper = null;
-        try {
-            dbHelper = new CatlogDBHelper(this);
+        new AsyncTask<Void, Void, List<FilterItem>>() {
+            @Override
+            protected List<FilterItem> doInBackground(Void... params) {
+                List<FilterItem> filterItems = new ArrayList<FilterItem>();
+                CatlogDBHelper dbHelper = null;
+                try {
+                    dbHelper = new CatlogDBHelper(LogcatActivity.this);
+                    
+                    for (FilterItem filterItem : dbHelper.findFilterItems()) {
+                        filterItems.add(filterItem);
+                    }
+                } finally {
+                    if (dbHelper != null) {
+                        dbHelper.close();
+                    }
+                }
+                return filterItems;
+            }
             
-            for (FilterItem filterItem : dbHelper.findFilterItems()) {
-                addToAutocompleteSuggestions(filterItem.getText());
+            @Override
+            protected void onPostExecute(List<FilterItem> filterItems) {
+                for (FilterItem filterItem : filterItems) {
+                    addToAutocompleteSuggestions(filterItem.getText());
+                }
             }
-        } finally {
-            if (dbHelper != null) {
-                dbHelper.close();
-            }
-        }
+        }.execute();
         
     }
 
@@ -396,6 +409,7 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnClickListener, OnLon
 //		searchEditText.setSuggestionsAdapter(searchSuggestionsAdapter);
 		
         return true;
+
     }
     
     @Override
@@ -468,7 +482,7 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnClickListener, OnLon
         }
         return false;
     }
-
+/*
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
 
@@ -527,7 +541,7 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnClickListener, OnLon
 
         return super.onPrepareOptionsMenu(menu);
     }
-
+*/
   @Override
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
     menu.add(0, CONTEXT_MENU_FILTER_ID, 0, R.string.filter_choice);
@@ -1369,10 +1383,6 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnClickListener, OnLon
             
             filenameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, PreferenceHelper.getTextSizePreference(this) + 2);
             ColorScheme colorScheme = PreferenceHelper.getColorScheme(this);
-            borderView1.setBackgroundColor(colorScheme.getForegroundColor(this));
-            borderView2.setBackgroundColor(colorScheme.getForegroundColor(this));
-            borderView3.setBackgroundColor(colorScheme.getForegroundColor(this));
-            borderView4.setBackgroundColor(colorScheme.getForegroundColor(this));
             filenameTextView.setTextColor(colorScheme.getForegroundColor(this));
             filenameTextView.setBackgroundColor(colorScheme.getBubbleBackgroundColor(this));
             filenameTextView.setText(currentlyOpenLog);
@@ -1430,10 +1440,21 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnClickListener, OnLon
         
         backgroundLayout = findViewById(R.id.main_background);
 
-       /* clearButton.setOnLongClickListener(this);	*/
+       /*clearButton = findViewById(R.id.main_clear_button);
+        expandButton = findViewById(R.id.main_more_button);
+        pauseButton = findViewById(R.id.main_pause_button);
+        expandButtonImage = (ImageView) findViewById(R.id.main_expand_button_image);
+        pauseButtonImage = (ImageView) findViewById(R.id.main_pause_button_image);
+        
+        
+        for (View view : new View[]{clearButton, expandButton, pauseButton}) {
+            view.setOnClickListener(this);
+        }
+        clearButton.setOnLongClickListener(this);	*/
         
         filenameTextView = (TextView) findViewById(R.id.main_filename_text_view);
         mainFilenameLayout = findViewById(R.id.main_filename_linear_layout);
+		
         borderView1 = findViewById(R.id.main_border_view_1);
         borderView2 = findViewById(R.id.main_border_view_2);
         borderView3 = findViewById(R.id.main_border_view_3);
@@ -1585,6 +1606,7 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnClickListener, OnLon
 		}
     }
 
+    //如果按搜索键，则选中本activity的搜索框，同时显示软键盘
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
         
@@ -1660,6 +1682,7 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnClickListener, OnLon
 
     }    
 
+    //Called when an action is being performed.
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         

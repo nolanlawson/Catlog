@@ -1,7 +1,15 @@
 bin
 gen
+local.properties
+build
+obj
+.settings
+.gradle
+.idea
 *~
+*.iml
 **/proguard/dump.txt
 **/proguard/seeds.txt
 **/proguard/usage.txt
+**/.DS_Store
 CatlogTest/.settings/org.eclipse.jdt.core.prefs
