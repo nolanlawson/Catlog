@@ -14,8 +14,14 @@ import java.util.*;
 import android.app.AlertDialog.Builder;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.ClipboardManager;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View.OnLongClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -29,11 +35,16 @@ import com.nolanlawson.logcat.db.FilterItem;
 import com.nolanlawson.logcat.intents.Intents;
 import com.nolanlawson.logcat.reader.LogcatReader;
 import com.nolanlawson.logcat.reader.LogcatReaderLoader;
+import com.nolanlawson.logcat.util.ArrayUtil;
+import com.nolanlawson.logcat.util.LogLineAdapterUtil;
+import com.nolanlawson.logcat.util.StringUtil;
+import com.nolanlawson.logcat.util.UtilLogger;
+
 import java.io.File;
 
-public class LogcatActivity extends ListActivity implements OnQueryTextListener, 
-OnScrollListener, FilterListener, OnEditorActionListener, OnLongClickListener {
-
+public class LogcatActivity extends ListActivity implements OnQueryTextListener, TextWatcher, 
+OnScrollListener, FilterListener, OnEditorActionListener, OnClickListener, OnLongClickListener {			
+	
     private static final int REQUEST_CODE_SETTINGS = 1;
     
     // how often to check to see if we've gone over the max size
@@ -199,34 +210,70 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnLongClickListener {
         
         // handle an intent that was sent from an external application
         
-        if (intent != null && Intents.ACTION_LAUNCH.equals(intent.getAction())) {
-            
-            String filter = intent.getStringExtra(Intents.EXTRA_FILTER);
-            String level = intent.getStringExtra(Intents.EXTRA_LEVEL);
-            
-            if (!TextUtils.isEmpty(filter)) {
-                silentlySetSearchText(filter);
-            }
-            
-            
-            if (!TextUtils.isEmpty(level)) {
-                CharSequence[] logLevels = getResources().getStringArray(R.array.log_levels_values);
-                int logLevelLimit = ArrayUtil.indexOf(logLevels, level.toUpperCase(Locale.US));
-                
-                if (logLevelLimit == -1) {
-                    String invalidLevel = String.format(getString(R.string.toast_invalid_level), level);
-                    Toast.makeText(this, invalidLevel, Toast.LENGTH_LONG).show();
-                } else {
-                    adapter.setLogLevelLimit(logLevelLimit);
-                    logLevelChanged();
-                }
-                
-            }
+        if (intent != null){
+        	if (Intents.ACTION_LAUNCH.equals(intent.getAction())) {
+        
+	            String filter = intent.getStringExtra(Intents.EXTRA_FILTER);
+	            String level = intent.getStringExtra(Intents.EXTRA_LEVEL);
+	            
+	            if (!TextUtils.isEmpty(filter)) {
+	                silentlySetSearchText(filter);
+	            }
+	            
+	            
+	            if (!TextUtils.isEmpty(level)) {
+	                CharSequence[] logLevels = getResources().getStringArray(R.array.log_levels_values);
+	                int logLevelLimit = ArrayUtil.indexOf(logLevels, level.toUpperCase(Locale.US));
+	                
+	                if (logLevelLimit == -1) {
+	                    String invalidLevel = String.format(getString(R.string.toast_invalid_level), level);
+	                    Toast.makeText(this, invalidLevel, Toast.LENGTH_LONG).show();
+	                } else {
+	                    adapter.setLogLevelLimit(logLevelLimit);
+	                    logLevelChanged();
+	                }
+	            }
+	        }else if (Intent.ACTION_VIEW.equals(intent.getAction())){
+	        	Uri uri = intent.getData();
+	        	if (intent.getScheme().compareTo("content")==0){
+	        		openZippedLogFromContentProvider(uri);
+	        	}
+	        }
         }
     }
 
+    private void openZippedLogFromContentProvider(Uri uri) {
+	    try 
+	    {
+	    	final String tmpFilename = "gmail_attachment.txt";
+	        InputStream zippedAttachment = getContentResolver().openInputStream(uri);
+	        if (zippedAttachment == null)
+	            Log.e("onCreate", "cannot access mail attachment");
+	        else
+	        {
+	        	GZIPInputStream attachment = new GZIPInputStream(zippedAttachment);
+	            FileOutputStream tmp = new FileOutputStream(SaveLogHelper.getFile(tmpFilename));
+	            byte []buffer = new byte[1024];
+	            while (attachment.read(buffer) > 0)
+	                tmp.write(buffer);
 
-    @Override
+	            tmp.close();
+	            attachment.close();
+	            zippedAttachment.close();
+	            openLog(tmpFilename);
+	        }
+	    } 
+	    catch (FileNotFoundException e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+	    } catch (IOException e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+	    }
+    }
+
+
+	@Override
     public void onResume() {
         super.onResume();
         
