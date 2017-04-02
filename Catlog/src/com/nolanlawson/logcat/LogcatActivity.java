@@ -3,31 +3,22 @@ package com.nolanlawson.logcat;
 import android.app.*;
 import android.content.*;
 import android.os.*;
-import android.text.*;
 import android.view.*;
 import android.widget.*;
 import com.nolanlawson.logcat.data.*;
 import com.nolanlawson.logcat.helper.*;
 import com.nolanlawson.logcat.util.*;
+import java.io.*;
 import java.util.*;
 
 import android.app.AlertDialog.Builder;
-import android.app.ListActivity;
-import android.app.ProgressDialog;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ResolveInfo;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.ClipboardManager;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.util.TypedValue;
@@ -43,15 +34,10 @@ import com.nolanlawson.logcat.db.FilterItem;
 import com.nolanlawson.logcat.intents.Intents;
 import com.nolanlawson.logcat.reader.LogcatReader;
 import com.nolanlawson.logcat.reader.LogcatReaderLoader;
-import com.nolanlawson.logcat.util.ArrayUtil;
-import com.nolanlawson.logcat.util.LogLineAdapterUtil;
-import com.nolanlawson.logcat.util.StringUtil;
-import com.nolanlawson.logcat.util.UtilLogger;
+import java.util.zip.GZIPInputStream;
 
-import java.io.File;
-
-public class LogcatActivity extends ListActivity implements OnQueryTextListener, TextWatcher, 
-OnScrollListener, FilterListener, OnEditorActionListener, OnClickListener, OnLongClickListener {			
+public class LogcatActivity extends ListActivity implements OnQueryTextListener, 
+OnScrollListener, FilterListener, OnEditorActionListener, OnLongClickListener {			
 	
     private static final int REQUEST_CODE_SETTINGS = 1;
     
@@ -73,7 +59,8 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnClickListener, OnLon
     private LogLineAdapter adapter;
     private LogReaderAsyncTask task;
     private TextView filenameTextView;
-    
+    private View borderView1, borderView2, borderView3, borderView4;
+	
 	private MenuItem itemExpandCollapse, itemPauseResume;
 	
     private int firstVisibleItem = -1;
@@ -145,14 +132,15 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnClickListener, OnLon
     }
 
     private void addFiltersToSuggestions() {
-        new AsyncTask<Void, Void, List<FilterItem>>() {
-            @Override
-            protected List<FilterItem> doInBackground(Void... params) {
-                List<FilterItem> filterItems = new ArrayList<FilterItem>();
+		new Thread(){
+
+			@Override
+			public void run() {
+				final List<FilterItem> filterItems = new ArrayList<FilterItem>();
                 CatlogDBHelper dbHelper = null;
                 try {
                     dbHelper = new CatlogDBHelper(LogcatActivity.this);
-                    
+
                     for (FilterItem filterItem : dbHelper.findFilterItems()) {
                         filterItems.add(filterItem);
                     }
@@ -161,16 +149,20 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnClickListener, OnLon
                         dbHelper.close();
                     }
                 }
-                return filterItems;
-            }
-            
-            @Override
-            protected void onPostExecute(List<FilterItem> filterItems) {
-                for (FilterItem filterItem : filterItems) {
-                    addToAutocompleteSuggestions(filterItem.getText());
-                }
-            }
-        }.execute();
+				
+				handler.post(new Runnable(){
+
+						@Override
+						public void run() {
+							for (FilterItem filterItem : filterItems) {
+								addToAutocompleteSuggestions(filterItem.getText());
+							}
+						}
+					});
+			}
+			
+			
+		}.start();
         
     }
 
@@ -579,7 +571,7 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnClickListener, OnLon
         }
         return false;
     }
-/*
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
 
@@ -638,7 +630,7 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnClickListener, OnLon
 
         return super.onPrepareOptionsMenu(menu);
     }
-*/
+
   @Override
   public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
     menu.add(0, CONTEXT_MENU_FILTER_ID, 0, R.string.filter_choice);
@@ -1480,7 +1472,11 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnClickListener, OnLon
             
             filenameTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, PreferenceHelper.getTextSizePreference(this) + 2);
             ColorScheme colorScheme = PreferenceHelper.getColorScheme(this);
-            filenameTextView.setTextColor(colorScheme.getForegroundColor(this));
+            borderView1.setBackgroundColor(colorScheme.getForegroundColor(this));
+			borderView2.setBackgroundColor(colorScheme.getForegroundColor(this));
+			borderView3.setBackgroundColor(colorScheme.getForegroundColor(this));
+			borderView4.setBackgroundColor(colorScheme.getForegroundColor(this));
+			filenameTextView.setTextColor(colorScheme.getForegroundColor(this));
             filenameTextView.setBackgroundColor(colorScheme.getBubbleBackgroundColor(this));
             filenameTextView.setText(currentlyOpenLog);
         }
@@ -1703,7 +1699,7 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnClickListener, OnLon
 		}
     }
 
-    //Èç¹û°´ËÑË÷¼ü£¬ÔòÑ¡ÖÐ±¾activityµÄËÑË÷¿ò£¬Í¬Ê±ÏÔÊ¾Èí¼üÅÌ
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½Ð±ï¿½activityï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¬Ê±ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
         
@@ -1949,7 +1945,7 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnClickListener, OnLon
         @Override
         protected void onProgressUpdate(LogLine... values) {
             super.onProgressUpdate(values);
-
+			
             if (!firstLineReceived) {
                 firstLineReceived = true;
                 hideProgressBar();

@@ -174,7 +174,7 @@ public class LogcatRecordingService extends IntentService {
 
 		Notification.Builder builder = new Notification.Builder(this)
 				.setContentIntent(pendingIntent)
-				.setSmallIcon(R.drawable.status_icon)
+				.setSmallIcon(R.drawable.ic_launcher)
 				.setContentTitle(tickerText);
 		Notification notification = builder.build();
 

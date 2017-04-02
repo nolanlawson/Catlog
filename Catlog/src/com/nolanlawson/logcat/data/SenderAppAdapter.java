@@ -158,14 +158,14 @@ public class SenderAppAdapter extends ArrayAdapter<ResolveInfo> {
 	 * @param moreThanOneAttachment
 	 * @return
 	 */
-	private static Intent createDummyIntent(SendLogDetails.AttachmentType attachmentType) {
+	public static Intent createDummyIntent(SendLogDetails.AttachmentType attachmentType) {
 		Intent actionSendIntent = new Intent(android.content.Intent.ACTION_SEND);
 		actionSendIntent.setType(attachmentType.getMimeType());
 
 		return actionSendIntent;
 	}
 
-	private static Intent createSendIntent(String subject, String body, SendLogDetails.AttachmentType attachmentType, File attachment) {
+	public static Intent createSendIntent(String subject, String body, SendLogDetails.AttachmentType attachmentType, File attachment) {
 
 		String action = android.content.Intent.ACTION_SEND;
 		Intent actionSendIntent = new Intent(action);
