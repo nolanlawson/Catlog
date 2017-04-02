@@ -16,7 +16,15 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.ResolveInfo;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
+<<<<<<< HEAD
 import android.net.Uri;
+=======
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+>>>>>>> 67d17fb15224ee5991c9bffaf2d0e0688e54033b
 import android.text.ClipboardManager;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
@@ -741,6 +749,43 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnLongClickListener {
 			}
 		}.run();
 
+<<<<<<< HEAD
+=======
+            @Override
+            protected void onPostExecute(List<FilterItem> filters) {
+                super.onPostExecute(filters);
+                                
+                final FilterAdapter filterAdapter = new FilterAdapter(LogcatActivity.this, filters);
+                
+                new AlertDialog.Builder(LogcatActivity.this)
+                    .setCancelable(true)
+                    .setTitle(R.string.title_filters)
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .setSingleChoiceItems(filterAdapter, 0, new DialogInterface.OnClickListener() {
+                        
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (which == 0) { // dummy 'add filter' item
+                                showAddFilterDialog(filterAdapter);
+                            } else {
+                                // load filter
+                                String text = filterAdapter.getItem(which).getText();
+                                silentlySetSearchText(text);
+                                dialog.dismiss();
+                            }
+                            
+                            
+                        }
+                    })
+                    .show();
+                
+            }
+            
+        }.execute((Void)null);
+        // TODO
+        //this solves the problem, need to check what is causing it
+        //}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Void)null);
+>>>>>>> 67d17fb15224ee5991c9bffaf2d0e0688e54033b
     }
     
 	private void showFiltersDialog(List<FilterItem> filters){
@@ -920,10 +965,22 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnLongClickListener {
                 logLine.setExpanded(!collapsedMode);
             }
         }
+<<<<<<< HEAD
 		
 		itemExpandCollapse.setIcon(collapsedMode ? android.R.drawable.ic_menu_more : R.drawable.ic_menu_less_32);
         itemExpandCollapse.setTitle(collapsedMode ? R.string.menu_ab_expand : R.string.menu_ab_collapse);
 		
+=======
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        	expandButtonImage.setImageResource(
+                    collapsedMode ? R.drawable.ic_action_expand : R.drawable.ic_action_collapse);
+        } else {
+        	expandButtonImage.setImageResource(
+                    collapsedMode ? R.drawable.ic_menu_more_32 : R.drawable.ic_menu_less_32);	
+        }
+        
+>>>>>>> 67d17fb15224ee5991c9bffaf2d0e0688e54033b
         adapter.notifyDataSetChanged();
         
         // ensure that we either stay autoscrolling at the bottom of the list...
@@ -1455,11 +1512,25 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnLongClickListener {
 		// TODO: this
 /*		clearButton.setVisibility(filename == null? View.VISIBLE : View.GONE);
         pauseButton.setVisibility(filename == null? View.VISIBLE : View.GONE);
+<<<<<<< HEAD
         pauseButtonImage.setImageResource(R.drawable.ic_media_pause);
         expandButtonImage.setImageResource(
                 collapsedMode ? R.drawable.ic_menu_more_32 : R.drawable.ic_menu_less_32);
 */				
 				
+=======
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        	pauseButtonImage.setImageResource(R.drawable.ic_action_pause);
+            expandButtonImage.setImageResource(
+                    collapsedMode ? R.drawable.ic_action_expand : R.drawable.ic_action_collapse);
+        } else {
+        	pauseButtonImage.setImageResource(R.drawable.ic_media_pause);
+            expandButtonImage.setImageResource(
+                    collapsedMode ? R.drawable.ic_menu_more_32 : R.drawable.ic_menu_less_32);
+        }
+        
+>>>>>>> 67d17fb15224ee5991c9bffaf2d0e0688e54033b
         addFiltersToSuggestions(); // filters are what initial populate the suggestions
         updateDisplayedFilename();
         resetFilter();
@@ -1539,6 +1610,12 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnLongClickListener {
         expandButtonImage = (ImageView) findViewById(R.id.main_expand_button_image);
         pauseButtonImage = (ImageView) findViewById(R.id.main_pause_button_image);
         
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        	expandButtonImage.setAlpha(0.8f);
+        	pauseButtonImage.setAlpha(0.8f);
+        	((ImageView) findViewById(R.id.main_clear_button_image)).setAlpha(0.8f);
+        	((AutoCompleteTextView) findViewById(R.id.main_edit_text)).setAlpha(0.8f);
+        }
         
         for (View view : new View[]{clearButton, expandButton, pauseButton}) {
             view.setOnClickListener(this);
@@ -1734,8 +1811,18 @@ OnScrollListener, FilterListener, OnEditorActionListener, OnLongClickListener {
                 currentTask.pause();
             }
         
+<<<<<<< HEAD
 			itemPauseResume.setIcon(currentTask.isPaused() ? android.R.drawable.ic_media_play : android.R.drawable.ic_media_pause);
 			itemPauseResume.setTitle(currentTask.isPaused() ? R.string.menu_ab_resume : R.string.menu_ab_pause);
+=======
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            	pauseButtonImage.setImageResource(
+                        currentTask.isPaused() ? R.drawable.ic_action_play : R.drawable.ic_action_pause);
+            } else {
+            	pauseButtonImage.setImageResource(
+                        currentTask.isPaused() ? R.drawable.ic_media_play : R.drawable.ic_media_pause);	
+            }
+>>>>>>> 67d17fb15224ee5991c9bffaf2d0e0688e54033b
         }
     }
 

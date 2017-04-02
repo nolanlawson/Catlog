@@ -161,7 +161,20 @@ public class LogcatRecordingService extends IntentService {
 		// notify the widgets that we're running
 		WidgetHelper.updateWidgets(getApplicationContext());
 
+<<<<<<< HEAD
         CharSequence tickerText = getText(R.string.notification_ticker);
+=======
+        // Set the icon, scrolling text and timestamp
+        // TODO Add NotificationBuilder code
+        /*Notification notification = new Notification(R.drawable.status_icon, tickerText,
+                System.currentTimeMillis());*/
+        
+        Notification.Builder notificationBuilder = new Notification.Builder(this);
+        notificationBuilder
+        	.setSmallIcon(R.drawable.status_icon)
+        	.setTicker(tickerText)
+        	.setWhen(System.currentTimeMillis());
+>>>>>>> 67d17fb15224ee5991c9bffaf2d0e0688e54033b
 
         Intent stopRecordingIntent = new Intent();
         stopRecordingIntent.setAction(ACTION_STOP_RECORDING);
@@ -171,6 +184,7 @@ public class LogcatRecordingService extends IntentService {
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,
                     0 /* no requestCode */, stopRecordingIntent, PendingIntent.FLAG_ONE_SHOT);
+<<<<<<< HEAD
 
 		Notification.Builder builder = new Notification.Builder(this)
 				.setContentIntent(pendingIntent)
@@ -179,6 +193,21 @@ public class LogcatRecordingService extends IntentService {
 		Notification notification = builder.build();
 
         startForegroundCompat(R.string.notification_title, notification);
+=======
+        
+        // Set the info for the views that show in the notification panel.
+        /*notification.setLatestEventInfo(this, getText(R.string.notification_title),
+                       getText(R.string.notification_subtext), pendingIntent);*/
+        
+        notificationBuilder
+	    	.setContentTitle(getText(R.string.notification_title))
+	    	.setContentText(getText(R.string.notification_subtext))
+	    	.setContentIntent(pendingIntent);
+
+        //startForegroundCompat(R.string.notification_title, notification);
+        startForegroundCompat(R.string.notification_title, notificationBuilder.build());
+
+>>>>>>> 67d17fb15224ee5991c9bffaf2d0e0688e54033b
 	}
 
 
@@ -214,6 +243,7 @@ public class LogcatRecordingService extends IntentService {
 			}
 	    }
 	    mNM.notify(id, notification);
+	    
 	}
 
 	/**

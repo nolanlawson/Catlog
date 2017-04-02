@@ -8,8 +8,9 @@ obj
 .idea
 *~
 *.iml
+*.jar
 **/proguard/dump.txt
 **/proguard/seeds.txt
 **/proguard/usage.txt
 **/.DS_Store
-CatlogTest/.settings/org.eclipse.jdt.core.prefs
+

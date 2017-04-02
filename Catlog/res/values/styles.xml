@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
     <style 
 		name="AppTheme" 
 		parent="@android:style/Theme.Holo.Light.DarkActionBar">
@@ -16,4 +17,11 @@
 		name="Dialog"
 		parent="@android:style/Theme.Dialog">
 	</style>
+    
+    <style name="DialogTheme" parent="android:Theme.Dialog"></style>
+    
+    <style name="ButtonAction" parent="android:Widget.Button">
+        <item name="android:background">@android:drawable/list_selector_background</item>
+    </style>
+
 </resources>

@@ -15,6 +15,7 @@
 		android:paddingTop="7dp"
 		android:paddingBottom="10dp">
 
+<<<<<<< HEAD
 		<LinearLayout
 			android:id="@+id/title_template"
 			android:layout_width="wrap_content"
@@ -43,9 +44,15 @@
 			android:scaleType="fitXY"
 			android:gravity="fill_horizontal"
 			android:background="@color/dark_divider"/>
+=======
+	<LinearLayout android:id="@+id/LinearLayout02"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:orientation="horizontal" android:padding="3dp">
+>>>>>>> 67d17fb15224ee5991c9bffaf2d0e0688e54033b
 
 	</LinearLayout>
 
+<<<<<<< HEAD
 	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -88,3 +95,6 @@
 
 </LinearLayout>
 
+=======
+</LinearLayout>
+>>>>>>> 67d17fb15224ee5991c9bffaf2d0e0688e54033b

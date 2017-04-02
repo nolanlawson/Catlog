@@ -23,9 +23,16 @@ public class ShowRecordLogDialogActivity extends Activity {
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
 		setContentView(R.layout.record_log_dialog);
+<<<<<<< HEAD
 
 		getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 
+=======
+		
+		//getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+		getWindow().setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		
+>>>>>>> 67d17fb15224ee5991c9bffaf2d0e0688e54033b
 		// grab the search suggestions, if any
 		final List<String> suggestions = (getIntent() != null && getIntent().hasExtra(EXTRA_QUERY_SUGGESTIONS))
 			? Arrays.asList(getIntent().getStringArrayExtra(EXTRA_QUERY_SUGGESTIONS))
