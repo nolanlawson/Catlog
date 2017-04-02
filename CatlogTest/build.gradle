@@ -1,0 +1,33 @@
+apply plugin: 'com.android.application'
+
+dependencies {
+}
+
+android {
+    compileSdkVersion defaultCompileSdkVersion
+    buildToolsVersion defaultBuildToolsVersion
+
+    defaultConfig {
+        minSdkVersion defaultMinSdkVersion
+        targetSdkVersion defaultTargetSdkVersion
+    }
+
+    lintOptions { abortOnError false }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src',]
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+            jniLibs.srcDirs = ['libs']
+            jni.srcDirs = [] //disable automatic ndk-build
+        }
+        instrumentTest.setRoot('tests')
+    }
+
+}
+

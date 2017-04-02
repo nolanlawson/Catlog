@@ -92,6 +92,7 @@
     
     <string name="files_deleted">%d file(s) deleted.</string>
     
+	<string name="filter_by">Filtered by «%s»</string>
     <string name="filter_choice">Search by</string>
     <string name="filter_choice_pid">Process id</string>
     <string name="filter_choice_tag">Tag</string>
@@ -111,8 +112,15 @@
     
     <string name="manage_saved_logs">Manage Saved Logs</string>
     
-    <string name="menu_title_partial_select">Select Partial</string>
-    
+    <string name="menu_ab_search">Search</string>
+	<string name="menu_ab_pause">Pause</string>
+	<string name="menu_ab_resume">Resume</string>
+	<string name="menu_ab_expand">Moore</string>
+	<string name="menu_ab_collapse">Less</string>
+	<string name="menu_ab_clear">Clear</string>
+	
+	<string name="menu_title_partial_select">Select Partial</string>
+	
     <string name="no_saved_logs">No saved logs found.</string>
     
     <string name="notification_subtext">Select to stop recording.</string>

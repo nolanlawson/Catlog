@@ -1,4 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
+<<<<<<< HEAD
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/main_background"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:gravity="center_horizontal"
+	android:orientation="vertical">
+
+	<LinearLayout
+		android:id="@+id/main_filename_outer_layout"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center_horizontal|center_vertical"
+		android:orientation="vertical"
+		android:paddingBottom="1dp"
+		android:paddingLeft="5dp"
+		android:paddingRight="5dp"
+		android:paddingTop="3dp">
+
+		<LinearLayout
+			android:id="@+id/main_filename_linear_layout"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+
+			<View
+				android:id="@+id/main_border_view_1"
+				android:layout_width="fill_parent"
+				android:layout_height="1dp"/>
+
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal">
+
+				<View
+					android:id="@+id/main_border_view_2"
+					android:layout_width="1dp"
+					android:layout_height="fill_parent"/>
+
+				<LinearLayout
+					android:layout_width="0px"
+					android:layout_height="wrap_content"
+					android:layout_weight="1.0">
+
+					<TextView
+						android:id="@+id/main_filename_text_view"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:paddingBottom="1dp"
+						android:paddingLeft="5dp"
+						android:paddingRight="5dp"
+						android:paddingTop="1dp"
+						android:typeface="monospace"/>
+
+				</LinearLayout>
+
+				<View
+					android:id="@+id/main_border_view_3"
+					android:layout_width="1dp"
+					android:layout_height="fill_parent"/>
+
+			</LinearLayout>
+
+			<View
+				android:id="@+id/main_border_view_4"
+				android:layout_width="fill_parent"
+				android:layout_height="1dp"/>
+
+		</LinearLayout>
+
+	</LinearLayout>
+
+	<ProgressBar
+		android:id="@+id/main_dark_progress_bar"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:indeterminate="true"
+		android:visibility="gone"/>
+
+	<ProgressBar
+		android:id="@+id/main_light_progress_bar"
+		style="@android:style/Widget.ProgressBar.Inverse"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:indeterminate="true"
+		android:visibility="gone"/>
+
+	<com.nolanlawson.logcat.widget.ExceptionCatchingListView
+		android:id="@android:id/list"
+		android:layout_width="fill_parent"
+		android:layout_height="0px"
+		android:layout_weight="1"
+		android:layout_below="@+id/main_light_progress_bar"
+		android:dividerHeight="0px"
+		android:paddingBottom="2dp"
+		android:paddingTop="1dp"
+		android:scrollbars="none"/>
+
+</LinearLayout>
+=======
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_background"
     android:layout_width="fill_parent"
@@ -42,17 +144,16 @@
 
         <LinearLayout
             android:id="@+id/main_pause_button"
-            style="@android:style/Widget.Button"
+            style="@style/ButtonAction"
             android:layout_width="@dimen/main_button_width"
             android:layout_height="fill_parent"
-            android:background="@android:drawable/list_selector_background"
             android:gravity="center_vertical|left"
             android:orientation="horizontal" >
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="fill_parent"
-                android:background="@android:color/darker_gray" />
+                android:background="@color/main_divider" />
 
             <ImageView
                 android:id="@+id/main_pause_button_image"
@@ -64,17 +165,16 @@
 
         <LinearLayout
             android:id="@+id/main_more_button"
-            style="@android:style/Widget.Button"
+            style="@style/ButtonAction"
             android:layout_width="@dimen/main_button_width"
             android:layout_height="fill_parent"
-            android:background="@android:drawable/list_selector_background"
             android:gravity="center_vertical|left"
             android:orientation="horizontal" >
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="fill_parent"
-                android:background="@android:color/darker_gray" />
+                android:background="@color/main_divider" />
 
             <ImageView
                 android:id="@+id/main_expand_button_image"
@@ -86,17 +186,16 @@
 
         <LinearLayout
             android:id="@+id/main_clear_button"
-            style="@android:style/Widget.Button"
+            style="@style/ButtonAction"
             android:layout_width="@dimen/main_button_width"
             android:layout_height="fill_parent"
-            android:background="@android:drawable/list_selector_background"
             android:gravity="center_vertical|left"
             android:orientation="horizontal" >
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="fill_parent"
-                android:background="@android:color/darker_gray" />
+                android:background="@color/main_divider" />
 
             <ImageView
                 android:id="@+id/main_clear_button_image"
@@ -105,8 +204,9 @@
                 android:layout_weight="1"
                 android:src="@drawable/ic_menu_close_clear_cancel_32" />
         </LinearLayout>
+                
     </LinearLayout>
-
+    
     <LinearLayout
         android:id="@+id/main_filename_outer_layout"
         android:layout_width="fill_parent"
@@ -195,3 +295,4 @@
         android:scrollbars="none" />
 
 </LinearLayout>
+>>>>>>> 67d17fb15224ee5991c9bffaf2d0e0688e54033b

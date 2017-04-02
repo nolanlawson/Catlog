@@ -1,6 +1,16 @@
 bin
 gen
+local.properties
+build
+obj
+.settings
+.gradle
+.idea
 *~
+*.iml
+*.jar
 **/proguard/dump.txt
 **/proguard/seeds.txt
 **/proguard/usage.txt
+**/.DS_Store
+

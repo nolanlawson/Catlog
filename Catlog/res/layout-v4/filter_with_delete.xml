@@ -6,8 +6,8 @@
     android:paddingRight="2dp"
     android:paddingTop="2dp"
     android:paddingBottom="2dp"
-    >
-    
+>
+
     <Button
         android:id="@android:id/button1"
         android:layout_alignParentRight="true"
@@ -17,8 +17,8 @@
         android:drawableLeft="@drawable/ic_delete"
         android:focusable="false"
         android:clickable="true"
-        />
-    
+	/>
+
     <TextView 
 	    android:id="@android:id/text1"
 	    style="?android:attr/spinnerDropDownItemStyle"
@@ -32,5 +32,6 @@
 	    android:textSize="18sp"
 	    android:paddingTop="10dp"
 	    android:paddingBottom="10dp"/>
-    
+
 </RelativeLayout>
+
