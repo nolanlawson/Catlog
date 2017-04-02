@@ -1,9 +1,9 @@
 package com.nolanlawson.logcat.data;
 
+import com.nolanlawson.logcat.R;
+
 import android.view.View;
 import android.widget.TextView;
-
-import com.nolanlawson.logcat.R;
 
 /**
  * Improves performance of the ListView.  Watch Romain Guy's video about ListView to learn more.

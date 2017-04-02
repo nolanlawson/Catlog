@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <color name="action_bar_start">#000000</color>
+	<color name="action_bar_end">#000000</color>
+	
+	<color name="main_divider">@android:color/transparent</color>
+    
+</resources>
